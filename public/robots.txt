@@ -1,0 +1,6 @@
+# Allow all search engines to crawl all public pages
+User-agent: *
+Allow: /
+
+# Direct search engine crawlers to our XML sitemap
+Sitemap: https://team360mindset.in/sitemap.xml
