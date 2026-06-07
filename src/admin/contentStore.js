@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 
-export const CONTENT_UPDATED_EVENT = 't360-content-updated-v3';
+export const CONTENT_UPDATED_EVENT = 't360-content-updated-v4';
 
 const STORAGE_KEYS = {
-  courses: 't360_v3_courses',
-  products: 't360_v3_products',
-  blogs: 't360_v3_blogs',
-  contacts: 't360_v3_contacts',
+  courses: 't360_v4_courses',
+  products: 't360_v4_products',
+  blogs: 't360_v4_blogs',
+  contacts: 't360_v4_contacts',
 };
 
 const DEFAULT_CONTENT = {
@@ -43,7 +43,7 @@ const DEFAULT_CONTENT = {
           "a": "No, this is started from the absolute basics of breath monitoring."
         }
       ],
-      "image": "/src/assets/pranayama_breath.png"
+      "image": "/pranayama_breath.png"
     },
     {
       "id": "trainers-training-program",
@@ -74,7 +74,7 @@ const DEFAULT_CONTENT = {
           "a": "Yes, certified trainers get opportunities to work as speakers in Central Schools."
         }
       ],
-      "image": "/src/assets/gayatri_sun.png"
+      "image": "/gayatri_sun.png"
     },
     {
       "id": "signature-program",
@@ -105,7 +105,7 @@ const DEFAULT_CONTENT = {
           "a": "Bonuses: Video Series (Value ₹5,500), 9 Energy Awakening Series (Value ₹5,000), 30 Days Mentorship, Monthly Meditation Sessions."
         }
       ],
-      "image": "/src/assets/subconscious_mind_alpha.png"
+      "image": "/subconscious_mind_alpha.png"
     }
   ],
   products: [
@@ -250,7 +250,7 @@ const DEFAULT_CONTENT = {
       "date": "June 7, 2026",
       "readTime": "5 mins read",
       "course": "Gayatri Science",
-      "image": "/src/assets/gayatri_sun.png",
+      "image": "/gayatri_sun.png",
       "quote": "The Gayatri Mantra is a universal prayer that aligns our conscious mind with the supreme solar intelligence, activating our inner wisdom.",
       "sections": [
         {
@@ -288,7 +288,7 @@ const DEFAULT_CONTENT = {
       "date": "June 5, 2026",
       "readTime": "6 mins read",
       "course": "Alpha Mind Activation",
-      "image": "/src/assets/subconscious_mind_alpha.png",
+      "image": "/subconscious_mind_alpha.png",
       "quote": "Change your thoughts, and you change your destiny. Wealth is not a number; it is a state of mind.",
       "sections": [
         {
@@ -325,7 +325,7 @@ const DEFAULT_CONTENT = {
       "date": "June 3, 2026",
       "readTime": "7 mins read",
       "course": "Chakra Activation",
-      "image": "/src/assets/shree_vidya_mandala.png",
+      "image": "/shree_vidya_mandala.png",
       "quote": "When your chakras are aligned, you no longer chase success; success is drawn to you like a magnet.",
       "sections": [
         {
@@ -362,7 +362,7 @@ const DEFAULT_CONTENT = {
       "date": "May 28, 2026",
       "readTime": "5 mins read",
       "course": "Positive Thinking",
-      "image": "/src/assets/water_energizing.png",
+      "image": "/water_energizing.png",
       "quote": "Your brain is a filter. What you look for is exactly what you will find.",
       "sections": [
         {
@@ -449,26 +449,26 @@ export const useAdminContent = (collName) => {
 // Legacy auth status checks for backward compatibility
 export const getAdminAccount = () => {
   if (typeof window === 'undefined') return null;
-  return safeJsonParse(window.localStorage.getItem('t360_v3_account'), null);
+  return safeJsonParse(window.localStorage.getItem('t360_v4_account'), null);
 };
 
 export const saveAdminAccount = (account) => {
   if (typeof window !== 'undefined') {
-    window.localStorage.setItem('t360_v3_account', JSON.stringify(account));
+    window.localStorage.setItem('t360_v4_account', JSON.stringify(account));
   }
 };
 
 export const isAdminLoggedIn = () => {
   if (typeof window === 'undefined') return false;
-  return window.localStorage.getItem('t360_v3_session') === 'active';
+  return window.localStorage.getItem('t360_v4_session') === 'active';
 };
 
 export const setAdminSession = (isActive) => {
   if (typeof window !== 'undefined') {
     if (isActive) {
-      window.localStorage.setItem('t360_v3_session', 'active');
+      window.localStorage.setItem('t360_v4_session', 'active');
     } else {
-      window.localStorage.removeItem('t360_v3_session');
+      window.localStorage.removeItem('t360_v4_session');
     }
   }
 };
