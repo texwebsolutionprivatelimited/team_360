@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, Sparkles, ChevronRight, Heart } from 'lucide-react';
-import logoImg from '../assets/logo.jpg';
+import logoImg from '../assets/logo.png';
 
 export default function Footer({ onOpenModal }) {
 
@@ -65,14 +65,16 @@ export default function Footer({ onOpenModal }) {
           {/* Column 1: Brand details with glowing social icons */}
           <div className="space-y-5">
             <div className="flex items-center gap-3">
-              <img src={logoImg} alt="Team 360" className="w-12 h-12 rounded-full object-cover border-2 border-[#FFD95A]/30 shadow-lg" />
+              <div className="w-12 h-12 rounded-full bg-white border-2 border-[#FFD95A]/30 shadow-lg overflow-hidden flex items-center justify-center">
+                <img src={logoImg} alt="Team 360" className="w-full h-full object-contain scale-[1.8]" />
+              </div>
               <div>
                 <h3 className="font-serif text-white font-black text-sm uppercase tracking-wider leading-none">Team 360</h3>
                 <span className="text-[9px] text-[#FFD95A] font-black tracking-widest uppercase mt-1 block">With D.D. Sharma</span>
               </div>
             </div>
             <p className="text-xs leading-relaxed text-white/50">
-              India's leading training and spiritual transformation platform. We offer modules in organizational leadership, peak performance, and subconscious mind reprogramming under the guidance of international trainer Devendra Sharma (D.D. Sharma Ji).
+              India's leading training and spiritual transformation platform. We offer programs in organizational leadership, peak performance, and subconscious mind reprogramming under the guidance of international trainer Devendra Sharma (D.D. Sharma Ji).
             </p>
             
             {/* Beautiful Social Media Icons with high-quality direct inline SVGs */}
@@ -161,9 +163,10 @@ export default function Footer({ onOpenModal }) {
             </h3>
             <ul className="space-y-3.5 text-xs font-bold uppercase tracking-wider">
               {[
-                { label: 'Mentors Training Program (M-1)', href: '/courses/mentors-training-program' },
-                { label: 'Trainers Training Program (M-2)', href: '/courses/trainers-training-program' },
-                { label: 'Signature Program (M-3)', href: '/courses/signature-program' },
+                { label: 'Introductory & Signature Program', href: '/courses/signature-program' },
+                { label: 'Trainer Program', href: '/courses/trainers-training-program' },
+                { label: 'Gayatri Mentorship Program', href: '/courses/gayatri-mentorship-program' },
+                { label: 'Mentor & Center Program', href: '/courses/mentors-training-program' },
               ].map(({ label, href }) => (
                 <li key={label}>
                   <Link
@@ -219,7 +222,7 @@ export default function Footer({ onOpenModal }) {
                 Subscribe: Gayatri Manifest (YT)
               </a>
               <a
-                href={`https://wa.me/916376779062?text=${encodeURIComponent("Hello Team 360! I would like to enquire about your modules, workshops, and books. Please guide me!")}`}
+                href={`https://wa.me/916376779062?text=${encodeURIComponent("Hello Team 360! I would like to enquire about your programs, workshops, and books. Please guide me!")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full bg-gradient-to-r from-emerald-500 via-teal-600 to-emerald-600 hover:brightness-110 text-white font-black py-3 px-4 rounded-xl text-[10px] uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg hover:shadow-emerald-500/10 cursor-pointer"

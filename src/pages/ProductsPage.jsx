@@ -62,7 +62,7 @@ export default function ProductsPage() {
       id: 'book-7',
       name: 'आत्मज्ञान - पुष्पमाला (अध्यात्म ज्ञान सरल भाषा में )',
       price: '₹495',
-      intention: 'Vedic wisdom, self-realization, and consciousness elevation',
+      intention: 'Gayatri Science wisdom, self-realization, and consciousness elevation',
       affirmation: 'I connect with my true inner self, elevating my consciousness to divine truth.'
     },
     {
@@ -98,7 +98,7 @@ export default function ProductsPage() {
 
     const stages = [
       { progress: 25, text: "Reading your zodiac sign and energy match..." },
-      { progress: 60, text: "Matching publication frequency with your mind goals..." },
+      { progress: 60, text: "Matching spiritual frequency with your mind goals..." },
       { progress: 100, text: "Perfect match calculation complete!" }
     ];
 
@@ -148,10 +148,10 @@ export default function ProductsPage() {
         <div className="relative z-10 max-w-4xl mx-auto px-4">
           <span className="inline-flex items-center gap-1.5 text-[10px] xs:text-xs font-bold tracking-widest text-[#6B2D17] uppercase mb-3 whitespace-nowrap">
             <BookOpen className="w-4 h-4 text-[#6B2D17]" />
-            Official Bookstore &amp; Publications
+            Official Spiritual &amp; Motivational Books
           </span>
           <h1 className="font-serif text-[21px] xs:text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#2A0D04] leading-tight mb-3 whitespace-nowrap">
-            Bookstore &amp; Publications
+            Spiritual &amp; Motivational Books
           </h1>
           <p className="text-gray-700 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed font-medium">
             Browse our collection of transformative books by D.D. Sharma Ji. Designed to reprogram your subconscious, activate solar energies, and guide you towards financial freedom and peak mental training.

@@ -5,6 +5,8 @@ import gayatriSunImg from '../assets/gayatri_sun.png';
 import shreeVidyaImg from '../assets/shree_vidya_mandala.png';
 import subconsciousImg from '../assets/subconscious_mind_alpha.png';
 import waterEnergizingImg from '../assets/water_energizing.png';
+import signatureProgramArt from '../assets/signature_program_art.png';
+import gayatriMentorshipArt from '../assets/gayatri_mentorship_art.png';
 
 export default function Hero({ onOpenModal }) {
   const navigate = useNavigate();
@@ -13,9 +15,9 @@ export default function Hero({ onOpenModal }) {
   const panels = [
     {
       id: 'm',
-      title: 'Swar Vigyan (Module 1)',
+      title: 'Mentor & Center Program',
       letter: 'T',
-      desc: 'Module 1: Discover Swar Vigyan nostril breathing, Ida & Pingala balance, and Panch Mahabhuta elements purification.',
+      desc: 'Become a Certified Mentor, Trainer & Authorized Center Leader. Learn center leadership, diksha authorization, and group sadhana facilitation.',
       image: shreeVidyaImg,
       path: '/courses/mentors-training-program',
       icons: (
@@ -29,9 +31,9 @@ export default function Hero({ onOpenModal }) {
     },
     {
       id: 't',
-      title: 'Gayatri Science (Module 2)',
+      title: 'Trainer Program',
       letter: 'E',
-      desc: 'Module 2: Advanced brain activation, sound wave frequency resonance, GABA hormone release, and Savita meditation.',
+      desc: 'Become a Certified Trainer with D.D. Sharma Ji. Includes complete Signature Program mastery, 5 elements awakening, and motivational school speaker opportunities.',
       image: subconsciousImg,
       path: '/courses/trainers-training-program',
       icons: (
@@ -52,11 +54,33 @@ export default function Hero({ onOpenModal }) {
       icons: null // Focus on the teacher profile portrait
     },
     {
-      id: 's',
-      title: 'Abundance Codes (Module 3)',
+      id: 'y',
+      title: 'Gayatri Mentorship Program',
       letter: 'M',
-      desc: 'Module 3: Reprogram your subconscious mind, Water Glass manifestation, mirror technique, and 9 Urja Chakras.',
-      image: gayatriSunImg,
+      desc: 'Become a Certified Gayatri Mentor. Wake up the 24 quantum energy powers, master Yagya therapy, and learn Diksha authorization.',
+      image: gayatriMentorshipArt,
+      path: '/courses/gayatri-mentorship-program',
+      icons: (
+        <svg className="w-16 h-40 filter drop-shadow-[0_0_8px_rgba(255,217,90,0.8)]" viewBox="0 0 100 240" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="120" r="24" fill="none" stroke="#FFD95A" strokeWidth="2" />
+          <circle cx="50" cy="120" r="14" fill="none" stroke="#FFD95A" strokeWidth="1.5" />
+          <line x1="50" y1="88" x2="50" y2="94" stroke="#FFD95A" strokeWidth="2" />
+          <line x1="50" y1="146" x2="50" y2="152" stroke="#FFD95A" strokeWidth="2" />
+          <line x1="18" y1="120" x2="24" y2="120" stroke="#FFD95A" strokeWidth="2" />
+          <line x1="76" y1="120" x2="82" y2="120" stroke="#FFD95A" strokeWidth="2" />
+          <line x1="28" y1="98" x2="33" y2="103" stroke="#FFD95A" strokeWidth="1.5" />
+          <line x1="72" y1="142" x2="67" y2="137" stroke="#FFD95A" strokeWidth="1.5" />
+          <line x1="28" y1="142" x2="33" y2="137" stroke="#FFD95A" strokeWidth="1.5" />
+          <line x1="72" y1="98" x2="67" y2="103" stroke="#FFD95A" strokeWidth="1.5" />
+        </svg>
+      )
+    },
+    {
+      id: 's',
+      title: 'Introductory & Signature Program',
+      letter: 'S',
+      desc: '3 Days Live Online & Offline (Jaipur) Workshop. Reprogram subconscious mind, activate 9 energy chakras, and learn Alpha state scripting.',
+      image: signatureProgramArt,
       path: '/courses/signature-program',
       icons: (
         <svg className="w-24 h-40 filter drop-shadow-[0_0_8px_rgba(255,217,90,0.8)]" viewBox="0 0 120 240" xmlns="http://www.w3.org/2000/svg">
@@ -64,21 +88,6 @@ export default function Hero({ onOpenModal }) {
           <path d="M60 180 L60 60" stroke="#FFD95A" strokeWidth="3" strokeLinecap="round" />
           <path d="M45 75 L60 60 L75 75" fill="none" stroke="#FFD95A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
           <circle cx="60" cy="120" r="16" fill="none" stroke="#FFD95A" strokeWidth="2.5" />
-        </svg>
-      )
-    },
-    {
-      id: 'q',
-      title: 'Vedic Bookstore',
-      letter: 'S',
-      desc: 'Explore original publications and books by D.D. Sharma Ji on Amazon for mindset and wealth reprogramming.',
-      image: waterEnergizingImg,
-      path: '/products',
-      icons: (
-        <svg className="w-16 h-40 filter drop-shadow-[0_0_8px_rgba(255,217,90,0.8)]" viewBox="0 0 100 240" xmlns="http://www.w3.org/2000/svg">
-          {/* Water drop charging with energy */}
-          <path d="M50 70 C50 70, 20 120, 20 140 C20 156.5, 33.5 170, 50 170 C66.5 170, 80 156.5, 80 140 C80 120, 50 70, 50 70 Z" fill="none" stroke="#FFD95A" strokeWidth="2.5" />
-          <path d="M35 130 Q50 145 65 130" stroke="#FFD95A" strokeWidth="2" fill="none" />
         </svg>
       )
     }
@@ -98,6 +107,15 @@ export default function Hero({ onOpenModal }) {
           display: flex;
           width: max-content;
           animation: marquee-sanskrit 50s linear infinite;
+        }
+        @keyframes marquee-hindi-opposite {
+          0% { transform: translateX(-50%); }
+          100% { transform: translateX(0%); }
+        }
+        .animate-marquee-hindi-opposite {
+          display: flex;
+          width: max-content;
+          animation: marquee-hindi-opposite 65s linear infinite;
         }
         .collapsed-title {
           writing-mode: horizontal-tb;
@@ -253,12 +271,25 @@ export default function Hero({ onOpenModal }) {
         })}
       </section>
 
-      {/* Unified Sanskrit Marquee Divider Banner */}
-      <div className="w-full bg-[#1A002C] py-3.5 border-y border-[#FFD95A]/20 overflow-hidden relative z-20 shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
+      {/* Unified Marquee Divider Banners (Sanskrit & Hindi Translation in Opposite Directions) */}
+      <div className="w-full bg-[#1A002C] py-3.5 border-y border-[#FFD95A]/20 overflow-hidden relative z-20 shadow-[0_4px_20px_rgba(0,0,0,0.4)] space-y-2.5">
+        {/* Sanskrit - Right to Left */}
         <div className="animate-marquee-sanskrit gap-8 text-[10px] sm:text-xs font-serif font-bold tracking-widest text-[#FFD95A]/80 uppercase">
           {[...Array(6)].map((_, i) => (
             <span key={i} className="mx-4 whitespace-nowrap">
               ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि धियो यो नः प्रचोदयात् ॥
+            </span>
+          ))}
+        </div>
+        
+        {/* Divider Line */}
+        <div className="h-[1px] w-full bg-[#FFD95A]/10" />
+
+        {/* Hindi Translation - Left to Right (Opposite Direction) */}
+        <div className="animate-marquee-hindi-opposite gap-8 text-[10px] sm:text-xs font-serif font-bold tracking-widest text-[#FFD95A]/80">
+          {[...Array(4)].map((_, i) => (
+            <span key={i} className="mx-4 whitespace-nowrap">
+              मैं प्राण स्वरूप, दुःख नाशक, सुख स्वरूप, तेजस्वी, श्रेष्ठ, पाप नाशक, व दिव्य इन गुणों का मैं चिंतन करता हूँ व धारण करता हूँ, यह गुण मेरी बुद्धि को प्रखर व निश्चयात्मक बनाते हैं।
             </span>
           ))}
         </div>

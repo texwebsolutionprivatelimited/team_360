@@ -227,7 +227,7 @@ export default function CoursesPage() {
             Frequently Asked Questions
           </span>
           <h2 className="font-serif text-2xl sm:text-4xl font-extrabold text-[#2A0D04]">
-            Module & Workshop Queries
+            Program &amp; Workshop Queries
           </h2>
           <div className="w-16 h-1 bg-gradient-to-r from-[#2A0D04] to-[#6B2D17] mx-auto rounded-full mt-3" />
         </div>
@@ -236,7 +236,7 @@ export default function CoursesPage() {
           {[
             {
               q: "What is Swar Vigyan and how does it benefit my daily life?",
-              a: "Swar Vigyan is the ancient Vedic science of breathing through specific nostrils (Surya/Ida and Chandra/Pingala). By understanding and aligning your nasal cycles, you can naturally regulate your body temperature, boost energy on demand, improve digestion, and enter a state of deep emotional balance."
+              a: "Swar Vigyan is the ancient Gayatri Science of breathing through specific nostrils (Surya/Ida and Chandra/Pingala). By understanding and aligning your nasal cycles, you can naturally regulate your body temperature, boost energy on demand, improve digestion, and enter a state of deep emotional balance."
             },
             {
               q: "How does chanting the Gayatri Mantra activate brain glands scientifically?",
@@ -244,15 +244,15 @@ export default function CoursesPage() {
             },
             {
               q: "Will I receive a certified teacher degree or coaching license?",
-              a: "Yes! Our core modules (Module 1, 2, and 3) include structured training manuals and official certification. Successful graduates are certified as authorized mentors and trainers, enabling them to conduct workshops and explore high-earning opportunities in schools, institutions, and corporate coaching."
+              a: "Yes! Our core training programs include structured training manuals and official certification. Successful graduates are certified as authorized mentors and trainers, enabling them to conduct workshops and explore high-earning opportunities in schools, institutions, and corporate coaching."
             },
             {
               q: "Are these workshops suitable for absolute beginners?",
-              a: "Absolutely. Devendra Sharma (D.D. Sharma) Ji teaches every module starting from the foundational basics. Whether you are a business owner looking for stress relief, a student wanting to improve memory, or an aspiring coach, the course structure is designed to guide you step-by-step."
+              a: "Absolutely. Devendra Sharma (D.D. Sharma) Ji teaches every program starting from the foundational basics. Whether you are a business owner looking for stress relief, a student wanting to improve memory, or an aspiring coach, the course structure is designed to guide you step-by-step."
             },
             {
               q: "What formats are the courses conducted in?",
-              a: "All modules are structured as online interactive bootcamps followed by extended guided daily practice (ranging from 15 to 45 days) to ensure the habits and techniques become permanently integrated into your subconscious mind."
+              a: "All programs are structured as online interactive bootcamps followed by extended guided daily practice (ranging from 15 to 45 days) to ensure the habits and techniques become permanently integrated into your subconscious mind."
             }
           ].map((faq, idx) => {
             const isOpen = openFaqIdx === idx;

@@ -386,20 +386,24 @@ export default function CourseDetailsPage() {
               </div>
 
               {/* Quick stats grid */}
-              <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-6">
-                <div className="bg-amber-50/60 p-2.5 sm:p-4 rounded-2xl border-2 border-amber-300/80 flex flex-col justify-between hover:bg-amber-50/80 hover:scale-[1.02] transition-all duration-300">
-                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-[#6B2D17] mb-1.5 sm:mb-2" />
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
+                <div className="bg-gradient-to-br from-[#FFFDFB] via-[#FFF8F3] to-[#FFF1E6] p-4 sm:p-5 rounded-[20px] sm:rounded-[24px] border-2 border-[#6B2D17] flex flex-col justify-between hover:bg-gradient-to-br hover:from-white hover:to-[#FFE8D6] hover:scale-[1.03] transition-all duration-300 shadow-[0_6px_20px_rgba(107,45,23,0.15)] relative overflow-hidden group/stat">
+                  {/* Subtle top indicator bar */}
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-[#6B2D17]" />
+                  <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-[#E25822] mb-3 animate-pulse" />
                   <div>
-                    <span className="block text-[8px] sm:text-[9px] font-black text-[#6B2D17] uppercase tracking-wider">Format</span>
-                    <span className="font-bold text-[10px] sm:text-sm text-[#2A0D04] leading-tight block">{workshop.duration}</span>
+                    <span className="block text-[10px] sm:text-xs font-black text-[#6B2D17] uppercase tracking-widest mb-1.5 border-b border-[#6B2D17]/10 pb-1.5">Format</span>
+                    <span className="font-extrabold text-xs sm:text-base text-[#2A0D04] leading-snug block">{workshop.duration}</span>
                   </div>
                 </div>
 
-                <div className="bg-amber-50/60 p-2.5 sm:p-4 rounded-2xl border-2 border-amber-300/80 flex flex-col justify-between hover:bg-amber-50/80 hover:scale-[1.02] transition-all duration-300">
-                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-[#6B2D17] mb-1.5 sm:mb-2" />
+                <div className="bg-gradient-to-br from-[#FFFDFB] via-[#FFF8F3] to-[#FFF1E6] p-4 sm:p-5 rounded-[20px] sm:rounded-[24px] border-2 border-[#6B2D17] flex flex-col justify-between hover:bg-gradient-to-br hover:from-white hover:to-[#FFE8D6] hover:scale-[1.03] transition-all duration-300 shadow-[0_6px_20px_rgba(107,45,23,0.15)] relative overflow-hidden group/stat">
+                  {/* Subtle top indicator bar */}
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-[#6B2D17]" />
+                  <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-[#E25822] mb-3 animate-pulse" />
                   <div>
-                    <span className="block text-[8px] sm:text-[9px] font-black text-[#6B2D17] uppercase tracking-wider">Classification</span>
-                    <span className="font-bold text-[10px] sm:text-sm text-[#2A0D04] leading-tight block">{workshop.type}</span>
+                    <span className="block text-[10px] sm:text-xs font-black text-[#6B2D17] uppercase tracking-widest mb-1.5 border-b border-[#6B2D17]/10 pb-1.5">Classification</span>
+                    <span className="font-extrabold text-xs sm:text-base text-[#2A0D04] leading-snug block">{workshop.type}</span>
                   </div>
                 </div>
               </div>

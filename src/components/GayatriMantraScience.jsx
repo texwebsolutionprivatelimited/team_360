@@ -2,138 +2,48 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Sun, Sparkles, Brain, Heart, Play, Pause, Activity, Info, Award } from 'lucide-react';
 
 const SYLLABLE_GLANDS = [
-  { syllable: "तत् (Tat)", energy: "तापिनी (Tapini)", gland: "Thyroid Gland", impact: "Regulates metabolism, thyroid hormones, and overall body energy." },
-  { syllable: "स (Sa)", energy: "सफलता (Saphalta)", gland: "Pituitary Gland", impact: "Governs growth, hormone production, and endocrine coordination." },
-  { syllable: "वि (Vi)", energy: "विश्व (Vishwa)", gland: "Pineal Gland", impact: "Secretes melatonin, regulates circadian rhythm, and supports sleep cycles." },
-  { syllable: "तुर् (Tur)", energy: "तुष्टि (Tushti)", gland: "Thymus Gland", impact: "Stimulates immune system response and T-cell activation." },
-  { syllable: "व (Va)", energy: "वरदा (Varada)", gland: "Adrenal Gland", impact: "Regulates adrenaline, manages stress responses, and boosts stamina." },
-  { syllable: "रे (Re)", energy: "रेवती (Revati)", gland: "Pancreas Gland", impact: "Maintains insulin levels, balancing sugar and digestive processes." },
-  { syllable: "णि (Ni)", energy: "निष्कामा (Niskama)", gland: "Spleen Gland", impact: "Filters blood cells, supports lymphatic system, and immune defense." },
-  { syllable: "यम् (Yam)", energy: "यमुना (Yamuna)", gland: "Reproductive Glands", impact: "Balances vital energy, hormone regulation, and physical strength." },
+  { num: 1, syllable: "तत् (Tat)", energy: "आध्या (Aadhya)", gland: "Tapini / Pineal Gland", impact: "Awakens primordial consciousness, spiritual insight, and deep cosmic wisdom.", x: 50, y: 15 },
+  { num: 2, syllable: "स (Sa)", energy: "ब्राह्मी (Brahmi)", gland: "Pituitary Gland", impact: "Enhances intellect, logical memory, concentration, and endocrine coordination.", x: 50, y: 20 },
+  { num: 3, syllable: "वि (Vi)", energy: "वैष्णवी (Vaishnavi)", gland: "Pineal / Thalamus", impact: "Governs intuition, sleep cycles, cell rejuvenation, and aura harmony.", x: 50, y: 17 },
+  { num: 4, syllable: "तु (Tu)", energy: "शाम्भवी (Shambhavi)", gland: "Thymus Gland", impact: "Boosts immune system, emotional stability, compassion, and heart chakra energy.", x: 50, y: 45 },
+  { num: 5, syllable: "व (Va)", energy: "वेदमाता (Vedmata)", gland: "Adrenal Glands", impact: "Regulates stress hormones, fight-or-flight stability, and bodily stamina.", x: 50, y: 65 },
+  { num: 6, syllable: "रे (Re)", energy: "देवमाता (Devmata)", gland: "Pancreas Gland", impact: "Governs blood sugar, metabolic regulation, and digestive fire.", x: 50, y: 70 },
+  { num: 7, syllable: "णि (Ni)", energy: "विश्वमाता (Vishwamata)", gland: "Spleen Gland", impact: "Filters cellular toxins, purifies blood, and expands life-force vitality.", x: 43, y: 62 },
+  { num: 8, syllable: "यम् (Yam)", energy: "मंदंभरा (Mandambhara)", gland: "Reproductive Gland", impact: "Balances creative potential, structural stability, and life energy reserves.", x: 50, y: 90 },
+  { num: 9, syllable: "भूर् (Bhur)", energy: "मन्दाकिनी (Mandakini)", gland: "Submandibular Gland", impact: "Purifies words, speech resonance, verbal authority, and expression.", x: 50, y: 30 },
+  { num: 10, syllable: "गो (Go)", energy: "अजपा (Ajapa)", gland: "Thyroid Gland", impact: "Regulates body metabolic rate, vocal strength, and throat chakra balance.", x: 50, y: 33 },
+  { num: 11, syllable: "दे (De)", energy: "ऋद्धि (Riddhi)", gland: "Parathyroid Gland", impact: "Governs bone calcium absorption, density, and physical structure integrity.", x: 50, y: 36 },
+  { num: 12, syllable: "व (Va)", energy: "सिद्धि (Siddhi)", gland: "Thymus Cortex", impact: "Speeds up physical self-healing, cellular tissue recovery, and adaptation.", x: 50, y: 48 },
+  { num: 13, syllable: "स्य (Sya)", energy: "सावित्री (Savitri)", gland: "Hypothalamus", impact: "Coordinates body temperature, autonomic balance, and neural safety pathways.", x: 50, y: 23 },
+  { num: 14, syllable: "धी (Dhi)", energy: "सरस्वती (Saraswati)", gland: "Temporal Lobe Glands", impact: "Awakens speed reading, creative vision, memory retention, and art talents.", x: 44, y: 19 },
+  { num: 15, syllable: "म (Ma)", energy: "लक्ष्मी (Lakshmi)", gland: "Cardiac Plexus", impact: "Attracts financial prosperity, flow of wealth, love, and heart health.", x: 50, y: 52 },
+  { num: 16, syllable: "हि (Hi)", energy: "दुर्गा (Durga)", gland: "Solar Plexus", impact: "Awakens courage, protection shield, gut instincts, and inner confidence.", x: 50, y: 75 },
+  { num: 17, syllable: "धि (Dhi)", energy: "कुण्डलिनी (Kundalini)", gland: "Sacral Plexus Gland", impact: "Awakens latent kundalini energy, vital strength, and spiritual flow.", x: 50, y: 95 },
+  { num: 18, syllable: "यो (Yo)", energy: "प्रज्ञानी (Pragyani)", gland: "Prefrontal Cortex", impact: "Sharpens logical decision-making, executive focus, and deep learning.", x: 50, y: 12 },
+  { num: 19, syllable: "यो (Yo)", energy: "भवानी (Bhavani)", gland: "Medulla Oblongata", impact: "Restores deep rhythmic breathing, heart rate control, and autonomic ease.", x: 50, y: 25 },
+  { num: 20, syllable: "नः (Nah)", energy: "भुवनेश्वरी (Bhuvaneshwari)", gland: "Lymphatic System Nodes", impact: "Promotes detoxification, cell renewal, and overall body immunity.", x: 50, y: 58 },
+  { num: 21, syllable: "प्र (Pra)", energy: "अन्नपूर्णा (Annapurna)", gland: "Gastric Plexus", impact: "Regulates nutrient assimilation, digestive comfort, and physical satiety.", x: 50, y: 80 },
+  { num: 22, syllable: "चो (Cho)", energy: "महामाया (Mahamaya)", gland: "Amygdala Glands", impact: "Dissolves mental fear, anxiety, and coordinates emotional stability.", x: 48, y: 18 },
+  { num: 23, syllable: "द (Da)", energy: "पयस्विनी (Payaswini)", gland: "Thoracic / Mammary Gland", impact: "Fosters motherly love, compassion, stress relief, and heart openness.", x: 50, y: 42 },
+  { num: 24, syllable: "यात् (Yat)", energy: "त्रिपुरा (Tripura)", gland: "Coccygeal / Root Gland", impact: "Enhances grounding, root chakra security, absolute fearlessness, and core stability.", x: 50, y: 105 }
+];
+
+const WORD_GROUPS = [
+  { name: "तत्सवितुर्वरेण्यं", translation: "Tat Savitur Varenyam", syllables: [1, 2, 3, 4, 5, 6, 7, 8] },
+  { name: "भर्गो देवस्य", translation: "Bhargo Devasya", syllables: [9, 10, 11, 12, 13] },
+  { name: "धीमहि", translation: "Dhimahi", syllables: [14, 15, 16] },
+  { name: "धियो यो नः", translation: "Dhiyo Yo Nah", syllables: [17, 18, 19, 20] },
+  { name: "प्रचोदयात्", translation: "Prachodayat", syllables: [21, 22, 23, 24] }
 ];
 
 export default function GayatriMantraScience() {
-  const [activeTab, setActiveTab] = useState('gaba');
-  const [isPlaying, setIsPlaying] = useState(false);
   const [selectedSyllable, setSelectedSyllable] = useState(SYLLABLE_GLANDS[0]);
-  const [waveHeightMultiplier, setWaveHeightMultiplier] = useState(1);
-
-  // Audio refs for Web Audio API synthesis
-  const audioCtxRef = useRef(null);
-  const gainNodeRef = useRef(null);
-  const oscillatorsRef = useRef([]);
-
-  const startAudio = () => {
-    try {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContextClass) return;
-      
-      const ctx = new AudioContextClass();
-      audioCtxRef.current = ctx;
-
-      const mainGain = ctx.createGain();
-      mainGain.gain.setValueAtTime(0, ctx.currentTime);
-      mainGain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 1.5);
-      mainGain.connect(ctx.destination);
-      gainNodeRef.current = mainGain;
-
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(350, ctx.currentTime);
-      filter.connect(mainGain);
-
-      const baseFreq = 136.10; // Cosmic OM / Sadhana frequency
-      const freqs = [baseFreq, baseFreq * 2, baseFreq * 1.5]; // Fundamental, Octave, Perfect Fifth
-      const oscs = [];
-
-      freqs.forEach((freq, index) => {
-        const osc = ctx.createOscillator();
-        osc.type = index === 0 ? 'sine' : 'triangle';
-        osc.frequency.setValueAtTime(freq, ctx.currentTime);
-        
-        if (index > 0) {
-          osc.detune.setValueAtTime((index === 1 ? 4 : -4), ctx.currentTime);
-        }
-        
-        osc.connect(filter);
-        osc.start(0);
-        oscs.push(osc);
-      });
-
-      const lfo = ctx.createOscillator();
-      lfo.type = 'sine';
-      lfo.frequency.setValueAtTime(0.2, ctx.currentTime);
-      
-      const lfoGain = ctx.createGain();
-      lfoGain.gain.setValueAtTime(100, ctx.currentTime);
-      
-      lfo.connect(lfoGain);
-      lfoGain.connect(filter.frequency);
-      lfo.start(0);
-
-      oscillatorsRef.current = [...oscs, lfo];
-    } catch (e) {
-      console.warn("Failed to initialize Web Audio API:", e);
-    }
-  };
-
-  const stopAudio = () => {
-    try {
-      const ctx = audioCtxRef.current;
-      const gainNode = gainNodeRef.current;
-      const oscs = oscillatorsRef.current;
-
-      if (ctx && gainNode) {
-        gainNode.gain.setValueAtTime(gainNode.gain.value, ctx.currentTime);
-        gainNode.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.0);
-        
-        setTimeout(() => {
-          oscs.forEach(osc => {
-            try { osc.stop(); } catch (err) {}
-          });
-          try { ctx.close(); } catch (err) {}
-          
-          if (audioCtxRef.current === ctx) {
-            audioCtxRef.current = null;
-            gainNodeRef.current = null;
-            oscillatorsRef.current = [];
-          }
-        }, 1100);
-      }
-    } catch (e) {
-      console.warn("Error stopping Web Audio:", e);
-    }
-  };
-
-  // Animate sound waves and control sound play
-  useEffect(() => {
-    let interval;
-    if (isPlaying) {
-      startAudio();
-      interval = setInterval(() => {
-        setWaveHeightMultiplier(Math.random() * 1.5 + 0.5);
-      }, 1500);
-    } else {
-      stopAudio();
-      setWaveHeightMultiplier(1);
-    }
-    return () => {
-      clearInterval(interval);
-      if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
-        const currentCtx = audioCtxRef.current;
-        oscillatorsRef.current.forEach(osc => {
-          try { osc.stop(); } catch (err) {}
-        });
-        try { currentCtx.close(); } catch (err) {}
-      }
-    };
-  }, [isPlaying]);
 
   return (
     <section className="relative py-12 sm:py-20 bg-gradient-to-b from-[#120502] via-[#2A0D04] to-[#120502] text-white overflow-hidden">
       
       {/* Background Mandala overlay */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] opacity-[0.03] text-gold pointer-events-none">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] opacity-[0.03] text-[#FFD95A] pointer-events-none">
         <svg viewBox="0 0 100 100" fill="none" stroke="currentColor">
           <circle cx="50" cy="50" r="45" strokeWidth="0.2" />
           <circle cx="50" cy="50" r="35" strokeWidth="0.2" />
@@ -157,7 +67,7 @@ export default function GayatriMantraScience() {
         <div className="text-center max-w-3xl mx-auto mb-12">
           <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-[#FFD95A] uppercase mb-3 animate-tagline-blink">
             <Sun className="w-3.5 h-3.5 animate-pulse text-[#FFD95A]" />
-            Quantum Sound &amp; Vedic Science
+            Quantum Sound &amp; Gayatri Science
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-4">
             The Scientific Power of{' '}
@@ -167,203 +77,179 @@ export default function GayatriMantraScience() {
           </h2>
           <div className="w-24 h-0.5 mx-auto bg-gradient-to-r from-[#FFD95A] to-[#F5A623] mb-5" />
           <p className="text-white/70 text-sm sm:text-base leading-relaxed font-semibold">
-            Vedic chanting is not just belief; it is a physical and biological energy grid. Chanting the Gayatri Mantra generates 110,000 distinct sound wave frequencies per second, triggering profound neural and hormonal shifts in your body.
+            Gayatri Science chanting is not just belief; it is a physical and biological energy grid. Chanting the Gayatri Mantra generates 110,000 distinct sound wave frequencies per second, triggering profound neural and hormonal shifts in your body.
           </p>
         </div>
 
-        {/* Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        {/* 2-Column Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
           
-          {/* 1. Left Panel: Rotating Mandala & Audio Wave (5 Cols) */}
-          <div className="lg:col-span-5 glass-card rounded-[2.5rem] p-6 sm:p-8 border border-white/10 flex flex-col justify-between items-center text-center relative overflow-hidden">
-            
-            {/* Spinning decorative solar background */}
-            <div className="absolute w-64 h-64 rounded-full border border-dashed border-[#FFD95A]/5 animate-spin" style={{ animationDuration: '40s' }} />
-            
-            {/* Pulsing Sun Globe */}
-            <div className="relative w-44 h-44 rounded-full bg-gradient-to-tr from-[#E25822]/15 to-[#FFD95A]/15 flex items-center justify-center p-2 mt-4 animate-float-slow">
-              {/* Rotating Solar Rays */}
-              <div 
-                className={`absolute inset-0 rounded-full border-2 border-dashed border-[#FFD95A]/20 transition-all duration-1000 ${isPlaying ? 'rotate-180 scale-110 border-[#E25822]/40' : ''}`}
-                style={{ transform: isPlaying ? 'rotate(180deg)' : 'rotate(0deg)' }}
-              />
-              
-              <div className="w-36 h-36 rounded-full bg-[#2A0D04] flex flex-col items-center justify-center border-2 border-[#FFD95A]/50 shadow-2xl relative">
-                <Sun className={`w-14 h-14 text-[#FFD95A] ${isPlaying ? 'scale-110 animate-pulse text-[#E25822]' : 'scale-100'} transition-all duration-500`} />
-                <span className="text-[10px] font-black uppercase text-[#FFD95A] tracking-widest mt-2">Savita Solar</span>
-                <span className="text-[8px] text-white/50 tracking-wider">110,000 Waves/s</span>
-              </div>
+          {/* Column 1: Gland Visualizer Silhouette (4 Cols) */}
+          <div className="md:col-span-5 lg:col-span-4 glass-card rounded-[2rem] sm:rounded-[2.5rem] p-4 sm:p-6 border border-white/10 flex flex-col justify-between items-center text-center relative overflow-hidden min-h-[350px] sm:min-h-[400px]">
+            <div className="flex items-center gap-1.5 self-start">
+              <Activity className="w-4 h-4 text-[#FFD95A]" />
+              <span className="text-[10px] font-black uppercase text-[#FFD95A] tracking-wider">Biological Alignment</span>
             </div>
-
-            {/* Sound Wave Animation */}
-            <div className="w-full space-y-4 my-6">
-              <div className="h-16 flex items-center justify-center gap-1">
-                {[20, 32, 45, 28, 55, 64, 40, 15, 38, 48, 52, 60, 34, 44, 25, 50, 42, 30, 22].map((height, i) => (
-                  <div
-                    key={i}
-                    className="w-1 bg-gradient-to-t from-[#E25822] to-[#FFD95A] rounded-full transition-all duration-150"
-                    style={{
-                      height: isPlaying 
-                        ? `${Math.max(4, Math.min(64, height * waveHeightMultiplier * (i % 2 === 0 ? 1.2 : 0.8)))}px`
-                        : '8px'
-                    }}
-                  />
-                ))}
-              </div>
-
-              {/* Mantra Audio Control Button */}
-              <button
-                onClick={() => setIsPlaying(!isPlaying)}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#FFD95A] to-[#F5A623] hover:brightness-110 text-[#2A0D04] font-black text-xs uppercase tracking-widest transition-all duration-300 shadow-md hover:shadow-[#FFD95A]/20 cursor-pointer active:scale-95"
-              >
-                {isPlaying ? (
-                  <>
-                    <Pause className="w-4 h-4 fill-[#2A0D04]" /> Stop sound resonance
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-4 h-4 fill-[#2A0D04]" /> Simulate sound resonance
-                  </>
-                )}
-              </button>
-            </div>
-
-            <div className="bg-[#120502]/60 border border-white/5 rounded-2xl p-4 w-full">
-              <span className="text-[9px] font-black text-[#FFD95A] tracking-wider uppercase block mb-1">Resonating Mantra</span>
-              <p className="font-serif text-sm leading-relaxed text-white font-medium">
-                ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि धियो यो नः प्रचोदयात् ॥
-              </p>
-              <p className="text-[10px] text-white/50 font-bold mt-2">
-                "OM Bhur Bhuvah Svah, Tat Savitur Varenyam..."
-              </p>
-            </div>
-
-          </div>
-
-          {/* 2. Middle Panel: Interactive Syllable gland mapping (7 Cols) */}
-          <div className="lg:col-span-7 flex flex-col justify-between gap-6">
             
-            {/* Interactive Syllables Box */}
-            <div className="glass-card rounded-[2.5rem] p-6 sm:p-8 border border-white/10 flex-1 flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <Activity className="w-5 h-5 text-[#FFD95A]" />
-                  <h3 className="font-serif text-lg font-black text-white">Syllable Gland Activation Grid</h3>
-                </div>
-                <p className="text-white/60 text-xs font-semibold mb-6">
-                  Each of the 24 syllables of the Gayatri Mantra acts as a key to turn on a corresponding gland in the endocrine and autonomic systems. Click a syllable below to view its specific biological impact:
-                </p>
+            <div className="relative w-full flex-1 flex items-center justify-center py-4">
+              {/* Human Silhouette SVG */}
+              <svg viewBox="0 0 100 120" className="w-auto h-full max-h-[350px] opacity-90 transition-all duration-500">
+                <defs>
+                  <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="rgba(255, 217, 90, 0.4)" />
+                    <stop offset="50%" stopColor="rgba(226, 88, 34, 0.3)" />
+                    <stop offset="100%" stopColor="rgba(42, 13, 4, 0.1)" />
+                  </linearGradient>
+                  <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#FFD95A" stopOpacity="0.8" />
+                    <stop offset="50%" stopColor="#E25822" stopOpacity="0.3" />
+                    <stop offset="100%" stopColor="#2A0D04" stopOpacity="0" />
+                  </radialGradient>
+                </defs>
+                
+                {/* Central Sushumna Channel */}
+                <line x1="50" y1="10" x2="50" y2="110" stroke="rgba(255,217,90,0.15)" strokeWidth="1" strokeDasharray="3 3" />
 
-                {/* Syllable Grid */}
-                <div className="grid grid-cols-4 sm:grid-cols-4 gap-2.5 mb-6">
-                  {SYLLABLE_GLANDS.map((item, idx) => {
-                    const isSelected = selectedSyllable.syllable === item.syllable;
-                    return (
-                      <button
-                        key={idx}
-                        onClick={() => setSelectedSyllable(item)}
-                        className={`py-3 px-1 rounded-xl border text-center transition-all duration-300 cursor-pointer ${
-                          isSelected
-                            ? 'bg-[#E25822]/80 border-[#FFD95A] text-white scale-[1.03] shadow-md shadow-[#E25822]/20'
-                            : 'bg-white/5 border-white/10 hover:bg-white/10 text-white/80'
-                        }`}
-                      >
-                        <span className="block text-xs font-black tracking-wide">{item.syllable}</span>
-                        <span className="block text-[8px] opacity-60 font-semibold mt-0.5">{item.energy}</span>
-                      </button>
+                {/* Human Silhouette path */}
+                <path 
+                  d="M 50,8 
+                     C 44,8 40,11 40,16 
+                     C 40,21 44,24 50,24 
+                     C 56,24 60,21 60,16 
+                     C 60,11 56,8 50,8 Z 
+                     M 48,24 
+                     C 43,26 35,28 30,35 
+                     C 25,42 24,52 26,62 
+                     C 27,67 29,72 29,82 
+                     C 29,88 27,95 29,110
+                     L 71,110 
+                     C 73,95 71,88 71,82 
+                     C 71,72 73,67 74,62 
+                     C 76,52 75,42 70,35 
+                     C 65,28 57,26 52,24 Z" 
+                  fill="url(#bodyGradient)" 
+                  stroke="rgba(255, 217, 90, 0.25)" 
+                  strokeWidth="1.2"
+                />
+
+                {/* Gland points network mapping */}
+                {SYLLABLE_GLANDS.map((gland) => {
+                  const isCurrent = selectedSyllable.num === gland.num;
+                  return (
+                    <g key={gland.num}>
+                      {/* Draw dots */}
+                      <circle
+                        cx={gland.x}
+                        cy={gland.y}
+                        r={isCurrent ? "4.5" : "2"}
+                        fill={isCurrent ? "#FFD95A" : "rgba(255, 255, 255, 0.25)"}
+                        className="transition-all duration-300"
+                      />
+                      {isCurrent && (
+                        <>
+                          <circle
+                            cx={gland.x}
+                            cy={gland.y}
+                            r="12"
+                            fill="url(#glow)"
+                            className="animate-ping"
+                          />
+                          <line 
+                            x1={gland.x} 
+                            y1={gland.y} 
+                            x2={gland.x > 50 ? gland.x - 15 : gland.x + 15} 
+                            y2={gland.y} 
+                            stroke="#FFD95A" 
+                            strokeWidth="0.5" 
+                            strokeDasharray="2 2"
+                          />
+                        </>
+                      )}
+                      </g>
                     );
                   })}
-                </div>
+                </svg>
               </div>
-
-              {/* Selected Syllable Details Display */}
-              <div className="bg-[#120502]/70 border border-white/10 rounded-2xl p-4 sm:p-5 flex items-start gap-4 animate-fade-in">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FFD95A] to-[#F5A623] text-[#2A0D04] flex items-center justify-center flex-shrink-0 font-black text-base shadow-md">
-                  {selectedSyllable.syllable[0]}
-                </div>
-                <div className="text-left space-y-1">
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-1.5">
-                    <span className="text-xs font-black text-[#FFD95A] uppercase tracking-wide">Syllable: {selectedSyllable.syllable}</span>
-                    <span className="hidden sm:inline text-white/30 text-xs">|</span>
-                    <span className="text-[10px] font-black text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full uppercase tracking-wider">Gland: {selectedSyllable.gland}</span>
+              
+              {/* Mini gland label indicator */}
+              <div className="bg-[#120502]/60 border border-white/5 rounded-xl px-3 py-2 w-full text-center mt-2">
+                <span className="text-[8px] text-white/50 block font-bold uppercase">Stimulus Target Gland</span>
+                <span className="text-xs text-[#FFD95A] font-black uppercase tracking-wider">{selectedSyllable.gland.split('/')[0]}</span>
+              </div>
+            </div>
+  
+            {/* Column 2: Word-by-Word Syllable Flow (8 Cols) */}
+            <div className="md:col-span-7 lg:col-span-8 flex flex-col justify-between gap-4 sm:gap-6">
+              
+              {/* Syllables block */}
+              <div className="glass-card rounded-[2rem] sm:rounded-[2.5rem] p-4 sm:p-6 border border-white/10 flex-1 flex flex-col justify-between">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Activity className="w-5 h-5 text-[#FFD95A]" />
+                    <h3 className="font-serif text-lg font-black text-white">Mantra Gland Activation</h3>
                   </div>
-                  <h4 className="text-xs font-bold text-white/90">Energy Shodhan: {selectedSyllable.energy}</h4>
-                  <p className="text-[11px] sm:text-xs text-white/60 leading-relaxed font-semibold">
-                    {selectedSyllable.impact}
+                  <p className="text-white/60 text-xs font-semibold leading-relaxed">
+                    Click each syllable within the natural word groupings of the Gayatri Mantra to trace its target biological gland and physiological impact:
                   </p>
+  
+                  {/* Sanskrit Words Flow */}
+                  <div className="space-y-3">
+                    {WORD_GROUPS.map((word, wIdx) => (
+                      <div key={wIdx} className="bg-white/5 border border-white/5 rounded-2xl p-3 sm:p-3.5 space-y-2 sm:space-y-2.5">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-b border-white/5 pb-1.5">
+                          <span className="font-serif text-sm font-black text-[#FFD95A] tracking-wide">{word.name}</span>
+                          <span className="text-[9px] text-white/40 font-bold uppercase tracking-wider">{word.translation}</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {word.syllables.map((sNum) => {
+                            const item = SYLLABLE_GLANDS.find(s => s.num === sNum);
+                            if (!item) return null;
+                            const isSelected = selectedSyllable.num === item.num;
+                            return (
+                              <button
+                                key={item.num}
+                                onClick={() => setSelectedSyllable(item)}
+                                className={`h-10 sm:h-11 px-2.5 sm:px-3.5 rounded-lg sm:rounded-xl border flex flex-col items-center justify-center transition-all duration-350 cursor-pointer active:scale-95 ${
+                                  isSelected
+                                    ? 'bg-[#E25822] border-[#FFD95A] text-white font-black shadow-md shadow-[#E25822]/30 scale-[1.04]'
+                                    : 'bg-white/5 border-white/10 hover:bg-white/10 text-white/70 hover:text-white'
+                                }`}
+                              >
+                                <span className="text-[11px] sm:text-xs font-extrabold leading-none">{item.syllable.split(' ')[0]}</span>
+                                <span className="text-[8px] opacity-40 font-bold mt-0.5 sm:mt-1 leading-none">{item.num}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+  
+                {/* Selected Syllable Details Display */}
+                <div className="bg-[#120502]/70 border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-5 flex flex-col sm:flex-row items-start gap-3 sm:gap-4 animate-fade-in mt-4 sm:mt-6">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-[#FFD95A] to-[#F5A623] text-[#2A0D04] flex items-center justify-center flex-shrink-0 font-black text-base sm:text-lg shadow-md">
+                    {selectedSyllable.syllable[0]}
+                  </div>
+                  <div className="text-left space-y-1 flex-1">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                      <span className="text-[11px] sm:text-xs font-black text-[#FFD95A] uppercase tracking-wide">Syllable: {selectedSyllable.syllable}</span>
+                      <span className="text-[8px] sm:text-[9px] font-black text-emerald-400 bg-emerald-500/10 px-2 sm:px-2.5 py-0.5 rounded-full uppercase tracking-wider self-start sm:self-auto">Gland: {selectedSyllable.gland}</span>
+                    </div>
+                    <div className="text-[10px] font-bold text-white/90">Energy/Shakti Shodhan: <span className="text-[#FFD95A]">{selectedSyllable.energy}</span></div>
+                    <p className="text-[11px] sm:text-xs text-white/60 leading-relaxed font-semibold">
+                      {selectedSyllable.impact}
+                    </p>
+                  </div>
                 </div>
               </div>
+  
             </div>
-
-            {/* Scientific Tabs Panel */}
-            <div className="glass-card rounded-[2.5rem] p-6 sm:p-8 border border-white/10">
-              {/* Tab Navigation */}
-              <div className="flex border-b border-white/10 gap-2 mb-6 overflow-x-auto no-scrollbar">
-                {[
-                  { id: 'gaba', label: 'GABA HORMONES', icon: Brain },
-                  { id: 'alpha', label: 'ALPHA MIND STATE', icon: Sun },
-                  { id: 'vagus', label: 'VAGUS NERVE CALM', icon: Heart }
-                ].map((tab) => {
-                  const Icon = tab.icon;
-                  const isActive = activeTab === tab.id;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`flex items-center gap-1.5 pb-3.5 px-1 border-b-2 font-black text-[10px] sm:text-xs tracking-wider uppercase transition-all duration-300 cursor-pointer whitespace-nowrap ${
-                        isActive
-                          ? 'border-[#FFD95A] text-[#FFD95A]'
-                          : 'border-transparent text-white/40 hover:text-white/70'
-                      }`}
-                    >
-                      <Icon className="w-3.5 h-3.5" />
-                      {tab.label}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Tab Content Display */}
-              <div className="min-h-[100px] text-left animate-fade-in">
-                {activeTab === 'gaba' && (
-                  <div className="space-y-2">
-                    <h4 className="text-[#FFD95A] font-serif text-sm sm:text-base font-extrabold flex items-center gap-1.5">
-                      <Brain className="w-4 h-4" /> Neural Transmitter Stimulation
-                    </h4>
-                    <p className="text-white/70 text-xs sm:text-sm leading-relaxed font-semibold">
-                      Chanting the specific sound phonetics of the Gayatri Mantra vibrates the hard palate, activating the adjacent pituitary gland. Medical research confirms that rhythmic Vedic chanting increases the release of <strong>GABA (Gamma-Aminobutyric Acid)</strong>. GABA is the primary inhibitory neurotransmitter that filters out excessive mental noise, reduces stress, and stops overthinking.
-                    </p>
-                  </div>
-                )}
-                {activeTab === 'alpha' && (
-                  <div className="space-y-2">
-                    <h4 className="text-[#FFD95A] font-serif text-sm sm:text-base font-extrabold flex items-center gap-1.5">
-                      <Sun className="w-4 h-4" /> 8-12Hz Subconscious Gateway
-                    </h4>
-                    <p className="text-white/70 text-xs sm:text-sm leading-relaxed font-semibold">
-                      Chanting slow, rhythmic mantras with breath control naturally shifts brainwave patterns from high-frequency alert Beta waves down to relaxed, coherent <strong>Alpha and Theta waves (8-12 Hz)</strong>. This state opens the gateway to your subconscious mind, making it exceptionally receptive to positive visualization, memory consolidation, and deep manifestation coding.
-                    </p>
-                  </div>
-                )}
-                {activeTab === 'vagus' && (
-                  <div className="space-y-2">
-                    <h4 className="text-[#FFD95A] font-serif text-sm sm:text-base font-extrabold flex items-center gap-1.5">
-                      <Heart className="w-4 h-4" /> Parasympathetic Nervous Response
-                    </h4>
-                    <p className="text-white/70 text-xs sm:text-sm leading-relaxed font-semibold">
-                      The vocal chord vibrations generated during Gayatri chanting stimulate the <strong>Vagus Nerve</strong>, which runs through the throat, lungs, and heart. Activating the vagus nerve signals the autonomic nervous system to exit the fight-or-flight stress mode and enter the parasympathetic rest-and-digest mode, slowing down the pulse rate and restoring biological harmony.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-
+  
           </div>
-
+  
         </div>
-
-      </div>
-
-    </section>
-  );
+  
+      </section>
+    );
 }

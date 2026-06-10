@@ -7,7 +7,7 @@ export default function ContactPage() {
     name: '',
     email: '',
     phone: '',
-    program: 'Module 3: Subconscious Reconditioning & Abundance Codes (₹11,800)',
+    program: 'Introductory & Signature Program (₹11,800)',
     message: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -49,7 +49,7 @@ export default function ContactPage() {
           name: '',
           email: '',
           phone: '',
-          program: 'Module 3: Subconscious Reconditioning & Abundance Codes (₹11,800)',
+          program: 'Introductory & Signature Program (₹11,800)',
           message: ''
         });
       }, 5000);
@@ -57,9 +57,10 @@ export default function ContactPage() {
   };
 
   const programs = [
-    'Module 1: Swar Vigyan & Breath Science Mastery (₹2,36,000)',
-    'Module 2: Gayatri Quantum Science & Brain Activation (₹59,000)',
-    'Module 3: Subconscious Reconditioning & Abundance Codes (₹11,800)',
+    'Mentor & Authorization Center Program (₹2,36,000)',
+    'Trainer Program (₹59,000)',
+    'Gayatri Mentorship Program (₹1,18,000)',
+    'Introductory & Signature Program (₹11,800)',
     '1-on-1 Private Consultation',
     'General Query / Guidance'
   ];
@@ -101,7 +102,7 @@ export default function ContactPage() {
           </h1>
           <div className="w-20 h-1 bg-gradient-to-r from-[#E25822] to-[#6B2D17] mx-auto rounded-full mb-4" />
           <p className="text-gray-600 max-w-2xl mx-auto text-xs sm:text-sm font-semibold leading-relaxed">
-            Have questions about our training modules, daily workshops, book purchases, or personal consultations? Get in touch with our friendly support team today.
+            Have questions about our training programs, daily workshops, book purchases, or personal consultations? Get in touch with our friendly support team today.
           </p>
         </div>
       </div>
@@ -217,7 +218,7 @@ export default function ContactPage() {
                       🔮 Reach Out to Us
                     </h4>
                     <p className="text-[11px] text-gray-500 font-bold leading-relaxed">
-                      Fill out this simple form to ask your questions about our modules, upcoming abundance programs, or publication books. We are happy to help!
+                      Fill out this simple form to ask your questions about our programs, upcoming abundance programs, or spiritual and motivational books. We are happy to help!
                     </p>
                   </div>
                 </div>
@@ -380,7 +381,7 @@ export default function ContactPage() {
           </h2>
           
           <p className="text-white/70 text-[11px] sm:text-sm font-semibold max-w-3xl mx-auto mb-6 sm:mb-10 leading-relaxed">
-            Every course, training program, and publication is guided and authorized under D.D. Sharma Ji's direction. We promise to support your transformation with complete dedication, scientific frameworks, and over 32+ years of expert training mastery.
+            Every course, training program, and book is guided and authorized under D.D. Sharma Ji's direction. We promise to support your transformation with complete dedication, scientific frameworks, and over 32+ years of expert training mastery.
           </p>
 
           {/* Three Crystalline Cards Grid */}

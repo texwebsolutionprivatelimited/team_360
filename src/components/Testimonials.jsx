@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Star, Quote, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Star, Quote, Sparkles, CheckCircle2, X } from 'lucide-react';
 
 // Default export: Renders the seeker stories carousel slider
 export default function Testimonials({ testimonialsList, activeIdx, setActiveIdx }) {
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+  const [modalTestimonial, setModalTestimonial] = useState(null);
 
   // Track window size for responsive item calculations
   useEffect(() => {
@@ -68,7 +69,7 @@ export default function Testimonials({ testimonialsList, activeIdx, setActiveIdx
             {testimonialsList.map((t, idx) => (
               <div
                 key={idx}
-                className="relative bg-white rounded-2xl p-4.5 sm:p-5 border-2 border-[#6B2D17]/40 hover:border-[#6B2D17]/80 hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between flex-shrink-0"
+                className="relative bg-white rounded-2xl p-4.5 sm:p-5 border-2 border-[#6B2D17]/40 transition-all duration-300 flex flex-col justify-between flex-shrink-0"
                 style={{
                   width: `calc(${100 / itemsPerPage}% - ${(itemsPerPage - 1) * 20 / itemsPerPage}px)`
                 }}
@@ -85,9 +86,17 @@ export default function Testimonials({ testimonialsList, activeIdx, setActiveIdx
                   </div>
 
                   {/* Content */}
-                  <p className="text-xs sm:text-sm text-gray-700 italic leading-relaxed mb-4">
-                    "{t.content}"
+                  <p className="text-xs sm:text-sm text-gray-700 italic leading-relaxed mb-1.5 whitespace-pre-line">
+                    "{t.content.length > 150 ? `${t.content.slice(0, 140)}...` : t.content}"
                   </p>
+                  {t.content.length > 150 && (
+                    <button
+                      onClick={() => setModalTestimonial(t)}
+                      className="text-[#6B2D17] hover:text-[#E25822] font-black text-[10px] uppercase tracking-widest mb-3.5 block cursor-pointer transition-colors text-left"
+                    >
+                      Read More &rarr;
+                    </button>
+                  )}
                 </div>
 
                 {/* Author */}
@@ -119,6 +128,50 @@ export default function Testimonials({ testimonialsList, activeIdx, setActiveIdx
         )}
 
       </div>
+
+      {/* Testimonial Full View Modal */}
+      {modalTestimonial && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
+            onClick={() => setModalTestimonial(null)}
+          />
+          
+          {/* Modal Card */}
+          <div className="relative bg-white rounded-2xl sm:rounded-[2rem] p-5 sm:p-8 border-2 border-[#6B2D17] max-w-[95%] sm:max-w-xl w-full max-h-[90vh] overflow-y-auto shadow-2xl z-10 text-left animate-fade-in">
+            {/* Close Button */}
+            <button
+              onClick={() => setModalTestimonial(null)}
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-[#2A0D04] p-1.5 sm:p-2 rounded-full bg-amber-50/50 hover:bg-amber-100/85 border border-amber-200/40 transition-all cursor-pointer active:scale-95"
+              aria-label="Close modal"
+            >
+              <X className="w-4.5 h-4.5 sm:w-5 sm:h-5 pointer-events-none" />
+            </button>
+
+            {/* Stars */}
+            <div className="flex gap-0.5 mb-4 pr-8">
+              {[...Array(modalTestimonial.rating)].map((_, i) => (
+                <Star key={i} className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 fill-amber-500" />
+              ))}
+            </div>
+
+            {/* Quote icon watermark */}
+            <Quote className="w-8 h-8 sm:w-10 sm:h-10 text-[#6B2D17]/10 mb-2 sm:mb-3" />
+
+            {/* Full testimonial text */}
+            <p className="text-xs sm:text-sm md:text-base text-gray-800 italic leading-relaxed mb-6 whitespace-pre-line pr-2">
+              "{modalTestimonial.content}"
+            </p>
+
+            {/* Author details */}
+            <div className="border-t border-amber-100 pt-4 mt-6">
+              <p className="font-serif font-black text-sm sm:text-base text-[#6B2D17]">{modalTestimonial.name}</p>
+              <p className="text-[10px] sm:text-xs text-gray-400 font-bold uppercase tracking-wider mt-0.5">{modalTestimonial.role}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

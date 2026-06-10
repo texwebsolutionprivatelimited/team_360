@@ -50,7 +50,7 @@ export default function Products({ limit }) {
               Empowering Mindsets & Abundance
             </span>
             <h2 className="font-serif text-[21px] xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#2A0D04] mb-3 whitespace-nowrap">
-              Bookstore & Publications
+              Spiritual &amp; Motivational Books
             </h2>
             <div className="w-20 h-1 mx-auto rounded-full bg-gradient-to-r from-[#2A0D04] to-[#6B2D17] mb-4" />
             <p className="text-gray-600 text-xs sm:text-sm leading-relaxed font-semibold">
@@ -195,7 +195,7 @@ export default function Products({ limit }) {
           <div className="mt-12 mb-4 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 bg-white/40 backdrop-blur-md border border-[#2A0D04]/10 rounded-[1.5rem] p-3.5 sm:p-5 sm:px-6 sm:py-4 relative z-10 shadow-lg">
             {/* Info Text */}
             <p className="text-[10px] xs:text-[11px] sm:text-xs font-bold text-[#2A0D04]/75 text-center sm:text-left tracking-tight sm:tracking-normal">
-              Showing <span className="text-[#2A0D04] font-black">{(currentPage - 1) * itemsPerPage + 1}–{Math.min(currentPage * itemsPerPage, products.length)}</span> of <span className="text-[#2A0D04] font-black">{products.length}</span> Premium Publications
+              Showing <span className="text-[#2A0D04] font-black">{(currentPage - 1) * itemsPerPage + 1}–{Math.min(currentPage * itemsPerPage, products.length)}</span> of <span className="text-[#2A0D04] font-black">{products.length}</span> Premium Books
             </p>
 
             {/* Pagination buttons */}
@@ -250,7 +250,7 @@ export default function Products({ limit }) {
         {!limit && (
           <div className="mt-4 sm:mt-12 pt-2 sm:pt-8 flex flex-nowrap sm:flex-wrap items-center sm:justify-center gap-5 sm:gap-8 overflow-x-auto no-scrollbar pb-3.5 sm:pb-0 relative z-10">
             <span className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-sm font-extrabold sm:font-bold tracking-wide text-[#2A0D04]/60 whitespace-nowrap flex-shrink-0">
-              <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 flex-shrink-0" /> 100% Genuine Publications
+              <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 flex-shrink-0" /> 100% Genuine Books
             </span>
             <span className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-sm font-extrabold sm:font-bold tracking-wide text-[#2A0D04]/60 whitespace-nowrap flex-shrink-0">
               <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500 fill-amber-500/20 flex-shrink-0" /> Empowering Brain Seeding
@@ -268,7 +268,7 @@ export default function Products({ limit }) {
               to="/products"
               className="inline-flex items-center gap-2 bg-[#2A0D04] hover:bg-[#6B2D17] text-white font-black text-xs sm:text-sm px-4 sm:px-8 py-3.5 sm:py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-[#2A0D04]/15 active:scale-95 uppercase tracking-widest border border-white/10 whitespace-nowrap"
             >
-              <span className="hidden sm:inline">Explore All Bookstore Publications</span>
+              <span className="hidden sm:inline">Explore All Spiritual &amp; Motivational Books</span>
               <span className="inline sm:hidden">Explore Bookstore</span>
               <svg className="w-4 h-4 translate-x-0 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />

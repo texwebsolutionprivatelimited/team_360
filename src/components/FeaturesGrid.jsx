@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logoImg from '../assets/logo.jpg';
+import logoImg from '../assets/logo.png';
 import { 
   Sparkles, Sun, Wind, Flame, Brain, GlassWater, 
   Heart, TrendingUp, Target, PenTool, Eye, SunDim 
@@ -379,8 +379,8 @@ export default function FeaturesGrid() {
                 }}
               >
                 <div className="p-2.5 bg-[#2A0D04] rounded-full">
-                  <div className="w-28 h-28 rounded-full overflow-hidden ring-2 ring-[#FFD95A]/20 shadow-inner">
-                    <img src={logoImg} alt="Team 360" className="w-full h-full object-cover" />
+                  <div className="w-28 h-28 rounded-full overflow-hidden ring-2 ring-[#FFD95A]/20 shadow-inner bg-white flex items-center justify-center">
+                    <img src={logoImg} alt="Team 360" className="w-full h-full object-contain scale-[1.8]" />
                   </div>
                 </div>
               </div>
@@ -459,8 +459,8 @@ export default function FeaturesGrid() {
             
             <div className="p-[3px] rounded-full shadow-2xl relative z-10 animate-bounce" style={{ background: 'linear-gradient(135deg, #FFD95A, #F5A623, #6B2D17)', animationDuration: '6s' }}>
               <div className="p-2.5 bg-[#2A0D04] rounded-full">
-                <div className="w-24 h-24 rounded-full overflow-hidden ring-2 ring-[#FFD95A]/10 shadow-inner">
-                  <img src={logoImg} alt="Team 360" className="w-full h-full object-cover" />
+                <div className="w-24 h-24 rounded-full overflow-hidden ring-2 ring-[#FFD95A]/10 shadow-inner bg-white flex items-center justify-center">
+                  <img src={logoImg} alt="Team 360" className="w-full h-full object-contain scale-[1.8]" />
                 </div>
               </div>
             </div>

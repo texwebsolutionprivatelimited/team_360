@@ -4,7 +4,13 @@ import {
   Compass, Flame, Award, Sun, Zap, Brain, Users
 } from 'lucide-react';
 import ddSharmaPortrait from '../assets/dd_sharma_portrait.jpg';
-import logoImg from '../assets/logo.jpg';
+import logoImg from '../assets/logo.png';
+import anjaliPortrait from '../assets/anjali_ajadiwal.jpg';
+import anjuPortrait from '../assets/anju_jangid.jpg';
+import hemaPortrait from '../assets/hema_alwani.jpg';
+import umaPortrait from '../assets/uma_tailor.jpg';
+import vineetPortrait from '../assets/vineet_sharma.jpg';
+import vipulPortrait from '../assets/vipul_sharma.png';
 
 // Custom Youtube Icon SVG to avoid lucide-react version export issues
 const Youtube = ({ className }) => (
@@ -18,6 +24,45 @@ const Youtube = ({ className }) => (
 );
 
 export default function About() {
+  const team = [
+    {
+      name: "Vineet Sharma",
+      designation: "Director",
+      organization: "TEAM 360",
+      image: vineetPortrait
+    },
+    {
+      name: "Vipul Sharma",
+      designation: "Director",
+      organization: "TEAM 360",
+      image: vipulPortrait
+    },
+    {
+      name: "Anjali Ajadiwal",
+      designation: "Managing Director",
+      organization: "TEAM 360",
+      image: anjaliPortrait
+    },
+    {
+      name: "Anju Jangid",
+      designation: "Project Director",
+      organization: "TEAM 360",
+      image: anjuPortrait
+    },
+    {
+      name: "Hema Alwani",
+      designation: "Project Manager",
+      organization: "TEAM 360",
+      image: hemaPortrait
+    },
+    {
+      name: "Uma Tailor",
+      designation: "Marketing Manager",
+      organization: "TEAM 360",
+      image: umaPortrait
+    }
+  ];
+
   const modalities = [
     {
       title: 'Brain Training & Midbrain Activation',
@@ -147,11 +192,11 @@ export default function About() {
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row items-center gap-6">
                 {/* Photo Frame */}
-                <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden ring-4 ring-[#E25822]/10 shadow-xl flex-shrink-0">
+                <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden ring-4 ring-[#E25822]/10 bg-white shadow-xl flex-shrink-0 flex items-center justify-center">
                   <img
                     src={logoImg}
                     alt="Team 360 Network"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-contain scale-[1.8] group-hover:scale-[1.95] transition-transform duration-700"
                   />
                 </div>
                 <div className="text-center sm:text-left space-y-1.5">
@@ -173,7 +218,7 @@ export default function About() {
                   Team 360 is our national community of certified Trainers and authorized Mentors trained directly under D.D. Sharma Ji.
                 </p>
                 <p>
-                  Our trainers are empowered to conduct workshops, deliver motivational speeches in Central Schools, and guide seekers through 15-day and 45-day practice modules. Together, we help communities build focus, confidence, and financial growth.
+                  Our trainers are empowered to conduct workshops, deliver motivational speeches in Central Schools, and guide seekers through 15-day and 45-day practice plans. Together, we help communities build focus, confidence, and financial growth.
                 </p>
                 <p className="italic text-[#6B2D17] bg-amber-50/50 p-4 rounded-2xl border border-amber-100/60 font-semibold">
                   "Our mission is to create thousands of certified leaders who can help others activate their alpha mind state and manifest peak potential."
@@ -187,6 +232,72 @@ export default function About() {
             </div>
           </div>
 
+        </div>
+
+        {/* Core Leadership Team */}
+        <div className="space-y-10 pt-10 border-t border-amber-100/40">
+          <div className="text-center space-y-3">
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-[#6B2D17] uppercase">
+              <Users className="w-4 h-4 text-[#6B2D17]" />
+              Core Leadership
+            </span>
+            <h3 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#2A0D04]">
+              Meet the Pillars of Team 360
+            </h3>
+            <div className="w-16 h-1 bg-[#6B2D17] mx-auto rounded-full" />
+            <p className="text-gray-600 text-xs sm:text-sm font-semibold max-w-2xl mx-auto">
+              Our core team members and management executives dedicated to facilitating the smooth operation of Team 360 programs globally.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto px-4">
+            {team.map((member, idx) => (
+              <div 
+                key={idx} 
+                className="w-full max-w-[280px] sm:max-w-none mx-auto bg-white/90 backdrop-blur-md rounded-[2rem] sm:rounded-[2.5rem] p-4 sm:p-6 border border-amber-100/60 shadow-md hover:shadow-2xl hover:border-amber-500/20 transition-all duration-500 ease-out hover:-translate-y-2 flex flex-col items-center text-center group relative overflow-hidden"
+              >
+                {/* Top corner glow effect on hover */}
+                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#E25822]/40 via-amber-400/50 to-[#6B2D17]/40 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+                <div className="absolute -right-12 -top-12 w-24 h-24 bg-gradient-to-br from-[#E25822]/5 to-amber-500/5 rounded-full blur-xl group-hover:scale-150 transition-all duration-770 ease-out" />
+                
+                {/* Unique Arch-shaped Image Frame */}
+                <div className="relative w-40 h-52 sm:w-44 sm:h-56 rounded-t-[3rem] sm:rounded-t-[4rem] rounded-b-[1.25rem] sm:rounded-b-[1.5rem] overflow-hidden mb-6 ring-4 ring-[#E25822]/5 group-hover:ring-[#E25822]/15 shadow-lg group-hover:shadow-amber-500/5 transition-all duration-500 flex-shrink-0 bg-gradient-to-tr from-[#FFF5EE] via-[#FFEFE4] to-[#FFE4D6]">
+                  <img 
+                    src={member.image} 
+                    alt={member.name} 
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
+                  />
+                  {/* Seniority badge overlay */}
+                  {(member.designation.includes("Director") || member.designation.includes("MD")) && (
+                    <div className="absolute top-4 left-4 z-20 bg-amber-500/90 text-white p-1.5 rounded-full shadow-md backdrop-blur-sm border border-amber-300/30 group-hover:rotate-12 transition-transform duration-500">
+                      <Award className="w-3.5 h-3.5 fill-current text-white" />
+                    </div>
+                  )}
+                  {/* Subtle vignette layer */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#2A0D04]/10 via-transparent to-transparent pointer-events-none" />
+                </div>
+                
+                <div className="flex-grow flex flex-col justify-between items-center w-full">
+                  <div>
+                    <h4 className="font-serif text-xl sm:text-2xl font-black text-[#2A0D04] tracking-tight group-hover:text-[#6B2D17] transition-colors duration-300 leading-snug">
+                      {member.name}
+                    </h4>
+                    
+                    {/* Unique thin decorative divider */}
+                    <div className="w-10 h-[2px] bg-gradient-to-r from-transparent via-amber-300 to-transparent my-3.5 group-hover:w-16 transition-all duration-500 mx-auto rounded-full" />
+                    
+                    <p className="text-[#E25822] text-xs sm:text-[13px] font-black tracking-widest uppercase">
+                      {member.designation}
+                    </p>
+                  </div>
+                  
+                  <span className="text-[10px] text-[#6B2D17]/80 font-black tracking-widest uppercase mt-4 bg-[#FFF5EE] border border-amber-100/60 px-3.5 py-1 rounded-full group-hover:bg-[#E25822]/15 group-hover:text-[#E25822] transition-colors duration-300">
+                    {member.organization}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Interactive Modalities Section */}

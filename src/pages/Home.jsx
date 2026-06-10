@@ -16,27 +16,76 @@ export default function Home({ onOpenModal, onAddToCart }) {
   // Testimonials State lifted up to Home Page level
   const [testimonialsList, setTestimonialsList] = useState([
     {
-      name: 'Neetu Shree',
+      name: 'नीतूश्री (Neetu Shree)',
       role: 'Signature Program Graduate',
-      content: 'अनंत यात्रा की मुझे दिख रही हैं झांकी। अब मुझे हो गया हैं पूरा यकीन, ईश्वर ने सुन ली हैं मेरे दिल की पुकार, गुरुजी उन्होंने आपको भेजकर, कर दिया हैं मेरा \'बेडा पार\'। सादर प्रणाम गुरुदेव!',
+      content: `आदरणीय गुरुजी, 
+सादर प्रणाम।
+आपने मुझे सही रास्ता दिखाकर मुझ पर बहुत उपकार किया है, इसके लिए मैं हमेशा आपकी शुक्रगुज़ार रहूँगी। आपके अनमोल ज्ञान ने मेरी ज़िंदगी को एक सही दिशा दी है। मैंने कविता की कुछ लाइनों के ज़रिए अपने दिल की बात बयाँ करने की कोशिश की है। मुझे उम्मीद है कि मेरी यह कोशिश आपको ज़रूर पसंद आएगी।
+
+कविता :- गुरुजी 👏
+
+गुरुजी, आपने मुझको दिया है, 
+अत्यधिक अनमोल उपहार, 
+गायत्री मंत्र की 'दीक्षा' देकर, 
+आपने किया है मुझ पर उपकार।
+
+करती थी हर वक्त प्रार्थना, 
+मुझे भी मिल जायें मार्गदर्शक,
+मनुष्य योनि में मिला यह जीवन, 
+मेरा भी हो जाये सफल सार्थक।
+
+अब आपके सानिध्य में मिल जायेगा, 
+मुझे अमूल्य आत्मा का ज्ञान,
+इसी ज्ञान के सहयोग से मैं,
+कर सकूंगी स्वयं की पहचान।
+
+आधा जीवन गुजर चुका है मेरा,
+बस अब आधा ही है बाकी,
+जब आप मेरे बन चुके हैं पथदर्शक,
+अनंत यात्रा की मुझे दिख रही है झांकी।
+
+अब मुझे हो गया है पूरा यक़ीन,
+ईश्वर ने सुन ली है मेरे दिल की पुकार,
+गुरुजी उन्होंने आपको भेजकर,
+कर दिया है मेरा 'बेड़ा पार'।
+
+आपकी शिष्या 👏 नीतूश्री ✍️`,
       rating: 5,
     },
     {
       name: 'Rajesh K. Varma',
-      role: 'Mentors Training Graduate (Module 1)',
+      role: 'Mentor & Center Program Graduate',
       content: 'D.D. Sharma Ji\'s Leadership framework changed how I run my company. The focus on Widely Important Goals and maintaining a Scoreboard helped our business grow 3x in 3 months! Peak performance is now our daily habit.',
       rating: 5,
     },
     {
       name: 'Sunita Deshmukh',
-      role: 'Trainers Training Graduate (Module 2)',
-      content: 'After completing Module 2, I started conducting my own workshops and got selected as a motivational speaker in central schools. Reprogramming my subconscious mind using Alpha activation has made me financially independent.',
+      role: 'Trainer Program Graduate',
+      content: 'After completing the trainer program, I started conducting my own workshops and got selected as a motivational speaker in central schools. Reprogramming my subconscious mind using Alpha activation has made me financially independent.',
       rating: 5,
     },
     {
       name: 'Amit Choudhary',
       role: 'Swar Vigyan & Element Science Seeker',
       content: 'Learning Swar Vigyan and element science has cured my chronic stress. The Water Glass Technique and mirror work rewrote my identity. My focus is incredibly sharp, and positive vibes surround me.',
+      rating: 5,
+    },
+    {
+      name: 'Dr. Meera Chawla',
+      role: 'Midbrain Activation & DMIT Graduate',
+      content: 'Team 360’s DMIT and Midbrain training has added immense value to my child counseling practice. The fingerprint mapping scientific patterns are extremely accurate, and parents are amazed by the results. D.D. Sharma Ji\'s training manual is incredibly structured!',
+      rating: 5,
+    },
+    {
+      name: 'Vikramaditya Singh',
+      role: 'Brain Engineering Expert Graduate',
+      content: 'The speed reading and memory retention techniques from the Brain Engineering book are phenomenal. I was able to optimize my learning capacity and double my reading speed in just 10 days. The Alpha state goal programming methods really work.',
+      rating: 5,
+    },
+    {
+      name: 'Sadhvi Pragya Bharti',
+      role: 'Gayatri Quantum Science Seeker',
+      content: 'Gayatri Mantra chanting\'s connection with the pituitary gland and GABA hormones explained by D.D. Sharma Ji is a pathbreaking synthesis of science and spirituality. It helped me activate my third eye energy and find deep mental calm.',
       rating: 5,
     },
   ]);

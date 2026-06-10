@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import logoImg from '../assets/logo.jpg';
+import logoImg from '../assets/logo.png';
 import {
   Menu, X, ShoppingCart, Sparkles, Trash2,
   Home, User, BookOpen, BookMarked,
@@ -64,11 +64,13 @@ export default function Navbar({ onOpenModal, cart = [], onRemoveFromCart, onCle
 
             {/* Left: Logo */}
             <a href="/" className="flex items-center gap-3 group flex-shrink-0">
-              <img
-                src={logoImg}
-                alt="Team 360 Logo"
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white/40 group-hover:border-white/80 transition-all duration-300 shadow-md"
-              />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-2 border-white/40 group-hover:border-white/80 transition-all duration-300 shadow-md overflow-hidden flex items-center justify-center relative">
+                <img
+                  src={logoImg}
+                  alt="Team 360 Logo"
+                  className="w-full h-full object-contain scale-[1.8] transition-transform duration-300"
+                />
+              </div>
               <div className="flex flex-col text-left">
                 <span className="font-serif text-white font-extrabold text-sm sm:text-base tracking-wide uppercase leading-none">
                   Team 360
@@ -158,7 +160,9 @@ export default function Navbar({ onOpenModal, cart = [], onRemoveFromCart, onCle
               {/* Drawer Header */}
               <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
                 <div className="flex items-center gap-2">
-                  <img src={logoImg} alt="Logo" className="w-12 h-12 rounded-full border-2 border-white/30 object-cover" />
+                  <div className="w-12 h-12 rounded-full border-2 border-white/30 bg-white overflow-hidden flex items-center justify-center">
+                    <img src={logoImg} alt="Logo" className="w-full h-full object-contain scale-[1.8]" />
+                  </div>
                   <div>
                     <div className="font-serif text-white font-extrabold text-sm uppercase tracking-wide">Team 360</div>
                     <div className="text-[9px] text-white/50 tracking-widest uppercase">With D.D. Sharma</div>

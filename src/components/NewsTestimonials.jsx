@@ -21,7 +21,7 @@ export default function NewsTestimonials() {
   const newsItems = [
     {
       src: news4,
-      tag: "Vedic Wealth Mission",
+      tag: "Gayatri Science Wealth Mission",
       title: "Awakening Financial Consciousness: D.D. Sharma Pattern",
       desc: "Awakening financial consciousness in every Indian and helping them manifest wealth using the Team 360 pattern.",
       alt: "Newspaper clipping: Awakening Financial Consciousness in every Indian under D.D. Sharma Pattern"

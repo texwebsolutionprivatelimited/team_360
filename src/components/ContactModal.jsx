@@ -6,7 +6,7 @@ export default function ContactModal({ isOpen, onClose }) {
     name: '',
     email: '',
     phone: '',
-    program: 'Module 3: Subconscious Reconditioning & Abundance Codes (₹11,800)',
+    program: 'Introductory & Signature Program (₹11,800)',
     message: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -50,7 +50,7 @@ export default function ContactModal({ isOpen, onClose }) {
           name: '',
           email: '',
           phone: '',
-          program: 'Module 3: Subconscious Reconditioning & Abundance Codes (₹11,800)',
+          program: 'Introductory & Signature Program (₹11,800)',
           message: ''
         });
         onClose();
@@ -59,9 +59,10 @@ export default function ContactModal({ isOpen, onClose }) {
   };
 
   const programs = [
-    'Module 1: Swar Vigyan & Breath Science Mastery (₹2,36,000)',
-    'Module 2: Gayatri Quantum Science & Brain Activation (₹59,000)',
-    'Module 3: Subconscious Reconditioning & Abundance Codes (₹11,800)',
+    'Mentor & Authorization Center Program (₹2,36,000)',
+    'Gayatri Mentorship Program (₹1,18,000)',
+    'Trainer Program (₹59,000)',
+    'Introductory & Signature Program (₹11,800)',
     '1-on-1 Private Consultation',
     'General Query / Guidance'
   ];

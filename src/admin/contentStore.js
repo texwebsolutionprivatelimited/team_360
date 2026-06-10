@@ -1,111 +1,163 @@
 import { useEffect, useState } from 'react';
 
-export const CONTENT_UPDATED_EVENT = 't360-content-updated-v4';
+export const CONTENT_UPDATED_EVENT = 't360-content-updated-v5';
 
 const STORAGE_KEYS = {
-  courses: 't360_v4_courses',
-  products: 't360_v4_products',
-  blogs: 't360_v4_blogs',
-  contacts: 't360_v4_contacts',
+  courses: 't360_v7_courses',
+  products: 't360_v5_products',
+  blogs: 't360_v5_blogs',
+  contacts: 't360_v5_contacts',
 };
 
 const DEFAULT_CONTENT = {
   courses: [
     {
-      "id": "mentors-training-program",
-      "title": "Swar Vigyan & Breath Science Mastery (Module 1)",
-      "subtitle": "Module – 1: 15 Days Advanced Online Workshop & 45 Days Guided Practice",
-      "category": "Breath Science & Elements",
-      "duration": "15 Days Advanced Workshop + 45 Days Guided Practice",
+      "id": "signature-program",
+      "title": "Introductory & Signature Program",
+      "subtitle": "3 Days Live Online & Offline (Jaipur) Workshop",
+      "category": "Mind Programming & Abundance",
+      "duration": "3 Days Workshop + 30 Days Practice Plan",
       "type": "Workshop",
-      "description": "Unlock the secret science of breathing (Swar Vigyan), Ida & Pingala nostril balance, and Panch Mahabhuta Shodhan (five elements purification) to balance your physical and mental energy.",
-      "details": "Swar Vigyan & Breath Science:\n* Ida & Pingala nostril alignment\n* Activation of Surya & Chandra swar\n* Breath analysis for daily tasks\n* Panch Mahabhuta Shodhan (five elements purification)\n\nKey Practices:\nNadi Shodhana, Element concentration, Aura expansion, and Daily breath awareness.\n\nPeak Flow State Principles:\n* Shift from stress to flow state\n* Cleanse cellular memory with breathing\n* Align breath with widely important actions",
+      "description": "Reprogram your subconscious mind in Alpha state, activate 9 energy chakras, and learn practical Water Glass, Mirror, and Identity Notebook techniques for health, wealth, and non-linear growth.",
+      "details": "What You Will Learn:\n* Vision Clarity: Visual Document & Vision Board creation\n* Mirror Technique: Releasing past pain & traumatic memories\n* Water Glass Technique: Molecular programming for positivity\n* Identity Notebook: Scripting and building a new positive identity\n* Panch Mahabhut Shodhan: Cleansing the five key elements\n* 9 Chakras & Alpha Mind Activation: 7 Habits subconscious scripting\n* Gratitude Writing, Money Meditation & Savita Meditation\n* 27 Days RAS Activation: Filtering success into the brain\n* Aura Protection Shield: Guarding positive daily energy\n\nProgram Objective:\n* Self-Empowerment Level 1 & Confidence Boost\n* Subconscious Mind Programming & Alpha Activation\n* Gaining non-verbal positive energy & happy hormones\n* Activating Money Magnet codes & Divine Blessings\n* Scientific Gayatri experiments that stimulate GABA hormones, calming tension and anxiety.",
       "benefits": [
-        "Opportunity for substantial monthly income as a certified breath coach",
-        "Learn authentic tools for Swar Vigyan and element balancing",
-        "Balance physical health, reduce chronic stress, and expand cognitive capacity",
-        "Learn to read and direct your breath for manifestation and peak productivity"
+        "Self-Empowerment Level 1 (खुद में शक्ति और क्षमता बढ़ाना)",
+        "Healing Power (शरीर की बीमारियों को ठीक करने की क्षमता - डॉक्टर की सलाह जरूरी)",
+        "Non-Linear Growth (जीवन में तेज़ and अचानक प्रोग्रेस)",
+        "Non-Verbal Positive Energy (बिना बोले पॉजिटिव वाइब्स फैलाना)",
+        "Happy Hormones Activation (हमेशा खुश, शांत और कूल रहना)",
+        "Alpha Mind Activation (अच्छे विचार और योजनाएं आना)",
+        "9 Chakras Activation (ऑरा मजबूत और चमकदार होना)",
+        "RAS Activation (सही मौके और अवसर दिखना)",
+        "Panch Tatva Shuddhi (मन, शरीर और बुद्धि की शुद्धि)",
+        "Confidence Boost (खुद पर भरोसा और बड़े काम करने की हिम्मत)",
+        "Self Image Growth (अपनी – इमेज और सोच का स्तर बढ़ना)",
+        "Money Magnet + Divine Blessings (धन आकर्षण and ईश्वरीय कृपा)"
       ],
       "whoCanJoin": [
-        "Anyone looking to resolve stress and mental exhaustion",
-        "Aspiring coaches and holistic healers",
-        "Professionals wanting to stay in peak mental flow",
-        "Spiritual seekers interested in ancient Vedic science"
+        "Anyone who wants to boost self-confidence and execute big plans",
+        "Individuals facing mental blocks or financial hurdles",
+        "Seekers wanting to align their 9 chakras and cleanse elements",
+        "Professionals and students wanting to operate in Alpha brain state"
       ],
-      "whyChoose": "This program combines the exact science of nostrils (Swar) and element purification to put you in a state of high energy and peak performance.",
+      "whyChoose": "This workshop is structured around highly practical and scientific techniques (Water Glass, Mirror, Alpha Activation) to deliver instant results.",
       "faqs": [
         {
-          "q": "Is there a certificate provided?",
-          "a": "Yes, this program includes certification as a Breath Coach & Authorized Mentor."
+          "q": "What is the program fee?",
+          "a": "The total investment is ₹11,800."
         },
         {
-          "q": "Do I need prior experience in yoga?",
-          "a": "No, this is started from the absolute basics of breath monitoring."
+          "q": "What are the bonuses included?",
+          "a": "Bonuses include: Powerful Video Series (Value ₹5,500), 9 Energy Awakening Video Series (Value ₹5,000), 30 Days Mentorship, and Monthly Meditation Sessions."
         }
       ],
-      "image": "/pranayama_breath.png"
+      "image": "/signature_program_art.png"
     },
     {
       "id": "trainers-training-program",
-      "title": "Gayatri Quantum Science & Brain Activation (Module 2)",
-      "subtitle": "Module – 2: 6 Days Advanced Online Workshop & 30 Days Practice",
-      "category": "Vedic Sound & Brain Science",
-      "duration": "6 Days Advanced Workshop + 30 Days Practice",
-      "type": "Workshop",
-      "description": "Dive into the scientific power of the Gayatri Mantra. Discover how the 110,000 sound waves per second frequency stimulates the secretion of GABA hormones, calms overthinking, activates the brain, and aligns your energetic body.",
-      "details": "Gayatri Quantum Science:\n* 110,000 sound waves/sec scientific impact\n* Stimulation of GABA hormones and happy hormones (dopamine, serotonin)\n* Vagus nerve stimulation and parasympathetic healing\n* Savita Solar Meditation (Solar Ray Brain Activation)\n\nSyllabus Highlights:\n* Activating Gayatri energy in the spiritual body\n* Sound healing and neurological resonance\n* 27 Mantra Sadhana & 27 Days RAS Activation\n* Map of Conscious Evolution (20 to 700 Cal)\n* Manifestation and healing by a Master",
+      "title": "Trainer Program",
+      "subtitle": "Signature Program Included",
+      "category": "Trainer Certification & Brain Science",
+      "duration": "6 Days Program (3 Hours/Day) + 90 Days Internship",
+      "type": "Trainer Program",
+      "description": "Become a certified Trainer with complete Signature Program mastery included. Learn 5 element purification, 9 energy chakra activation, 27 days RAS reprogramming, and build a lucrative professional training identity.",
+      "details": "Program Objective:\n* Become a Certified Trainer with D.D. Sharma Ji\n* Speak in Central Schools as a Motivational Trainer\n* Conduct your own Workshops and Training Programs\n* Earn ₹1.5 to ₹5 Lakhs/month (Part-time or Full-time)\n* Gain National & International Recognition\n\nWhat is Taught in the Workshop:\n* पंच महाभूत का जागरण (Awakening of 5 elements)\n* नौ ऊर्जा चक्रों का जागरण (Awakening of 9 energy centers)\n* 27 मंत्र साधना व 27 दिन की तकनीक (27 mantra sadhana & 27 days techniques)\n* Water Energizing Technique\n* 111 Soham Meditation\n* Reconditioning of Subconscious Mind & Alpha Mind Activation\n* Inspiring Books study (The Magic of Thinking Big, The Power of Self Discipline, The 7 Habits, etc.)\n\nAlso Included:\n* Introduction Swar Vigyan & Element Science\n* Activation of Gayatri Energy in Spiritual Body\n* Map of Conscious Evolution from 20 Cal to 700 Cal\n* Manifestation & Healing by a Mentor, Group Healing Session, and Sixth Sense Activation\n* Build Your Professional Identity & Get Certified",
       "benefits": [
-        "Become a certified Trainer in Gayatri Quantum Science and Conduct workshops",
-        "Get opportunities to speak in Central Schools as a motivational trainer",
-        "Awaken the third eye center and clear cognitive blocks using solar rays",
-        "Join D.D. Sharma Ji on our YouTube Channel and Web Podcasts",
-        "Lifelong mentorship and handsome income (₹1.5 to ₹5 Lakhs/month)"
+        "Opportunity to work as a Motivational Speaker in Central Schools",
+        "Authority to conduct your own workshops and courses",
+        "Trainer roles within official Team 360 programs",
+        "Feature on D.D. Sharma Ji's YouTube Channel & Web Podcasts",
+        "3 Days advanced workshop participation"
       ],
       "whoCanJoin": [
-        "Aspiring motivational speakers and trainers",
-        "Seekers interested in the intersection of science and Vedic mantras",
-        "Students wanting to optimize brain capacity and memory retention",
-        "Anyone looking to eliminate anxiety and chronic overthinking"
+        "Aspiring motivational speakers and educators",
+        "Spiritual coaches and healers wanting to scale their career",
+        "Individuals wanting to earn ₹1.5 to ₹5 Lakhs/month",
+        "Seekers wanting to master sixth sense activation and self-healing"
       ],
-      "whyChoose": "This program uses scientific experiments of Gayatri Mantra (which increases GABA hormones) to eliminate stress and enhance internal performance.",
+      "whyChoose": "This comprehensive Trainer certification includes the complete Signature Program, sixth sense activation, and direct opportunities to speak in Central Schools and join our official podcasts.",
       "faqs": [
         {
-          "q": "Will I get chances to speak in schools?",
-          "a": "Yes, certified trainers get opportunities to work as speakers in Central Schools."
+          "q": "What is the training investment?",
+          "a": "The total training investment is ₹59,000."
+        },
+        {
+          "q": "Can I do this part-time or full-time?",
+          "a": "Yes, certified trainers can work either part-time or full-time, with potential earnings of ₹1.5 to ₹5 Lakhs per month."
         }
       ],
       "image": "/gayatri_sun.png"
     },
     {
-      "id": "signature-program",
-      "title": "Subconscious Reconditioning & Abundance Codes (Module 3)",
-      "subtitle": "Module – 3: 3 Days Online Workshop & 15 Days Guided Practice",
-      "category": "Mind Programming",
-      "duration": "3 Days Online Workshop + 15 Days Guided Practice",
-      "type": "Workshop",
-      "description": "Learn to reprogram your subconscious mind at 8-12Hz (Alpha state) for infinite wealth and health. Master the Water Glass manifestation technique, Mirror work, Identity Notebook writing, and 9 Urja Chakras Activation.",
-      "details": "Subconscious Reconditioning:\n* Subconscious programming via Alpha Mind Activation\n* Water Glass Technique (molecular memory encoding)\n* Mirror Work (releasing past trauma & old identities)\n* Identity Notebook (scripting your future self)\n\nSyllabus Highlights:\n* 9 Urja Chakras Activation & Aura shielding\n* Reticular Activating System (RAS) goal programming\n* Money Meditation & Saffron wealth codes\n* Gratitude scripting and protection shield activation",
+      "id": "gayatri-mentorship-program",
+      "title": "Gayatri Mentorship Program",
+      "subtitle": "Become a Certified Gayatri Mentor",
+      "category": "Gayatri Sadhana & Mentorship",
+      "duration": "15 Days Live Online Training + 2 Months Practice Internship",
+      "type": "Mentorship Program",
+      "description": "Become a certified Gayatri Mentor. Discover the scientific, practical, and spiritual dimensions of Gayatri Sadhana, activate the 24 quantum energy powers, and master Yagya therapy.",
+      "details": "Program Objective:\n* गायत्री साधना की गहन समझ (Deep understanding of Gayatri Sadhana)\n* जीवन में शांति, समृद्धि, आरोग्यता एवं आत्मविकास (Peace, prosperity, health & self-growth)\n* गायत्री साधना के वैज्ञानिक, व्यावहारिक एवं आध्यात्मिक आयाम (Scientific, practical, and spiritual dimensions)\n\nWhat You Will Learn:\n* Gayatri Quantum Energy Mastery (गायत्री Quantum Energy की 24 शक्तियों का जागरण, धनवर्षा की प्रक्रिया, मधुर रिश्तों हेतु गायत्री साधना, आरोग्यता एवं ऊर्जा वृद्धि हेतु साधना, पद, प्रतिष्ठा एवं सफलता हेतु गायत्री साधना)\n* Advanced Spiritual Practices (यज्ञ थेरेपी, अनुष्ठान साधना, सामूहिक गायत्री साधना, विभिन्न देवताओं की गायत्री मंत्र साधना, सुरक्षा कवच साधना)\n* Authorization & Practical Training (दीक्षा देने की प्रक्रिया, दीक्षा हेतु अधिकृत किया जाना, आवश्यक परहेज एवं अनुशासन, साधना की सही विधि एवं अभ्यास, दैनिक जीवन में उपयोग)",
       "benefits": [
-        "Reprogram the mind to eliminate deep-seated scarcity beliefs",
-        "Build a solid aura protection shield to block negative vibes",
-        "Activate happy hormones and feel cool, calm, and composed daily",
-        "Experience rapid, non-linear growth in business, career, and finance",
-        "Learn to manifest goals effortlessly using the Water Glass Technique"
+        "Direct guidance and initiation into authentic Gayatri Sadhana",
+        "2 Months Guided practice and implementation internship",
+        "Official Authorization to perform Diksha and guide group meditations",
+        "Learn to apply Gayatri frequencies for health, wealth, and relationships",
+        "Personal, Professional, and Spiritual growth"
       ],
       "whoCanJoin": [
-        "Anyone feeling stuck, anxious, or facing financial blocks",
-        "Seekers wanting to tune and balance their 9 energy chakras",
-        "Individuals looking to master the Law of Attraction scientifically",
-        "Business owners aiming to scale their mindset for abundance"
+        "Sadhaks wanting to deepen their Gayatri practice",
+        "Seekers looking for peace, health, and prosperity in daily life",
+        "Spiritual trainers and energy healers wanting to learn sound therapies",
+        "Anyone looking to build a powerful protective auric shield"
       ],
-      "whyChoose": "This workshop is structured around highly practical and scientific techniques (Water Glass, Mirror, Alpha Activation) to deliver instant results.",
+      "whyChoose": "This comprehensive 15-day mentorship program provides authentic activation of the 24 powers of Gayatri Quantum Energy, Yagya therapy training, and official authorization to guide others.",
       "faqs": [
         {
-          "q": "What are the bonuses included?",
-          "a": "Bonuses: Video Series (Value ₹5,500), 9 Energy Awakening Series (Value ₹5,000), 30 Days Mentorship, Monthly Meditation Sessions."
+          "q": "What is the program investment?",
+          "a": "The total investment is ₹1,18,000 (₹1,00,000 program fee + ₹18,000 GST)."
+        },
+        {
+          "q": "Will I get authorized to give Diksha?",
+          "a": "Yes, this program includes official authorization and the process of giving Gayatri Diksha."
         }
       ],
-      "image": "/subconscious_mind_alpha.png"
+      "image": "/gayatri_mentorship_art.png"
+    },
+    {
+      "id": "mentors-training-program",
+      "title": "Mentor & Authorization Center Program",
+      "subtitle": "Become a Certified Mentor, Trainer & Authorized Center Leader",
+      "category": "Mentor & Center Leadership",
+      "duration": "20 Days Intensive Training + 90 Days Guided Practice",
+      "type": "Training Program",
+      "description": "Become a certified Mentor, Trainer, and Authorized Center Leader. Learn signature program mastery, trainer techniques, diksha authorization, and group sadhana facilitation under direct guidance.",
+      "details": "Program Objective:\n* Become a Certified Mentor & Trainer\n* Operate your own Authorized Training Center\n* Lead spiritual workshops and community consciousness\n* Partner with Team 360 for social & national transformation\n\nWhat You Will Learn:\n* Signature Program Mastery (सिग्नेचर प्रोग्राम की संपूर्ण ट्रेनिंग एवं प्रैक्टिकल समझ)\n* Trainers Trainer Certification (दूसरों को प्रशिक्षित करने की एडवांस तकनीक)\n* Diksha Authorization (गायत्री मंत्र दीक्षा देने हेतु अधिकृत किया जाना)\n* Yagya Vidhan Training (यज्ञ की संपूर्ण प्रक्रिया एवं व्यावहारिक प्रशिक्षण)\n* Group Gayatri Sadhana (सामूहिक साधना करवाने की संपूर्ण प्रैक्टिस)\n* Yagyopavit Process (यज्ञोपवीत प्रदान करने की प्रक्रिया एवं प्रशिक्षण)\n\nAdvanced Spiritual Leadership:\n* Self-Awakening & Panchakosha Activation (आत्मजागरण व पंचकोश जागरण प्रशिक्षण)\n* Spiritual Healing & Spiritual Realization Training\n* Peace, Prosperity & Spiritual Relationship Meditation\n* Blessings Meditation for humanity",
+      "benefits": [
+        "Direct guidance from experienced mentors",
+        "90 Days internship & practical exposure",
+        "Official recognition as an Authorized Mentor",
+        "Comprehensive support for setting up your training center",
+        "National & International networking opportunities",
+        "Holistic personal, professional, and spiritual growth"
+      ],
+      "whoCanJoin": [
+        "Anyone who wants to become a certified Mentor and Trainer",
+        "Individuals looking to start and operate an Authorized Center",
+        "Spiritual seekers wanting to contribute to community consciousness",
+        "Leaders interested in advanced spiritual healing and meditation"
+      ],
+      "whyChoose": "This 20-Day intensive program provides complete signature program training, official authorization, center-setup guidance, and a 90-day internship.",
+      "faqs": [
+        {
+          "q": "What career opportunities are available after completion?",
+          "a": "Graduates can work as certified Mentors, Trainers, operate Authorized Centers, and conduct workshops globally."
+        },
+        {
+          "q": "What is the program fee?",
+          "a": "The program fee is ₹2,00,000 + 18% GST (₹36,000), making the total investment ₹2,36,000."
+        }
+      ],
+      "image": "/pranayama_breath.png"
     }
   ],
   products: [
@@ -170,7 +222,7 @@ const DEFAULT_CONTENT = {
       "amazonLink": "https://amzn.in/d/02lgYQOX",
       "badge": "Must Read",
       "badgeColor": "bg-amber-100 text-amber-700",
-      "tagline": "Unleash your mind's true capability through Vedic brain reconditioning.",
+      "tagline": "Unleash your mind's true capability through Gayatri Science brain reconditioning.",
       "accent": "from-[#ff7e5f] to-[#feb47b]",
       "rating": 5
     },
@@ -192,11 +244,11 @@ const DEFAULT_CONTENT = {
       "title": "आत्मज्ञान - पुष्पमाला (अध्यात्म ज्ञान सरल भाषा में ) By Devendra Dutt Sharma",
       "price": 495,
       "image": "https://m.media-amazon.com/images/I/417JkJIcdQL._SY445_SX342_FMwebp_.jpg",
-      "description": "A collection of profound spiritual discourses explaining Vedic wisdom, self-realization, and the science of consciousness in simple, daily language.",
+      "description": "A collection of profound spiritual discourses explaining Gayatri Science wisdom, self-realization, and the science of consciousness in simple, daily language.",
       "amazonLink": "https://amzn.in/d/08wEvQab",
       "badge": "Life Transformation",
       "badgeColor": "bg-amber-100 text-amber-700",
-      "tagline": "Ancient Vedic wisdom and self-realization decoded in simple language.",
+      "tagline": "Ancient Gayatri Science wisdom and self-realization decoded in simple language.",
       "accent": "from-[#ff7e5f] to-[#feb47b]",
       "rating": 5
     },
@@ -449,26 +501,26 @@ export const useAdminContent = (collName) => {
 // Legacy auth status checks for backward compatibility
 export const getAdminAccount = () => {
   if (typeof window === 'undefined') return null;
-  return safeJsonParse(window.localStorage.getItem('t360_v4_account'), null);
+  return safeJsonParse(window.localStorage.getItem('t360_v5_account'), null);
 };
 
 export const saveAdminAccount = (account) => {
   if (typeof window !== 'undefined') {
-    window.localStorage.setItem('t360_v4_account', JSON.stringify(account));
+    window.localStorage.setItem('t360_v5_account', JSON.stringify(account));
   }
 };
 
 export const isAdminLoggedIn = () => {
   if (typeof window === 'undefined') return false;
-  return window.localStorage.getItem('t360_v4_session') === 'active';
+  return window.localStorage.getItem('t360_v5_session') === 'active';
 };
 
 export const setAdminSession = (isActive) => {
   if (typeof window !== 'undefined') {
     if (isActive) {
-      window.localStorage.setItem('t360_v4_session', 'active');
+      window.localStorage.setItem('t360_v5_session', 'active');
     } else {
-      window.localStorage.removeItem('t360_v4_session');
+      window.localStorage.removeItem('t360_v5_session');
     }
   }
 };

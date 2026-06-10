@@ -98,7 +98,7 @@ export default function App() {
           }
         `}</style>
         <a
-          href="https://wa.me/916376779062?text=Hello%20Team%20360!%20I%20am%20visiting%20your%20website%20and%20would%20like%20to%20enquire%20about%20your%20mind%20training%20courses%2C%20workshops%2C%20or%20publications.%20Please%20guide%20me!"
+          href="https://wa.me/916376779062?text=Hello%20Team%20360!%20I%20am%20visiting%20your%20website%20and%20would%20like%20to%20enquire%20about%20your%20mind%20training%20courses%2C%20workshops%2C%20or%20spiritual%20and%20motivational%20books.%20Please%20guide%20me!"
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] hover:bg-[#20BA56] text-white rounded-full flex items-center justify-center shadow-xl shadow-black/30 hover:scale-110 active:scale-95 transition-all duration-300 hover:rotate-6 flex-shrink-0 cursor-pointer animate-whatsapp-float"
