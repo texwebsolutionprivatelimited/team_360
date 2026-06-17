@@ -5,7 +5,7 @@ import Footer from './components/Footer';
 import ContactModal from './components/ContactModal';
 import Home from './pages/Home';
 import About from './pages/About';
-import ProductsPage from './pages/ProductsPage';
+import BooksPage from './pages/BooksPage';
 import CoursesPage from './pages/CoursesPage';
 import CourseDetailsPage from './pages/CourseDetailsPage';
 import BlogPage from './pages/BlogPage';
@@ -70,7 +70,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home onOpenModal={handleOpenModal} onAddToCart={handleAddToCart} />} />
           <Route path="/about" element={<About />} />
-          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/books" element={<BooksPage />} />
           <Route path="/courses" element={<CoursesPage onOpenModal={handleOpenModal} />} />
           <Route path="/courses/:id" element={<CourseDetailsPage />} />
           <Route path="/blog" element={<BlogPage />} />

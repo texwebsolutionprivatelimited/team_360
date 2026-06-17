@@ -116,7 +116,7 @@ export default function Footer({ onOpenModal }) {
                 <svg className="w-5 h-5 fill-white group-hover:fill-[#1877F2] transition-colors" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" /></svg>
               </a>
               <a
-                href="https://wa.me/916376779062?text=Hello%20Team%20360%20Support!%20I%20would%20like%20to%20enquire%20about%20your%20spiritual%20courses%2C%20workshops%2C%20or%20blessed%20crystal%20products.%20Please%20guide%20me!"
+                href="https://wa.me/916376779062?text=Hello%20Team%20360%20Support!%20I%20would%20like%20to%20enquire%20about%20your%20spiritual%20courses%2C%20workshops%2C%20or%20motivational%20books.%20Please%20guide%20me!"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:border-emerald-500/40 hover:bg-emerald-500/5 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center shadow-md cursor-pointer group"
@@ -138,7 +138,7 @@ export default function Footer({ onOpenModal }) {
                 { label: 'Home', href: '/' },
                 { label: 'About Us', href: '/about' },
                 { label: 'All Courses', href: '/courses' },
-                { label: 'Bookstore', href: '/products' },
+                { label: 'Bookstore', href: '/books' },
                 { label: 'Blog', href: '/blog' },
                 { label: 'Contact', href: '/contact' },
               ].map(({ label, href }) => (

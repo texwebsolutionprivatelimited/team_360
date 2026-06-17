@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Gem, Star, Shield, Zap, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAdminContent } from '../admin/contentStore';
 
-export default function Products({ limit }) {
+export default function BooksGrid({ limit }) {
   const products = useAdminContent('products');
   const [searchParams, setSearchParams] = useSearchParams();
   const itemsPerPage = 12;
@@ -265,7 +265,7 @@ export default function Products({ limit }) {
         {limit && (
           <div className="mt-6 sm:mt-8 text-center">
             <Link
-              to="/products"
+              to="/books"
               className="inline-flex items-center gap-2 bg-[#2A0D04] hover:bg-[#6B2D17] text-white font-black text-xs sm:text-sm px-4 sm:px-8 py-3.5 sm:py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-[#2A0D04]/15 active:scale-95 uppercase tracking-widest border border-white/10 whitespace-nowrap"
             >
               <span className="hidden sm:inline">Explore All Spiritual &amp; Motivational Books</span>

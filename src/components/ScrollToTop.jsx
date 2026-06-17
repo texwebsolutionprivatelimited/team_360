@@ -18,7 +18,7 @@ const SEO_MAP = {
     title: '1-to-1 Subconscious & Mind Coaching | D.D. Sharma Ji',
     desc: 'Book a private personal coaching session with D.D. Sharma Ji to reprogram your mind, resolve life goals, and build peak leadership skills.'
   },
-  '/products': {
+  '/books': {
     title: 'Spiritual & Motivational Books | Team 360 Bookstore',
     desc: 'Shop spiritual and motivational books by D.D. Sharma Ji including Mindset Badlo Aur Crorepatibano, Gayatri Quantum Energy, and daily journals.'
   },
@@ -52,7 +52,7 @@ export default function ScrollToTop() {
     window.scrollTo(0, 0);
 
     // 2. Set dynamic Google SEO values for static pages
-    // (Details pages like /courses/:id, /products/:id, /blog/:id manage their own titles dynamically)
+    // (Details pages like /courses/:id, /books/:id, /blog/:id manage their own titles dynamically)
     if (SEO_MAP[pathname]) {
       const { title, desc } = SEO_MAP[pathname];
       document.title = title;

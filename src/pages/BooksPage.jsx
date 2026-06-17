@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Products from '../components/Products';
 import { BookOpen, Sparkles, Copy, Check, Book, Sun, CheckCircle } from 'lucide-react';
+import BooksGrid from '../components/BooksGrid';
 
-export default function ProductsPage() {
+export default function BooksPage() {
   // Calculator States
   const [auraName, setAuraName] = useState('');
   const [auraZodiac, setAuraZodiac] = useState('Aries');
@@ -159,8 +159,8 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      {/* Render Products Grid Component */}
-      <Products />
+      {/* Render Books Grid Component */}
+      <BooksGrid />
 
       {/* 🔮 Interactive Mindset Book Match Calculator */}
       <div className="hidden xs:block mt-6 sm:mt-12 bg-gradient-to-br from-[#2A0D04] via-[#6B2D17] to-[#120502] text-white rounded-[1.5rem] sm:rounded-[2.5rem] p-3.5 sm:p-10 lg:p-12 border-2 border-amber-500/30 relative overflow-hidden shadow-2xl w-[calc(100%_-_1.5rem)] sm:max-w-[95%] mx-auto mb-12 sm:mb-16">

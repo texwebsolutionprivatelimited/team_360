@@ -33,7 +33,7 @@ export default function PrivacyPolicy() {
             We respect your privacy. Here is how we collect, use, and protect your personal information.
           </p>
           <p className="text-xs text-gray-400 mt-3 font-medium">
-            Last updated: June 2025 &nbsp;·&nbsp; Team 360
+            Last updated: June 2026 &nbsp;·&nbsp; Team 360
           </p>
         </div>
       </div>
@@ -47,7 +47,7 @@ export default function PrivacyPolicy() {
               Welcome to <strong className="text-[#2A0D04]">Team 360</strong> ("we", "us", or "our"). We are
               committed to protecting your personal information and your right to privacy. This Privacy Policy
               explains how we collect, use, and share information when you visit our website or purchase our
-              courses, workshops, and crystal products.
+              courses, workshops, and transformational books.
             </p>
           </Section>
 
@@ -64,7 +64,7 @@ export default function PrivacyPolicy() {
           <Section title="How We Use Your Information">
             <p>We use the information we collect to:</p>
             <ul className="list-disc list-inside space-y-1.5">
-              <li>Process your orders and deliver courses or products.</li>
+              <li>Process your orders and deliver courses or books.</li>
               <li>Respond to your inquiries and provide customer support.</li>
               <li>Send you updates about new courses, workshops, or offers (only if you opt-in).</li>
               <li>Improve our website and services.</li>

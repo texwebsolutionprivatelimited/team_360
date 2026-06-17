@@ -6,7 +6,7 @@ import Expertise from '../components/Expertise';
 import Offerings from '../components/Offerings';
 import FeaturesGrid from '../components/FeaturesGrid';
 import GayatriMantraScience from '../components/GayatriMantraScience';
-import Products from '../components/Products';
+import BooksGrid from '../components/BooksGrid';
 import VideoReviews from '../components/VideoReviews';
 import Testimonials, { WriteTestimonialForm } from '../components/Testimonials';
 import Blog from '../components/Blog';
@@ -99,7 +99,7 @@ export default function Home({ onOpenModal, onAddToCart }) {
       <Offerings onOpenModal={onOpenModal} />
       <FeaturesGrid />
       <GayatriMantraScience />
-      <Products limit={4} />
+      <BooksGrid limit={4} />
       <AboutBrief />
       <PhotoGallery />
       <NewsTestimonials />

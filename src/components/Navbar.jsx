@@ -29,7 +29,7 @@ export default function Navbar({ onOpenModal, cart = [], onRemoveFromCart, onCle
 
     if (path === '/about') {
       setActiveSection('About');
-    } else if (path === '/products' || path.startsWith('/products/')) {
+    } else if (path === '/books' || path.startsWith('/books/')) {
       setActiveSection('Books');
     } else if (path === '/blog' || path.startsWith('/blog/')) {
       setActiveSection('Blog');
@@ -46,7 +46,7 @@ export default function Navbar({ onOpenModal, cart = [], onRemoveFromCart, onCle
     { name: 'Home', href: '/', icon: <Home className="w-5 h-5" /> },
     { name: 'About', href: '/about', icon: <User className="w-5 h-5" /> },
     { name: 'Courses', href: '/courses', icon: <BookOpen className="w-5 h-5" /> },
-    { name: 'Books', href: '/products', icon: <BookMarked className="w-5 h-5" /> },
+    { name: 'Books', href: '/books', icon: <BookMarked className="w-5 h-5" /> },
   ];
 
   const secondLinks = [

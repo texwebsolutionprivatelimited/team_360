@@ -33,7 +33,7 @@ export default function TermsAndConditions() {
             Please read these terms carefully before using our website or purchasing our services.
           </p>
           <p className="text-xs text-gray-400 mt-3 font-medium">
-            Last updated: June 2025 &nbsp;·&nbsp; Team 360
+            Last updated: June 2026 &nbsp;·&nbsp; Team 360
           </p>
         </div>
       </div>
@@ -45,7 +45,7 @@ export default function TermsAndConditions() {
           <Section title="Acceptance of Terms">
             <p>
               By accessing or using the <strong className="text-[#2A0D04]">Team 360</strong> website, purchasing
-              any of our courses, workshops, or products, you agree to be bound by these Terms &amp; Conditions.
+              any of our courses, workshops, or books, you agree to be bound by these Terms &amp; Conditions.
               If you do not agree, please do not use our services.
             </p>
           </Section>
@@ -53,10 +53,10 @@ export default function TermsAndConditions() {
           <Section title="Our Services">
             <p>Team 360 offers the following services:</p>
             <ul className="list-disc list-inside space-y-1.5">
-              <li>Online and offline spiritual healing courses and workshops.</li>
-              <li>One-on-one healing attunement sessions with Devendra Sharma (D.D. Sharma).</li>
-              <li>Energized crystal and spiritual products.</li>
-              <li>Guided meditations and spiritual content via our blog and YouTube channel.</li>
+              <li>Online and offline mind training courses, spiritual healing programs, and workshops.</li>
+              <li>One-on-one healing attunement sessions and consultations with Devendra Sharma (D.D. Sharma).</li>
+              <li>Transformational, self-development, and motivational books.</li>
+              <li>Guided meditations and spiritual content via our blog and YouTube channels.</li>
             </ul>
             <p>
               We reserve the right to change, suspend, or discontinue any of our services at any time with
@@ -99,7 +99,7 @@ export default function TermsAndConditions() {
 
           <Section title="Disclaimer — Spiritual Services">
             <p>
-              Our courses, sessions, and products are designed to support your spiritual and personal well-being.
+              Our courses, sessions, and books are designed to support your spiritual and personal well-being.
               They are <strong className="text-[#2A0D04]">not a substitute for professional medical, psychological,
               or legal advice</strong>.
             </p>
@@ -113,7 +113,7 @@ export default function TermsAndConditions() {
             <p>
               To the fullest extent allowed by law, Team 360 and Devendra Sharma (D.D. Sharma) shall not be liable for
               any indirect, incidental, or consequential damages arising from your use of our services or
-              products, even if we have been advised of the possibility of such damages.
+              books, even if we have been advised of the possibility of such damages.
             </p>
           </Section>
 
@@ -128,7 +128,7 @@ export default function TermsAndConditions() {
           <Section title="Governing Law">
             <p>
               These Terms &amp; Conditions are governed by the laws of <strong className="text-[#2A0D04]">India</strong>.
-              Any disputes will be resolved in the courts of <strong className="text-[#2A0D04]">New Delhi, India</strong>.
+              Any disputes will be resolved in the courts of <strong className="text-[#2A0D04]">Jaipur, Rajasthan, India</strong>.
             </p>
           </Section>
 

@@ -33,7 +33,7 @@ export default function RefundPolicy() {
             Your satisfaction matters to us. Read our clear and fair refund guidelines below.
           </p>
           <p className="text-xs text-gray-400 mt-3 font-medium">
-            Last updated: June 2025 &nbsp;·&nbsp; Team 360
+            Last updated: June 2026 &nbsp;·&nbsp; Team 360
           </p>
         </div>
       </div>
@@ -45,19 +45,19 @@ export default function RefundPolicy() {
           <Section title="Our Refund Philosophy">
             <p>
               At <strong className="text-[#2A0D04]">Team 360</strong>, we put our heart and soul into every
-              course, workshop, attunement, and crystal product we offer. We want every customer to feel completely
+              course, workshop, recorded masterclass, and transformational book we offer. We want every customer to feel completely
               happy and confident with their purchase. Please read our refund policy carefully before making a purchase.
             </p>
           </Section>
 
           <Section title="Digital Courses & Workshops">
             <p>
-              Because our digital courses and workshop recordings are delivered <strong className="text-[#2A0D04]">instantly</strong> upon
-              purchase, we generally do not offer refunds once the content has been accessed or downloaded.
+              Because our digital courses and workshop recordings (including the Quantum Jump recorded masterclass) are delivered <strong className="text-[#2A0D04]">instantly</strong> upon
+              purchase or sent via direct access links, we generally do not offer refunds once the content has been shared, accessed, or downloaded.
             </p>
             <p>
               However, if you experience a <strong className="text-[#2A0D04]">technical issue</strong> that prevents you from accessing
-              the content, or if the course content is significantly different from what was described, please contact us within
+              the recorded sessions, or if the course content is significantly different from what was described, please contact us within
               <strong className="text-[#2A0D04]"> 7 days</strong> of purchase and we will do our best to resolve the issue or offer a replacement.
             </p>
           </Section>
@@ -74,21 +74,21 @@ export default function RefundPolicy() {
             </p>
           </Section>
 
-          <Section title="Crystal Products & Physical Items">
+          <Section title="Books & Physical Items">
             <p>
-              We accept returns for physical crystal products within <strong className="text-[#2A0D04]">7 days</strong> of
+              We accept returns for physical books and publications within <strong className="text-[#2A0D04]">7 days</strong> of
               delivery if:
             </p>
             <ul className="list-disc list-inside space-y-1.5">
-              <li>The item arrives <strong className="text-[#2A0D04]">damaged or broken</strong> (please share a photo or video as proof).</li>
-              <li>You received the <strong className="text-[#2A0D04]">wrong item</strong>.</li>
+              <li>The book arrives <strong className="text-[#2A0D04]">damaged, misprinted, or torn</strong> (please share a photo or video as proof).</li>
+              <li>You received the <strong className="text-[#2A0D04]">wrong book title</strong>.</li>
             </ul>
             <p>
-              Items must be returned in their original packaging and unused condition. Return shipping costs are the
+              Books must be returned in their original packaging and unread, unused condition. Return shipping costs are the
               responsibility of the customer unless the return is due to our error.
             </p>
             <p>
-              We do <strong className="text-[#2A0D04]">not</strong> accept returns for change of mind on physical products.
+              We do <strong className="text-[#2A0D04]">not</strong> accept returns for change of mind on physical books.
             </p>
           </Section>
 
