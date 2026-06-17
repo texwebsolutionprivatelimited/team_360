@@ -2,50 +2,50 @@ import React, { useState } from 'react';
 import { Camera, X, ChevronLeft, ChevronRight, Sparkles, ZoomIn } from 'lucide-react';
 
 // Import the 5 newly uploaded high-quality photos
-import gallery1 from '../assets/dd_sharma_gallery_1.png';
-import gallery2 from '../assets/dd_sharma_gallery_2.png';
-import gallery3 from '../assets/dd_sharma_gallery_3.png';
-import gallery4 from '../assets/dd_sharma_gallery_4.png';
-import gallery5 from '../assets/dd_sharma_gallery_5.png';
+import gallery1 from '../assets/dd_sharma_gallery_1.jpg';
+import gallery2 from '../assets/dd_sharma_gallery_2.jpg';
+import gallery3 from '../assets/dd_sharma_gallery_3.jpg';
+import gallery4 from '../assets/dd_sharma_gallery_4.jpg';
+import gallery5 from '../assets/dd_sharma_gallery_5.jpg';
 
 export default function PhotoGallery() {
   const [activeImageIdx, setActiveImageIdx] = useState(null);
 
   const images = [
     {
-      src: gallery2,
-      tag: "Podcasting Studio",
-      alt: "Devendra Sharma (D.D. Sharma) podcasting with microphone in armchair",
-      title: "Soulful Podcasting Insights",
-      desc: "Delivering deep wisdom on manifestation, alignment, and emotional release."
+      src: gallery1,
+      tag: "Podcast Session",
+      alt: "Devendra Sharma Ji speaking into a microphone during a podcast recording session",
+      title: "Wisdom Sharing Podcast",
+      desc: "Devendra Sharma Ji delivering deep guidance on subconscious reprogramming and Gayatri science in a live podcast studio session."
     },
     {
-      src: gallery1,
-      tag: "Guest Session",
-      alt: "Devendra Sharma (D.D. Sharma) with guests in professional podcast studio",
-      title: "Spiritual Podcast Guest Session",
-      desc: "Sharing high-vibrational guidance with seekers during a live studio recording."
+      src: gallery2,
+      tag: "Book Launch",
+      alt: "D.D. Sharma presenting his book to an elder guest alongside a Team 360 female member",
+      title: "Launching 'Read Stories & Become Rich'",
+      desc: "D.D. Sharma Ji presenting his popular book to a senior dignitary and Team 360 member, facilitating spiritual and financial literacy."
     },
     {
       src: gallery3,
-      tag: "Co-Facilitators & Guest",
-      alt: "Devendra Sharma (D.D. Sharma), Co-Facilitator Bhavya Chudasama, and a guest celebrating spiritual alignment",
-      title: "Celebrating Alignment & Success",
-      desc: "Bhavya Chudasama co-guides this sacred platform with D.D. Sharma, bridging high-frequency healing with practical lifestyle transformation."
+      tag: "Author Presentation",
+      alt: "D.D. Sharma presenting Atmagyan-Pushpamala book to a guest in blue blazer with pink garland",
+      title: "Presenting 'Atmagyan-Pushpamala'",
+      desc: "Honoring guests and seekers by presenting spiritual books to guide their journey toward peak performance and self-realization."
     },
     {
       src: gallery4,
-      tag: "Book Presentation",
-      alt: "Devendra Sharma (D.D. Sharma) receiving 'Manifest anything in 100 days' book from a guest",
-      title: "A Gift of Manifestation",
-      desc: "Devendra Sharma (D.D. Sharma) receiving the book 'Manifest anything in 100 days' as a presentation from a grateful guest seeker."
+      tag: "International Award",
+      alt: "Poster showing D.D. Sharma receiving the USA Gold Star Award in Florida",
+      title: "USA Gold Star Recognition",
+      desc: "D.D. Sharma Ji receiving the prestigious Gold Star Award from Dr. Howard Jacobson in Orlando, Florida, for his contributions to brain training."
     },
     {
       src: gallery5,
-      tag: "Divine Flow",
-      alt: "Devendra Sharma (D.D. Sharma) gesturing dynamically on podcast",
-      title: "Flow of Spiritual Wisdom",
-      desc: "Guiding the subconscious mind towards clarity and unshakeable inner peace."
+      tag: "Felicitation Ceremony",
+      alt: "D.D. Sharma Ji draping a white shawl over a guest wearing a pink garland",
+      title: "Honoring Sacred Seekers",
+      desc: "Felicitation and welcoming ceremony where D.D. Sharma Ji honors students, trainers, and guests with a traditional shawl and garland."
     }
   ];
 

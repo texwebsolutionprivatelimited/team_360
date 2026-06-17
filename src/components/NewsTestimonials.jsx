@@ -29,9 +29,9 @@ export default function NewsTestimonials() {
     {
       src: news6,
       tag: "Franchise Milestone",
-      title: "Record 490 Franchises Awarded Nationally",
-      desc: "Team 360 sets a national record by successfully awarding 490 training franchises across states.",
-      alt: "Newspaper clipping: Team 360 set record by giving 490 franchises"
+      title: "Record 940+ Franchises Awarded Nationally",
+      desc: "Team 360 sets a national record by successfully awarding 940+ training franchises across states.",
+      alt: "Newspaper clipping: Team 360 set record by giving 940+ franchises"
     },
     {
       src: news7,

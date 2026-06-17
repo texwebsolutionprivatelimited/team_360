@@ -148,7 +148,7 @@ export default function AboutBrief() {
               <div className="w-16 h-1 bg-gradient-to-r from-[#FFD95A] to-[#F5A623] mx-auto lg:mx-0 rounded-full" />
 
               <p className="text-white/70 text-xs sm:text-sm font-semibold leading-relaxed">
-                Devendra Sharma (D.D. Sharma Ji) is a world-renowned mind trainer, memory coach, and founder of Team 360. With over 32 years of training experience, he is a certified Silva Ultramind facilitator, Alpha Mind power expert, and 7 Habits practitioner. He has been honored with prestigious recognitions, including the Gold Star Award (USA) and the CEO Burj Award (Dubai) for his outstanding contribution to brain empowerment, peak performance, and subconscious programming.
+                Devendra Sharma (D.D. Sharma Ji) is a world-renowned mind trainer, memory coach, and founder of Team 360. With over 32 years of experience as a senior government officer and international mind trainer, he is a certified Silva Ultramind facilitator, Alpha Mind power expert, and 7 Habits practitioner. He has been honored with prestigious recognitions, including the Gold Star Award (USA) and the CEO Burj Award (Dubai) for his outstanding contribution to brain empowerment, peak performance, and subconscious programming.
               </p>
 
               {/* Unique bullet features with golden badges */}
@@ -157,7 +157,7 @@ export default function AboutBrief() {
                   <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 border border-white/10">
                     <Compass className="w-4 h-4 text-[#FFD95A]" />
                   </div>
-                  <span className="text-[11px] sm:text-xs font-bold text-white/80">32+ Years Training Journey</span>
+                  <span className="text-[11px] sm:text-xs font-bold text-white/80">32+ Years as Senior Gov. Officer</span>
                 </div>
                 <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-4 py-3 rounded-2xl backdrop-blur-sm shadow-sm hover:bg-white/10 transition-colors">
                   <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 border border-white/10">

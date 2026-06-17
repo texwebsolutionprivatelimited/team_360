@@ -146,13 +146,13 @@ export default function Expertise({ onOpenModal }) {
             },
             {
               icon: <Users className="w-5 h-5 sm:w-6 sm:h-6 text-[#FFD95A]" />,
-              title: "490+ National Franchises",
-              desc: "Set a nationwide record by establishing over 490 successful brain training and DMIT franchises across India."
+              title: "940+ National Franchises",
+              desc: "Set a nationwide record by establishing over 940 successful brain training and DMIT franchises across India."
             },
             {
               icon: <Award className="w-5 h-5 sm:w-6 sm:h-6 text-[#FFD95A]" />,
-              title: "32+ Years of Mastery",
-              desc: "Empowered more than 100,000+ students, business leaders, and seekers globally through verified training methodologies."
+              title: "32+ Years as Senior Gov. Officer",
+              desc: "Retired senior government officer with over 32 years of service, dedicating his life to training and empowering seekers globally."
             }
           ].map((item, index) => (
             <div

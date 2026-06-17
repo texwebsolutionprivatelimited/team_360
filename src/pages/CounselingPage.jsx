@@ -246,9 +246,9 @@ export default function CounselingPage() {
                       <Star className="w-4 h-4" />
                     </div>
                     <div>
-                      <h4 className="font-serif font-black text-sm sm:text-base text-[#2A0D04]">32+ Years of Trusted Experience</h4>
+                      <h4 className="font-serif font-black text-sm sm:text-base text-[#2A0D04]">32+ Years as Senior Gov. Officer</h4>
                       <p className="text-[11px] sm:text-xs text-gray-600 font-semibold mt-0.5">
-                        Guided thousands of corporate leaders and seekers around the world to find peace, health, and complete success.
+                        Over 32 years of experience as a senior government officer and international mind trainer guiding seekers worldwide.
                       </p>
                     </div>
                   </div>

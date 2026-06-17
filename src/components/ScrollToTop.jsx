@@ -8,7 +8,7 @@ const SEO_MAP = {
   },
   '/about': {
     title: 'About D.D. Sharma Ji | Founder of Team 360',
-    desc: 'Meet Devendra Sharma (D.D. Sharma Ji), USA Gold Star Awardee and Burj Awardee, with 32+ years of experience helping corporate leaders and seekers achieve peak performance.'
+    desc: 'Meet Devendra Sharma (D.D. Sharma Ji), USA Gold Star Awardee, Burj Awardee, and former senior government officer with over 32+ years of experience.'
   },
   '/courses': {
     title: 'Training Programs & Workshops | Team 360',

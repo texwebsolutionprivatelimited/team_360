@@ -381,7 +381,7 @@ export default function ContactPage() {
           </h2>
           
           <p className="text-white/70 text-[11px] sm:text-sm font-semibold max-w-3xl mx-auto mb-6 sm:mb-10 leading-relaxed">
-            Every course, training program, and book is guided and authorized under D.D. Sharma Ji's direction. We promise to support your transformation with complete dedication, scientific frameworks, and over 32+ years of expert training mastery.
+            Every course, training program, and book is guided and authorized under D.D. Sharma Ji's direction. We promise to support your transformation with complete dedication, scientific frameworks, and over 32+ years of experience as a senior government officer and mind trainer.
           </p>
 
           {/* Three Crystalline Cards Grid */}
@@ -432,10 +432,10 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h4 className="text-xs sm:text-sm font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-                    32+ Years of Experience
+                    32+ Years as Senior Gov. Officer
                   </h4>
                   <p className="text-[11px] font-bold text-white/50 mt-2 leading-relaxed">
-                    Access decades of direct mindset coaching, scientific breathing, and energy training under D.D. Sharma Ji.
+                    Access over 32 years of experience as a senior government officer combined with international mindset coaching.
                   </p>
                 </div>
               </div>

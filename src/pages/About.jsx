@@ -167,7 +167,7 @@ export default function About() {
 
               <div className="space-y-4 text-gray-600 text-xs sm:text-sm font-medium leading-relaxed">
                 <p className="font-bold text-[#2A0D04] text-sm sm:text-base">
-                  Devendra Sharma (D.D. Sharma Ji) is a highly respected mind trainer and spiritual guide with over 32 years of experience.
+                  Devendra Sharma (D.D. Sharma Ji) is a highly respected mind trainer, spiritual guide, and former senior government officer with over 32 years of experience.
                 </p>
                 <p>
                   Recipient of the Gold Star Award (USA) and the CEO Burj Award (Dubai), he has spent decades integrating the ancient science of Gayatri Quantum Energy, Swar Vigyan, and elements with modern mind training systems like Silva Ultramind and Alpha Mind control.
