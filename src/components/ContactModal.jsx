@@ -63,6 +63,7 @@ export default function ContactModal({ isOpen, onClose }) {
     'Gayatri Mentorship Program (₹1,18,000)',
     'Trainer Program (₹59,000)',
     'Introductory & Signature Program (₹11,800)',
+    'Quantum Jump (Recorded Session) (₹35,400)',
     '1-on-1 Private Consultation',
     'General Query / Guidance'
   ];

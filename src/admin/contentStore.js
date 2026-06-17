@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 export const CONTENT_UPDATED_EVENT = 't360-content-updated-v5';
 
 const STORAGE_KEYS = {
-  courses: 't360_v7_courses',
+  courses: 't360_v9_courses',
   products: 't360_v5_products',
   blogs: 't360_v5_blogs',
   contacts: 't360_v5_contacts',
@@ -158,6 +158,44 @@ const DEFAULT_CONTENT = {
         }
       ],
       "image": "/pranayama_breath.png"
+    },
+    {
+      "id": "quantum-jump",
+      "title": "Quantum Jump (Miracles of Gayatri Energy)",
+      "subtitle": "5 Days Recorded Session (1.5 Hours/Day)",
+      "category": "Gayatri Sadhana & Mentorship",
+      "duration": "5 Days Recorded Course",
+      "type": "Recorded Session",
+      "description": "Experience the miracles of Gayatri Energy. Cleanse fear, guilt, grief, anger, and anxiety; trigger happy hormones (GABA, Dopamine); and manifest money abundance, sweet relations, and sound health.",
+      "details": "What You Will Experience:\n* 1. Removal of Fear, Guilt & Grief\n* 2. Removal of Misery, Suffering & Anger\n* 3. Removal of Ego & Anxiety\n* 4. Reduction of Overthinking & Distress\n* 5. Relief from Obsessive Thought Patterns (OCD-like Tendencies)\n* 6. Relief from Emotional & Mental Pain\n\nSecretion of Happy Hormones:\n* Dopamine, Serotonin, Melatonin, Oxytocin, GABA, and Endorphins\n\nAttraction and Manifestation Power:\n* Abundance Money & Career Growth\n* Sweet Relationships & Harmony\n* Sound Health & Cure of Chronic Diseases\n* Recognition & Social Meaningful Contribution",
+      "benefits": [
+        "Removal of Fear, Guilt & Grief (भय, ग्लानि और शोक से मुक्ति)",
+        "Removal of Anger, Ego & Anxiety (क्रोध, अहंकार और चिंता से मुक्ति)",
+        "Reduction of Overthinking & OCD-like patterns (अत्यधिक सोचना और ओसीडी से राहत)",
+        "Happy Hormones Secretion - Dopamine, Serotonin, GABA (हैप्पी हार्मोन्स एक्टिवेशन)",
+        "Cure of Chronic Diseases & Health Challenges (पुरानी बीमारियों से राहत)",
+        "Manifesting Money Abundance & Success (धन आकर्षण और समृद्धि)",
+        "Sweet Relationships & Social Contribution (मधुर रिश्ते और सामाजिक योगदान)",
+        "Power of Attraction & Recognition (आकर्षण शक्ति और सम्मान)"
+      ],
+      "whoCanJoin": [
+        "Anyone suffering from overthinking, anxiety, or deep emotional pain",
+        "Seekers wanting to overcome fear, guilt, anger, or ego blocks",
+        "Individuals looking to cure chronic health challenges naturally",
+        "People wanting to attract wealth, sweet relations, and social recognition"
+      ],
+      "whyChoose": "This 5-day recorded masterclass connects the spiritual frequencies of Gayatri Energy with biological hormone balance to deliver healing, peace, and abundance.",
+      "faqs": [
+        {
+          "q": "What is the course investment?",
+          "a": "The investment is ₹30,000 + 18% GST (₹5,400), making a total of ₹35,400."
+        },
+        {
+          "q": "How do I purchase the recorded sessions?",
+          "a": "Click the register button to connect with our team on WhatsApp. Once payment is confirmed, you will receive lifetime access to the recordings."
+        }
+      ],
+      "image": "/quantum_jump_gayatri.png"
     }
   ],
   products: [
