@@ -131,7 +131,7 @@ export default function Hero({ onOpenModal }) {
       `}</style>
 
       {/* ─── DESKTOP/LAPTOP VERSION (100% Original Layout & Titles) ─── */}
-      <section className="hidden lg:flex relative w-full h-[calc(100vh-72px)] mt-[72px] flex-row overflow-hidden bg-cosmic-darkest">
+      <section className="hidden lg:flex relative w-full h-[calc(100vh-64px)] mt-[64px] flex-row overflow-hidden bg-cosmic-darkest">
         {desktopPanels.map((p) => (
           <div
             key={p.id}
@@ -180,7 +180,7 @@ export default function Hero({ onOpenModal }) {
       </section>
 
       {/* ─── MOBILE/TABLET VERSION (Interactive Tab Accordion & M.A.G.I.C. Pillars) ─── */}
-      <section className="relative w-full h-[46vh] min-h-[300px] md:h-[58vh] md:min-h-[420px] mt-16 flex lg:hidden flex-row overflow-hidden bg-[#1E003B]">
+      <section className="relative w-full h-[46vh] min-h-[300px] md:h-[58vh] md:min-h-[420px] mt-[46px] flex lg:hidden flex-row overflow-hidden bg-[#1E003B]">
         {mobilePanels.map((p) => {
           const isActive = activeId === p.id;
           return (

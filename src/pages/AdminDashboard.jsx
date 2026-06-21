@@ -95,7 +95,19 @@ export default function AdminDashboard() {
         setLoginError('Access denied: User is not an Administrator.');
       }
     } catch(err) {
-      setLoginError(err.message || 'Invalid credentials');
+      const code = err?.code || '';
+      const msg = err?.message || '';
+      if (code === 'auth/user-not-found' || msg.includes('user-not-found')) {
+        setLoginError('This email is not registered as an Administrator.');
+      } else if (code === 'auth/wrong-password' || msg.includes('wrong-password')) {
+        setLoginError('Incorrect password. Please try again.');
+      } else if (code === 'auth/invalid-credential' || msg.includes('invalid-credential')) {
+        setLoginError('Incorrect email or password. Please try again.');
+      } else if (code === 'auth/too-many-requests' || msg.includes('too-many-requests')) {
+        setLoginError('Too many failed attempts. This account has been temporarily disabled. Please try again later.');
+      } else {
+        setLoginError(err.message || 'Invalid credentials');
+      }
     } finally {
       setLoginLoading(false);
     }

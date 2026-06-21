@@ -2,6 +2,35 @@ import React, { useState } from 'react';
 import { X, Sparkles, LogIn, UserPlus, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
 import { loginUser, registerUser, resetUserPassword } from '../admin/contentStore';
 
+const getFriendlyErrorMessage = (err) => {
+  const code = err?.code || '';
+  const message = err?.message || '';
+
+  if (code === 'auth/user-not-found' || message.includes('user-not-found')) {
+    return 'This email is not registered. Please click "Sign Up" above to create an account.';
+  }
+  if (code === 'auth/wrong-password' || message.includes('wrong-password')) {
+    return 'Incorrect password. Please verify and try again, or click "Forgot Password?" below to reset it.';
+  }
+  if (code === 'auth/invalid-credential' || message.includes('invalid-credential')) {
+    return 'Incorrect email or password. If you don\'t have an account yet, click "Sign Up" above to register.';
+  }
+  if (code === 'auth/email-already-in-use' || message.includes('email-already-in-use') || message.includes('User already exists')) {
+    return 'This email is already registered. Please click "Login" above to sign in.';
+  }
+  if (code === 'auth/invalid-email' || message.includes('invalid-email')) {
+    return 'Please enter a valid email address.';
+  }
+  if (code === 'auth/weak-password' || message.includes('weak-password')) {
+    return 'Password is too weak. It must be at least 6 characters.';
+  }
+  if (code === 'auth/too-many-requests' || message.includes('too-many-requests')) {
+    return 'Too many failed login attempts. This account has been temporarily disabled. Please try again later.';
+  }
+  
+  return message || 'An error occurred. Please try again.';
+};
+
 export default function AuthModal({ isOpen, onClose, onSuccess }) {
   const [isLoginTab, setIsLoginTab] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
@@ -64,7 +93,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
         setFormData({ name: '', email: '', password: '', confirmPassword: '' });
       } catch (err) {
         console.error(err);
-        setError(err.message || 'An error occurred. Please try again.');
+        setError(getFriendlyErrorMessage(err));
       } finally {
         setLoading(false);
       }
@@ -92,7 +121,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
       onClose();
     } catch (err) {
       console.error(err);
-      setError(err.message || 'An error occurred. Please try again.');
+      setError(getFriendlyErrorMessage(err));
     } finally {
       setLoading(false);
     }
