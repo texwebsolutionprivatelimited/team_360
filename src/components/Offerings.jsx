@@ -8,7 +8,8 @@ import akashicRecordsImg from '../assets/akashic_records.png';
 import unicornTherapyImg from '../assets/unicorn_healing.png';
 
 export default function Offerings({ onOpenModal }) {
-  const workshops = useAdminContent('courses');
+  const allWorkshops = useAdminContent('courses');
+  const workshops = allWorkshops.filter(w => !(w.isRecorded || w.type === 'Recorded Session'));
   // Get 4 prominent featured programs to display on the Home page
   const featuredIds = ['maha-laxmi-workshop', 'dragon-mastery', 'akashic-records', 'unicorn-therapy'];
   const featuredPrograms = featuredIds.map(id => workshops.find(w => w.id === id)).filter(Boolean);

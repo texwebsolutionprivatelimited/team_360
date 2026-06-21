@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { BookOpen, Sparkles, Brain, Award, Wind, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { isPrivateSession, useAdminContent } from '../admin/contentStore';
-
 export default function CoursesPage() {
   const [searchParams] = useSearchParams();
-  const workshops = useAdminContent('courses');
+  const allWorkshops = useAdminContent('courses');
+  const workshops = allWorkshops.filter(w => !(w.isRecorded || w.type === 'Recorded Session'));
 
   // Internal type filter coming from Navbar Query Parameter (e.g. ?type=Courses)
   const typeParam = searchParams.get('type') || 'All';

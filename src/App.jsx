@@ -16,7 +16,10 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import RefundPolicy from './pages/RefundPolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
 import CounselingPage from './pages/CounselingPage';
-import QuantumJumpVault from './pages/QuantumJumpVault';
+import RecordedCourses from './pages/RecordedCourses';
+import RecordedCourseViewer from './pages/RecordedCourseViewer';
+import MyCourses from './pages/MyCourses';
+import AdminDashboard from './pages/AdminDashboard';
 
 
 export default function App() {
@@ -80,7 +83,10 @@ export default function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/refund-policy" element={<RefundPolicy />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-          <Route path="/exclusive-quantum-jump" element={<QuantumJumpVault />} />
+          <Route path="/recorded-courses" element={<RecordedCourses />} />
+          <Route path="/recorded-courses/:id" element={<RecordedCourseViewer />} />
+          <Route path="/my-courses" element={<MyCourses />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
         </Routes>
 
         {/* Footnote Footer */}

@@ -11,6 +11,7 @@ import hemaPortrait from '../assets/hema_alwani.jpg';
 import umaPortrait from '../assets/uma_tailor.jpg';
 import vineetPortrait from '../assets/vineet_sharma.jpg';
 import vipulPortrait from '../assets/vipul_sharma.png';
+import deepakPortrait from '../assets/deepak_shakya.jpg';
 
 // Custom Youtube Icon SVG to avoid lucide-react version export issues
 const Youtube = ({ className }) => (
@@ -60,6 +61,12 @@ export default function About() {
       designation: "Marketing Manager",
       organization: "TEAM 360",
       image: umaPortrait
+    },
+    {
+      name: "Deepak Shakya",
+      designation: "Digital Marketing Manager",
+      organization: "TEAM 360",
+      image: deepakPortrait
     }
   ];
 

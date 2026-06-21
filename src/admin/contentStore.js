@@ -1,4 +1,23 @@
 import { useEffect, useState } from 'react';
+import { auth, db, isFirebaseEnabled } from './firebaseConfig';
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged,
+  updateProfile
+} from 'firebase/auth';
+import { 
+  collection, 
+  doc, 
+  getDoc, 
+  getDocs, 
+  setDoc, 
+  deleteDoc, 
+  onSnapshot,
+  query,
+  where
+} from 'firebase/firestore';
 
 export const CONTENT_UPDATED_EVENT = 't360-content-updated-v5';
 
@@ -7,7 +26,43 @@ const STORAGE_KEYS = {
   products: 't360_v5_products',
   blogs: 't360_v5_blogs',
   contacts: 't360_v5_contacts',
+  users: 't360_v5_users',
+  purchases: 't360_v5_purchases',
+  settings: 't360_v5_settings',
 };
+
+// Default course modules data to pre-populate Quantum Jump
+const DEFAULT_QUANTUM_JUMP_MODULES = [
+  {
+    id: "m1",
+    title: "Module 1: Foundation & Energy Cleansing",
+    sessions: [
+      { id: "Bk2aXAlT7b0", title: "Session 1: Foundation & Energy Cleansing", desc: "Understanding the Gayatri Quantum energy, subconscious mind basics, and beginning the energy cleansing." },
+      { id: "P7yXpiZnn-Q", title: "Session 2: Day 1 Part 2 - Subconscious Deep Dive", desc: "Advanced molecular water restructuring and element cleansing practice." },
+      { id: "2OKTNA-bs9A", title: "Session 3: Day 2 - Releasing Emotional Blocks", desc: "Techniques to let go of old traumatic memories, fears, and guilt." },
+      { id: "NJ729i3Pcuw", title: "Session 4: Day 3 - Chakra & GABA Activation (v1)", desc: "Sound frequency alignment for pituitary glands and GABA hormone activation." },
+      { id: "v4iX39lrAI4", title: "Session 5: Day 3 - Chakra & GABA Activation (v2)", desc: "Integrating element purification, third eye meditation, and protective auric shielding." }
+    ]
+  },
+  {
+    id: "m2",
+    title: "Module 2: Breath & Swar Vigyan Mastery",
+    sessions: [
+      { id: "vj27rqn3QzI", title: "Session 6: Breath & Swar Vigyan Mastery", desc: "Opening of nostrils (Ida, Pingala), breath control, and daily rhythm alignment." },
+      { id: "SdWbL5ZwTGs", title: "Session 7: Subconscious Reprogramming", desc: "Advanced water glass technique, mirror work, and abundance manifestation." },
+      { id: "Q9zkDdV0N5U", title: "Session 8: Hormones & Energy Realization", desc: "Activating Dopamine, Serotonin, and cosmic protection systems." }
+    ]
+  },
+  {
+    id: "m3",
+    title: "Module 3: Gayatri Sadhana & Manifestation",
+    sessions: [
+      { id: "xR133xwucNs", title: "Session 9: Gayatri Mantra Deep Sadhana", desc: "Solar resonance, daily Savita meditation, and grounding practices." },
+      { id: "COdEmqXCRps", title: "Session 10: Relational Cord Cleansing", desc: "Direct emotional cord cutting, healing family bonds, and attracting sweet relations." },
+      { id: "w8LzEkBs9oc", title: "Session 11: Manifestation Mastery & Abundance", desc: "Finalizing RAS activation, clearing money limits, and attracting social contribution." }
+    ]
+  }
+];
 
 const DEFAULT_CONTENT = {
   courses: [
@@ -22,7 +77,7 @@ const DEFAULT_CONTENT = {
       "details": "What You Will Learn:\n* Vision Clarity: Visual Document & Vision Board creation\n* Mirror Technique: Releasing past pain & traumatic memories\n* Water Glass Technique: Molecular programming for positivity\n* Identity Notebook: Scripting and building a new positive identity\n* Panch Mahabhut Shodhan: Cleansing the five key elements\n* 9 Chakras & Alpha Mind Activation: 7 Habits subconscious scripting\n* Gratitude Writing, Money Meditation & Savita Meditation\n* 27 Days RAS Activation: Filtering success into the brain\n* Aura Protection Shield: Guarding positive daily energy\n\nProgram Objective:\n* Self-Empowerment Level 1 & Confidence Boost\n* Subconscious Mind Programming & Alpha Activation\n* Gaining non-verbal positive energy & happy hormones\n* Activating Money Magnet codes & Divine Blessings\n* Scientific Gayatri experiments that stimulate GABA hormones, calming tension and anxiety.",
       "benefits": [
         "Self-Empowerment Level 1 (खुद में शक्ति और क्षमता बढ़ाना)",
-        "Healing Power (शरीर की बीमारियों को ठीक करने की क्षमता - डॉक्टर की सलाह जरूरी)",
+        "Healing Power (शरीर की बीमारियों को ठीक करने की क्षमता)",
         "Non-Linear Growth (जीवन में तेज़ and अचानक प्रोग्रेस)",
         "Non-Verbal Positive Energy (बिना बोले पॉजिटिव वाइब्स फैलाना)",
         "Happy Hormones Activation (हमेशा खुश, शांत और कूल रहना)",
@@ -42,16 +97,11 @@ const DEFAULT_CONTENT = {
       ],
       "whyChoose": "This workshop is structured around highly practical and scientific techniques (Water Glass, Mirror, Alpha Activation) to deliver instant results.",
       "faqs": [
-        {
-          "q": "What is the program fee?",
-          "a": "The total investment is ₹11,800."
-        },
-        {
-          "q": "What are the bonuses included?",
-          "a": "Bonuses include: Powerful Video Series (Value ₹5,500), 9 Energy Awakening Video Series (Value ₹5,000), 30 Days Mentorship, and Monthly Meditation Sessions."
-        }
+        { "q": "What is the program fee?", "a": "The total investment is ₹11,800." },
+        { "q": "What are the bonuses included?", "a": "Bonuses include: Powerful Video Series (Value ₹5,500), 9 Energy Awakening Video Series (Value ₹5,000), 30 Days Mentorship, and Monthly Meditation Sessions." }
       ],
-      "image": "/signature_program_art.png"
+      "image": "/signature_program_art.png",
+      "modules": []
     },
     {
       "id": "trainers-training-program",
@@ -77,16 +127,11 @@ const DEFAULT_CONTENT = {
       ],
       "whyChoose": "This comprehensive Trainer certification includes the complete Signature Program, sixth sense activation, and direct opportunities to speak in Central Schools and join our official podcasts.",
       "faqs": [
-        {
-          "q": "What is the training investment?",
-          "a": "The total training investment is ₹59,000."
-        },
-        {
-          "q": "Can I do this part-time or full-time?",
-          "a": "Yes, certified trainers can work either part-time or full-time, with potential earnings of ₹1.5 to ₹5 Lakhs per month."
-        }
+        { "q": "What is the training investment?", "a": "The total training investment is ₹59,000." },
+        { "q": "Can I do this part-time or full-time?", "a": "Yes, certified trainers can work either part-time or full-time, with potential earnings of ₹1.5 to ₹5 Lakhs per month." }
       ],
-      "image": "/gayatri_sun.png"
+      "image": "/gayatri_sun.png",
+      "modules": []
     },
     {
       "id": "gayatri-mentorship-program",
@@ -112,16 +157,11 @@ const DEFAULT_CONTENT = {
       ],
       "whyChoose": "This comprehensive 15-day mentorship program provides authentic activation of the 24 powers of Gayatri Quantum Energy, Yagya therapy training, and official authorization to guide others.",
       "faqs": [
-        {
-          "q": "What is the program investment?",
-          "a": "The total investment is ₹1,18,000 (₹1,00,000 program fee + ₹18,000 GST)."
-        },
-        {
-          "q": "Will I get authorized to give Diksha?",
-          "a": "Yes, this program includes official authorization and the process of giving Gayatri Diksha."
-        }
+        { "q": "What is the program investment?", "a": "The total investment is ₹1,18,000 (₹1,00,000 program fee + ₹18,000 GST)." },
+        { "q": "Will I get authorized to give Diksha?", "a": "Yes, this program includes official authorization and the process of giving Gayatri Diksha." }
       ],
-      "image": "/gayatri_mentorship_art.png"
+      "image": "/gayatri_mentorship_art.png",
+      "modules": []
     },
     {
       "id": "mentors-training-program",
@@ -148,16 +188,11 @@ const DEFAULT_CONTENT = {
       ],
       "whyChoose": "This 20-Day intensive program provides complete signature program training, official authorization, center-setup guidance, and a 90-day internship.",
       "faqs": [
-        {
-          "q": "What career opportunities are available after completion?",
-          "a": "Graduates can work as certified Mentors, Trainers, operate Authorized Centers, and conduct workshops globally."
-        },
-        {
-          "q": "What is the program fee?",
-          "a": "The program fee is ₹2,00,000 + 18% GST (₹36,000), making the total investment ₹2,36,000."
-        }
+        { "q": "What career opportunities are available after completion?", "a": "Graduates can work as certified Mentors, Trainers, operate Authorized Centers, and conduct workshops globally." },
+        { "q": "What is the program fee?", "a": "The program fee is ₹2,00,000 + 18% GST (₹36,000), making the total investment ₹2,36,000." }
       ],
-      "image": "/pranayama_breath.png"
+      "image": "/pranayama_breath.png",
+      "modules": []
     },
     {
       "id": "quantum-jump",
@@ -166,6 +201,8 @@ const DEFAULT_CONTENT = {
       "category": "Gayatri Sadhana & Mentorship",
       "duration": "5 Days Recorded Course",
       "type": "Recorded Session",
+      "isRecorded": true,
+      "price": 35400,
       "description": "Experience the miracles of Gayatri Energy. Cleanse fear, guilt, grief, anger, and anxiety; trigger happy hormones (GABA, Dopamine); and manifest money abundance, sweet relations, and sound health.",
       "details": "What You Will Experience:\n* 1. Removal of Fear, Guilt & Grief\n* 2. Removal of Misery, Suffering & Anger\n* 3. Removal of Ego & Anxiety\n* 4. Reduction of Overthinking & Distress\n* 5. Relief from Obsessive Thought Patterns (OCD-like Tendencies)\n* 6. Relief from Emotional & Mental Pain\n\nSecretion of Happy Hormones:\n* Dopamine, Serotonin, Melatonin, Oxytocin, GABA, and Endorphins\n\nAttraction and Manifestation Power:\n* Abundance Money & Career Growth\n* Sweet Relationships & Harmony\n* Sound Health & Cure of Chronic Diseases\n* Recognition & Social Meaningful Contribution",
       "benefits": [
@@ -186,25 +223,20 @@ const DEFAULT_CONTENT = {
       ],
       "whyChoose": "This 5-day recorded masterclass connects the spiritual frequencies of Gayatri Energy with biological hormone balance to deliver healing, peace, and abundance.",
       "faqs": [
-        {
-          "q": "What is the course investment?",
-          "a": "The investment is ₹30,000 + 18% GST (₹5,400), making a total of ₹35,400."
-        },
-        {
-          "q": "How do I purchase the recorded sessions?",
-          "a": "Click the register button to connect with our team on WhatsApp. Once payment is confirmed, you will receive lifetime access to the recordings."
-        }
+        { "q": "What is the course investment?", "a": "The investment is ₹30,000 + 18% GST (₹5,400), making a total of ₹35,400." },
+        { "q": "How do I purchase the recorded sessions?", "a": "You can sign up and purchase this course directly using UPI or Card payment options online, unlocking instant lifetime access." }
       ],
-      "image": "/quantum_jump_gayatri.png"
+      "image": "/quantum_jump_gayatri.png",
+      "modules": DEFAULT_QUANTUM_JUMP_MODULES
     }
   ],
   products: [
     {
       "id": "book-1",
-      "title": "Kahani Padhey or Ameer Bane (Read Stories & Become Rich) (Edition - Hindi ) By Devendra Dutt Sharma",
+      "title": "Kahani Padhey or Ameer Bane (Read Stories & Become Rich) By Devendra Dutt Sharma",
       "price": 495,
       "image": "https://m.media-amazon.com/images/I/41FAcKSQKsL._SY445_SX342_FMwebp_.jpg",
-      "description": "A collection of inspiring stories that teach financial intelligence, spiritual mindset shifting, and subconscious reconditioning to attract wealth and abundance into daily life.",
+      "description": "A collection of inspiring stories that teach financial intelligence, spiritual mindset shifting, and subconscious reconditioning. Contains 50 powerful stories designed to awaken your abundance mindset.",
       "amazonLink": "https://amzn.in/d/00Rtv4o2",
       "badge": "Best Seller",
       "badgeColor": "bg-amber-100 text-amber-700",
@@ -214,10 +246,10 @@ const DEFAULT_CONTENT = {
     },
     {
       "id": "book-2",
-      "title": "How to Become a Millionaire? / करोड़पति कैसे बनें? : Awakening of Inner Energy (Hindi & English Edition) By Devendra Dutt Sharma",
+      "title": "How to Become a Millionaire? / करोड़पति कैसे बनें? By Devendra Dutt Sharma",
       "price": 495,
       "image": "https://m.media-amazon.com/images/I/41tKXSKxu0L._SY445_SX342_FMwebp_.jpg",
-      "description": "Learn the scientific and spiritual keys to awakening your inner energy. Reprogram your subconscious mind to align with the frequency of wealth and success.",
+      "description": "Learn the scientific and spiritual keys to awakening your inner energy. Reprogram your subconscious mind to align with wealth through 6th Sense activation techniques.",
       "amazonLink": "https://amzn.in/d/03CDKXGx",
       "badge": "Highly Rated",
       "badgeColor": "bg-amber-100 text-amber-700",
@@ -227,15 +259,15 @@ const DEFAULT_CONTENT = {
     },
     {
       "id": "book-3",
-      "title": "To be Billionaire – Every Indian’s Right By Devendra Dutt Sharma",
+      "title": "To be Billionaire – Every Indian's Right / अरबपति होना हर भारतीय का हक है By Devendra Dutt Sharma",
       "price": 989,
       "image": "https://m.media-amazon.com/images/I/41SiR6jRVjL._SY445_SX342_FMwebp_.jpg",
-      "description": "A revolutionary book proclaiming that abundance is the birthright of every citizen. Provides practical methods for financial planning, subconscious training, and clearing wealth blocks.",
+      "description": "A revolutionary book containing 47 inspiring stories to revive the financial consciousness of every Indian. Awaken your midbrain — the billionaire's brain — and dissolve all financial limitations.",
       "amazonLink": "https://amzn.in/d/048fee48",
       "badge": "New Release",
-      "badgeColor": "bg-amber-100 text-amber-700",
-      "tagline": "A powerful declaration and manual on why abundance is your divine birthright.",
-      "accent": "from-[#ff7e5f] to-[#feb47b]",
+      "badgeColor": "bg-emerald-100 text-emerald-700",
+      "tagline": "Declare abundance as your birthright and dissolve all limitations.",
+      "accent": "from-[#43e97b] to-[#38f9d7]",
       "rating": 5
     },
     {
@@ -243,25 +275,25 @@ const DEFAULT_CONTENT = {
       "title": "How to Become a Multimillionaire? / बहु-करोड़पति कैसे बनें? By Devendra Dutt Sharma",
       "price": 886,
       "image": "https://m.media-amazon.com/images/I/41Rsyq4ttqL._SY445_SX342_FMwebp_.jpg",
-      "description": "Take your financial goals to the next level. This book shares advanced mental frameworks, investment mindsets, and Alpha state programming to scale from a millionaire to a multimillionaire.",
+      "description": "Advanced wealth programming through 7th Sense activation. Scale your success from millionaire to multimillionaire consciousness using Alpha state mastery and advanced subconscious reprogramming.",
       "amazonLink": "https://amzn.in/d/00ZXIrGv",
-      "badge": "Divine Wisdom",
-      "badgeColor": "bg-amber-100 text-amber-700",
-      "tagline": "Take your financial goals to the next level with advanced mind-programming secrets.",
-      "accent": "from-[#ff7e5f] to-[#feb47b]",
+      "badge": "Advanced",
+      "badgeColor": "bg-purple-100 text-purple-700",
+      "tagline": "Shift your consciousness to multimillionaire levels and attract massive opportunities.",
+      "accent": "from-[#a18cd1] to-[#fbc2eb]",
       "rating": 5
     },
     {
       "id": "book-5",
-      "title": "Change Your Mindset and Become Rich / माइंडसेट बदलो और करोड़पति बनो : Motivation and Activation Mantra / मोटिवेशन एंड एक्टिवेशन मंत्र",
+      "title": "Change Your Mindset and Become Rich / माइंडसेट बदलें और अमीर बनें By Devendra Dutt Sharma",
       "price": 990,
       "image": "https://m.media-amazon.com/images/I/41SUkQzUtbL._SY445_SX342_FMwebp_.jpg",
-      "description": "To become rich, three changes are needed. First, Change of Mindset; second, Change of Skillset; and third, Change of Toolset. A person can be rich by making their mindset into one of abundance. The 50 stories given in this book are effective to change a poor person’s mind into a rich person’s mind as a rich mind attracts riches. The author has b...",
+      "description": "Master the triple formula of Mindset, Skillset, and Toolset shifting for riches. A comprehensive guide to transforming your thinking patterns and activating the motivation mantras for wealth creation.",
       "amazonLink": "https://amzn.in/d/02lgYQOX",
-      "badge": "Must Read",
-      "badgeColor": "bg-amber-100 text-amber-700",
-      "tagline": "Unleash your mind's true capability through Gayatri Science brain reconditioning.",
-      "accent": "from-[#ff7e5f] to-[#feb47b]",
+      "badge": "Popular",
+      "badgeColor": "bg-blue-100 text-blue-700",
+      "tagline": "Choose the mindset of abundance and transition into absolute peak wealth.",
+      "accent": "from-[#667eea] to-[#764ba2]",
       "rating": 5
     },
     {
@@ -269,92 +301,92 @@ const DEFAULT_CONTENT = {
       "title": "How Do We Gain from the Magic of Divine Bliss? / दिव्य कृपा का जादू By Devendra Dutt Sharma",
       "price": 990,
       "image": "https://m.media-amazon.com/images/I/41pxx3w2NIL._SY445_SX342_FMwebp_.jpg",
-      "description": "Learn the practices of gratitude, alignment, and divine connection. Attract continuous flow of success, health, and peace into your life by tapping into divine bliss frequencies.",
+      "description": "Part 1 of the Divine Bliss series. Contains 31 inspiring stories to awaken your subconscious mind, a photo gallery to communicate divinity to your right brain, and activities to experience divine grace and gratitude.",
       "amazonLink": "https://amzn.in/d/0el0x8bW",
-      "badge": "Self Excellence",
+      "badge": "Spiritual",
       "badgeColor": "bg-amber-100 text-amber-700",
-      "tagline": "Align your energy centers and connect with the flow of divine grace.",
-      "accent": "from-[#ff7e5f] to-[#feb47b]",
+      "tagline": "Open your life to the magic of divine bliss, vibrating in gratitude and protection.",
+      "accent": "from-[#f5af19] to-[#f12711]",
       "rating": 5
     },
     {
       "id": "book-7",
-      "title": "आत्मज्ञान - पुष्पमाला (अध्यात्म ज्ञान सरल भाषा में ) By Devendra Dutt Sharma",
+      "title": "आत्मज्ञान - पुष्पमाला (अध्यात्म ज्ञान सरल भाषा में) By Devendra Dutt Sharma",
       "price": 495,
       "image": "https://m.media-amazon.com/images/I/417JkJIcdQL._SY445_SX342_FMwebp_.jpg",
-      "description": "A collection of profound spiritual discourses explaining Gayatri Science wisdom, self-realization, and the science of consciousness in simple, daily language.",
+      "description": "Gayatri Science wisdom presented in simple, accessible Hindi language. A garland of spiritual knowledge flowers to elevate your consciousness and connect with your true inner self through self-realization practices.",
       "amazonLink": "https://amzn.in/d/08wEvQab",
-      "badge": "Life Transformation",
-      "badgeColor": "bg-amber-100 text-amber-700",
-      "tagline": "Ancient Gayatri Science wisdom and self-realization decoded in simple language.",
-      "accent": "from-[#ff7e5f] to-[#feb47b]",
+      "badge": "Hindi Edition",
+      "badgeColor": "bg-orange-100 text-orange-700",
+      "tagline": "Connect with your true inner self and elevate your consciousness to divine truth.",
+      "accent": "from-[#ff9a9e] to-[#fecfef]",
       "rating": 5
     },
     {
       "id": "book-8",
-      "title": "Become Brain Engineering Expert (theory book with page no learn) By Devendra Dutt Sharma",
+      "title": "Become Brain Engineering Expert (Theory Book with Page No Learn) By Devendra Dutt Sharma",
       "price": 1100,
       "image": "https://m.media-amazon.com/images/I/41THAMOKGAL._SY445_SX342_FMwebp_.jpg",
-      "description": "A comprehensive guide on brain engineering, speed reading, mind mapping, and sensory integration. Get certified to teach brain sciences and memory training.",
+      "description": "A comprehensive theory book on brain engineering, speed reading techniques, and memory enhancement hacks. Optimize your brain capacity and learn with supreme speed and retention through scientific methods.",
       "amazonLink": "https://amzn.in/d/00gWmNLL",
-      "badge": "Abundance",
-      "badgeColor": "bg-amber-100 text-amber-700",
-      "tagline": "Unlock peak learning speed, memory retention, and brain power.",
-      "accent": "from-[#ff7e5f] to-[#feb47b]",
+      "badge": "Professional",
+      "badgeColor": "bg-cyan-100 text-cyan-700",
+      "tagline": "Optimize your brain capacity for supreme speed learning and retention.",
+      "accent": "from-[#0093E9] to-[#80D0C7]",
       "rating": 5
     },
     {
       "id": "book-9",
-      "title": "Become MIDBRAIN ACTIVATION Professional, How to Become MIDBRAIN ACTIVATION Professional By Devendra Dutt Sharma",
+      "title": "Become MIDBRAIN ACTIVATION Professional / How to Become MIDBRAIN ACTIVATION Professional By Devendra Dutt Sharma",
       "price": 1100,
       "image": "https://m.media-amazon.com/images/I/61TrnV1HguL._SY445_SX342_FMwebp_.jpg",
-      "description": "Unlock child genius potential by learning the step-by-step methods of Midbrain Activation. Build a highly successful and lucrative career in child psychology and brain training.",
+      "description": "Professional training guide for Midbrain Activation techniques. Learn the scientific methods to awaken genius intelligence in yourself and others through advanced coaching and child brain development practices.",
       "amazonLink": "https://amzn.in/d/0j97cM31",
-      "badge": "Practice Journal",
-      "badgeColor": "bg-amber-100 text-amber-700",
-      "tagline": "Establish a successful career in the booming field of child brain training.",
-      "accent": "from-[#ff7e5f] to-[#feb47b]",
+      "badge": "Training Guide",
+      "badgeColor": "bg-indigo-100 text-indigo-700",
+      "tagline": "Channel the training codes of midbrain activation to awaken genius.",
+      "accent": "from-[#4facfe] to-[#00f2fe]",
       "rating": 5
     },
     {
       "id": "book-10",
-      "title": "know Your Inborn Talent : Become DMIT Professional, How to Become DMIT Professional By Devendra Dutt Sharma",
+      "title": "Know Your Inborn Talent: Become DMIT Professional / How to Become DMIT Professional By Devendra Dutt Sharma",
       "price": 1690,
       "image": "https://m.media-amazon.com/images/I/51dwjeMIQwL._SY445_SX342_FMwebp_.jpg",
-      "description": "A comprehensive textbook detailing the science of Dermatoglyphics Multiple Intelligence Test (DMIT). Analyze fingerprint patterns to map natural talents and career paths.",
+      "description": "The definitive guide to Dermatoglyphics Multiple Intelligence Test (DMIT) analysis. Learn to map fingerprint codes, discover natural talents, and build a professional career in DMIT counseling and talent mapping.",
       "amazonLink": "https://amzn.in/d/0bjoicbj",
-      "badge": "Deep Cleansing",
-      "badgeColor": "bg-amber-100 text-amber-700",
-      "tagline": "Discover inborn talents and build a rewarding career as a DMIT expert.",
-      "accent": "from-[#ff7e5f] to-[#feb47b]",
+      "badge": "Premium Guide",
+      "badgeColor": "bg-rose-100 text-rose-700",
+      "tagline": "Understand your inborn talents and direct your energy to your natural strengths.",
+      "accent": "from-[#fa709a] to-[#fee140]",
       "rating": 5
     }
   ],
   blogs: [
     {
-      "id": "gayatri-mantra-science",
+      "id": "1",
       "title": "The Scientific Power of Gayatri Mantra & GABA Hormones",
       "tagline": "How chanting the ancient solar mantra reduces stress, calms overthinking, and activates peak brain power.",
-      "intro": "For thousands of years, the Gayatri Mantra has been revered as the supreme chant for wisdom and illumination. Modern scientific studies now reveal that its specific sound frequencies stimulate the production of GABA (Gamma-Aminobutyric Acid), a neurotransmitter that naturally calms the nervous system.",
+      "intro": "For thousands of years, the Gayatri Mantra has been revered as the supreme chant for wisdom and illumination. Modern scientific studies now reveal that its specific sound frequencies stimulate the production of GABA.",
       "author": "Devendra Sharma",
       "date": "June 7, 2026",
       "readTime": "5 mins read",
       "course": "Gayatri Science",
-      "image": "/gayatri_sun.png",
-      "quote": "The Gayatri Mantra is a universal prayer that aligns our conscious mind with the supreme solar intelligence, activating our inner wisdom.",
+      "image": "",
+      "quote": "The Gayatri Mantra is a universal prayer that aligns our conscious mind with the supreme solar intelligence.",
       "sections": [
         {
           "heading": "1. The Saffron Frequency of Sound",
           "paragraphs": [
-            "Every syllable of the Gayatri Mantra is carefully structured to resonate with specific energy centers (chakras) in the human body. When chanted correctly, it creates sound vibrations that travel through the vagus nerve, sending calming signals to the brain.",
-            "This sound frequency acts as a natural stabilizer, shifting the brain from high-stress beta waves to relaxed alpha and theta waves."
+            "Every syllable of the Gayatri Mantra is carefully structured to resonate with specific energy centers in the human body.",
+            "This sound frequency acts as a natural stabilizer, shifting the brain from high-stress beta waves to relaxed alpha."
           ]
         },
         {
-          "heading": "2. Activation of GABA & Happy Hormones",
+          "heading": "2. GABA Secretion & Neural Calming",
           "paragraphs": [
-            "Medical research shows that rhythmic chanting of the Gayatri Mantra increases the secretion of GABA hormones. GABA is crucial for reducing anxiety, controlling overthinking, and soothing the nervous system.",
-            "At the same time, it stimulates dopamine and serotonin, the \"happy hormones\" that elevate mood, expand intelligence, and awaken inner peace."
+            "Scientific EEG studies show that rhythmic repetition of the 24 syllables triggers the pituitary gland.",
+            "This increases Gamma-Aminobutyric Acid (GABA) levels, which naturally calms tension and cures anxiety."
           ]
         }
       ],
@@ -362,129 +394,128 @@ const DEFAULT_CONTENT = {
         "title": "Daily Savita Meditation",
         "steps": [
           "Sit in a comfortable position, keeping your spine straight.",
-          "Close your eyes and visualize the rising golden sun at your eyebrow center (Third Eye).",
-          "Chant the Gayatri Mantra slowly and rhythmically 11 or 108 times.",
-          "Feel the warm golden light purifying your mind and body."
+          "Chant the Gayatri Mantra slowly and rhythmically 11 or 108 times."
         ]
       },
-      "conclusion": "By integrating Gayatri Mantra chanting into your daily routine, you reprogram your subconscious mind, shield your aura, and unlock your true divine potential."
+      "conclusion": "By integrating Gayatri Mantra chanting into your daily routine, you program your subconscious."
     },
     {
-      "id": "subconscious-reprogramming-secrets",
-      "title": "How to Reprogram Your Subconscious Mind for Wealth & Abundance",
-      "tagline": "Unlock the Alpha state of mind and align your inner beliefs with the flow of infinite prosperity.",
-      "intro": "Your subconscious mind acts like a supercomputer, executing the programs and beliefs installed since childhood. If you carry scarcity programming, you will struggle to attract wealth, regardless of your hard work. Reprogramming your mind is the key to effortless manifestation.",
+      "id": "2",
+      "title": "The Water Glass Technique: Molecular Reprogramming for Abundance",
+      "tagline": "How to use the molecular memory of water to program your subconscious mind for health, wealth, and success.",
+      "intro": "Water is not just a chemical compound; it is a sensitive receiver and recorder of frequencies. By holding a glass of water and injecting specific positive intentions in an alpha state, you program its molecular structure.",
       "author": "Devendra Sharma",
-      "date": "June 5, 2026",
+      "date": "June 12, 2026",
       "readTime": "6 mins read",
-      "course": "Alpha Mind Activation",
-      "image": "/subconscious_mind_alpha.png",
-      "quote": "Change your thoughts, and you change your destiny. Wealth is not a number; it is a state of mind.",
+      "course": "Subconscious Programming",
+      "image": "",
+      "quote": "Water holds memory and vibration. When you program it with gratitude and intention, you drink medicine.",
       "sections": [
         {
-          "heading": "1. Entering the Alpha State",
+          "heading": "1. Dr. Masaru Emoto's Discovery on Water Memory",
           "paragraphs": [
-            "The subconscious mind is most receptive when the brain slows down to Alpha waves (8-12 Hz). This naturally happens twice a day: right before you fall asleep and immediately after you wake up.",
-            "By practicing visualization and positive affirmations during these windows, you bypass the critical conscious filter and implant new beliefs directly into the subconscious."
+            "Experiments show that water crystals change shape depending on the thoughts and words directed to them.",
+            "Positive words like 'Love' and 'Gratitude' form beautiful, symmetrical hexagonal crystalline structures, while negative words form distorted patterns."
           ]
         },
         {
-          "heading": "2. The Water Glass Technique",
+          "heading": "2. Step-by-Step Programming in Alpha State",
           "paragraphs": [
-            "Water is a powerful conductor of energy and intention. Holding a glass of water and speaking positive affirmations into it before drinking charges the water with your desired vibration.",
-            "Consuming this energized water helps align your physical and energetic cells with the frequency of your goals."
+            "When you hold a glass of water, close your eyes and take deep breaths to enter the calm Alpha state of mind.",
+            "Visualize your goal as already achieved and feel the joy of success, sending that vibration into the water before drinking it."
           ]
         }
       ],
       "technique": {
-        "title": "The 3-Step Mirror Technique",
+        "title": "The 21-Day Water Glass Practice",
         "steps": [
-          "Stand in front of a mirror, look directly into your own eyes.",
-          "Take three deep breaths, releasing all past pain and old identities.",
-          "Affirm with absolute conviction: \"I am worthy, capable, and aligned with infinite abundance.\""
+          "Take a glass of clean drinking water in your hands every morning.",
+          "Look into the water and speak 5 powerful affirmations in the present tense.",
+          "Drink the water slowly, feeling it saturate every cell with success."
         ]
       },
-      "conclusion": "Consistently reprogramming your subconscious mind transforms your outer reality, creating synchronicity, luck, and non-linear growth."
+      "conclusion": "Water programming is a fast, scientifically supported way to align your biology with your subconscious goals."
     },
     {
-      "id": "law-of-attraction-and-9-chakras",
-      "title": "The Law of Attraction & 9 Chakras Activation",
-      "tagline": "Align your nine energy centers to turn your physical body into a powerful manifestation magnet.",
-      "intro": "Traditional spiritual systems talk about the 7 major chakras. However, advanced spiritual science reveals the existence of 9 energy centers. When all nine chakras are activated and balanced, your personal electromagnetic aura becomes extraordinarily strong, amplifying your manifestation power tenfold.",
+      "id": "3",
+      "title": "Awakening Your 9 Chakras & Kundalini Energy",
+      "tagline": "The spiritual and physiological guide to opening energy pathways for non-linear life growth.",
+      "intro": "The human body is equipped with nine major energy channels, commonly known as Chakras. When these centers are blocked, we experience stagnancy in our career, relationships, and health. Awakening them opens up quantum leaps.",
       "author": "Devendra Sharma",
-      "date": "June 3, 2026",
+      "date": "June 15, 2026",
       "readTime": "7 mins read",
-      "course": "Chakra Activation",
-      "image": "/shree_vidya_mandala.png",
-      "quote": "When your chakras are aligned, you no longer chase success; success is drawn to you like a magnet.",
+      "course": "Chakra Science",
+      "image": "",
+      "quote": "Chakras are not physical organs, but swirling vortexes of energy that govern our physical and emotional reality.",
       "sections": [
         {
-          "heading": "1. The 9 Energy Centers",
+          "heading": "1. Cleansing the Five Elements (Panch Tatva)",
           "paragraphs": [
-            "Beyond the root to crown chakras, the 9-chakra system includes additional cosmic and grounding links that connect you to earth's core and divine intelligence.",
-            "Cleansing these centers removes auric implants, subconscious blocks, and ancestral karma, restoring your natural state of flow."
+            "Before awakening the energy chakras, we must purify the five basic elements within us: Earth, Water, Fire, Air, and Space.",
+            "Element purification clears physical toxins and mental anxiety, creating a strong foundation for energy flow."
           ]
         },
         {
-          "heading": "2. RAS Activation for Opportunities",
+          "heading": "2. The Kundalini Rise and Non-Linear Growth",
           "paragraphs": [
-            "Activating your chakras also stimulates the Reticular Activating System (RAS) in your brain. The RAS acts as a filter, highlighting the opportunities, resources, and connections that align with your dominant energetic state.",
-            "This is the biological mechanism behind the Law of Attraction: you start seeing options that were previously invisible."
+            "As the energy moves upwards from the root chakra to the crown, your level of consciousness rises from survival to divinity.",
+            "This results in sudden, non-linear growth in external aspects of life, including fame, wealth, and intuitive intelligence."
           ]
         }
       ],
       "technique": {
-        "title": "Soham Breath & Chakra Alignment",
+        "title": "9 Chakras Breathing Attunement",
         "steps": [
-          "Inhale deeply while mentally chanting \"So\", drawing energy up your spine.",
-          "Exhale slowly while mentally chanting \"Ham\", letting the energy radiate from your crown.",
-          "Focus on each of the nine chakras for a few breaths, visualizing them spinning as bright spheres of light."
+          "Sit in a silent room and focus on the base of your spine.",
+          "Inhale deeply, visualizing a golden light rising up to the top of your head.",
+          "Exhale slowly, chanting a soft seed mantra to vibrate and open each chakra."
         ]
       },
-      "conclusion": "A strong, glowing aura acts as a protective shield and an abundance magnet, bringing non-verbal positive energy into every room you enter."
+      "conclusion": "Regular chakra attunement ensures a balanced mind, a healthy body, and a magnetic aura."
     },
     {
-      "id": "positive-thinking-neuroscience",
-      "title": "The Neuroscience of Positive Thinking & RAS",
-      "tagline": "How optimistic thoughts physically rewire your brain to filter in success and prosperity.",
-      "intro": "Optimism is not just a feel-good attitude; it is a cognitive strategy. Neurological science proves that our dominant thoughts physically shape our neural pathways through neuroplasticity. By training your mind to focus on solutions, you program your brain's filter to work for you.",
+      "id": "4",
+      "title": "Mastering the Alpha Brain State & Reticular Activating System (RAS)",
+      "tagline": "How to program your brain's internal filter to manifest and recognize life-changing opportunities.",
+      "intro": "Your Reticular Activating System (RAS) acts as the gatekeeper of your brain, filtering out millions of bits of unnecessary information. By entering the alpha brainwave state (8-12 Hz), you can write new instructions directly to your RAS.",
       "author": "Devendra Sharma",
-      "date": "May 28, 2026",
-      "readTime": "5 mins read",
-      "course": "Positive Thinking",
-      "image": "/water_energizing.png",
-      "quote": "Your brain is a filter. What you look for is exactly what you will find.",
+      "date": "June 18, 2026",
+      "readTime": "8 mins read",
+      "course": "Mind Mastery",
+      "image": "",
+      "quote": "Your brain does not see the world as it is; it sees what your RAS has been programmed to look for.",
       "sections": [
         {
-          "heading": "1. The Brain's Gatekeeper: The RAS",
+          "heading": "1. What is the Alpha Brain State?",
           "paragraphs": [
-            "Every second, your brain is bombarded with millions of bits of sensory information. The Reticular Activating System (RAS) filters out 99% of it, letting in only what it deems important.",
-            "If you focus on problems, your RAS filters in more problems. If you focus on your Widely Important Goals, your RAS filters in solutions and lucky opportunities."
+            "The brain operates on four primary wave frequencies. Alpha waves occur when you are deeply relaxed yet fully alert.",
+            "In this state, the analytical conscious mind relaxes, allowing direct access to the subconscious storehouse."
           ]
         },
         {
-          "heading": "2. Rewriting Your Inner Narrative",
+          "heading": "2. Programming the RAS for Wealth and Opportunities",
           "paragraphs": [
-            "The most effective way to guide your RAS is through an Identity Notebook. Writing down your goals as if they are already achieved teaches your brain to recognize them as important.",
-            "This simple habit rewires neural networks, boosting confidence and prompting creative action."
+            "If your RAS is programmed with fear or lack, it will only highlight problems and failures.",
+            "By scripting your goals in an Alpha state, you instruct your RAS to highlight solutions, resources, and syns."
           ]
         }
       ],
       "technique": {
-        "title": "Daily Vision & Gratitude Journaling",
+        "title": "Alpha Scripting in the Identity Notebook",
         "steps": [
-          "Every morning, write down 5 things you are deeply grateful for.",
-          "Write 3 goals for the future in the present tense (e.g., \"I am so happy that...\").",
-          "Spend 2 minutes visualizing the feeling of achieving these goals."
+          "Every night before sleeping, write down 3 goals as if they are already accomplished.",
+          "Close your eyes, breathe slowly, and mentally play a 2-minute video of your successful self."
         ]
       },
-      "conclusion": "Positive thinking is the alignment of mind, emotion, and brain biology. When these three are synchronized, success becomes inevitable."
+      "conclusion": "By mastering your brainwaves, you take full control of what your mind filters, notices, and attracts."
     }
   ],
   contacts: [],
+  users: [],
+  purchases: [],
 };
 
-// Local storage caching helpers for instant load (Stale-While-Revalidate UX pattern)
+// Safe parsing
 const safeJsonParse = (value, fallback) => {
   if (!value) return fallback;
   try {
@@ -494,49 +525,524 @@ const safeJsonParse = (value, fallback) => {
   }
 };
 
-export const getCollection = (collName) => {
-  if (typeof window === 'undefined') return DEFAULT_CONTENT[collName] || [];
-  const local = window.localStorage.getItem(STORAGE_KEYS[collName]);
-  if (!local) {
-    window.localStorage.setItem(STORAGE_KEYS[collName], JSON.stringify(DEFAULT_CONTENT[collName] || []));
-    return DEFAULT_CONTENT[collName] || [];
+// Initialize localStorage fallback database
+export const initializeLocalStorage = () => {
+  if (typeof window === 'undefined') return;
+  Object.entries(DEFAULT_CONTENT).forEach(([key, value]) => {
+    const storageKey = STORAGE_KEYS[key];
+    if (!window.localStorage.getItem(storageKey)) {
+      window.localStorage.setItem(storageKey, JSON.stringify(value));
+    }
+  });
+
+  // Data migration: ensure 'quantum-jump' course has default modules if they are empty
+  try {
+    const coursesKey = STORAGE_KEYS.courses;
+    const cachedCoursesRaw = window.localStorage.getItem(coursesKey);
+    if (cachedCoursesRaw) {
+      const cachedCourses = JSON.parse(cachedCoursesRaw);
+      let updated = false;
+      const newCourses = cachedCourses.map(course => {
+        if (course.id === 'quantum-jump' && (!course.modules || course.modules.length === 0)) {
+          updated = true;
+          return {
+            ...course,
+            modules: DEFAULT_QUANTUM_JUMP_MODULES
+          };
+        }
+        return course;
+      });
+      if (updated) {
+        window.localStorage.setItem(coursesKey, JSON.stringify(newCourses));
+      }
+    }
+  } catch (e) {
+    console.error("Failed to migrate localStorage courses data:", e);
   }
+
+  // Pre-populate settings with default values if not configured or missing keys
+  try {
+    const settingsKey = 't360_v5_settings';
+    const existingRaw = window.localStorage.getItem(settingsKey);
+    if (!existingRaw) {
+      const defaultSettings = {
+        firebase: {
+          apiKey: "AIzaSyCEp45xgfqFqD55c6shvxO7_jxymXjHDts",
+          authDomain: "ddsharma-3befe.firebaseapp.com",
+          projectId: "ddsharma-3befe",
+          storageBucket: "ddsharma-3befe.firebasestorage.app",
+          messagingSenderId: "452928596721",
+          appId: "1:452928596721:web:5f5423d5f540a3b7825750"
+        },
+        razorpayKey: "",
+        imagekit: {
+          urlEndpoint: "https://ik.imagekit.io/zk1gmjhtt",
+          publicKey: "public_Y4lsHCnlEUNxsHMlG4dsLllVkAI=",
+          authEndpoint: "/api/imagekit-auth"
+        }
+      };
+      window.localStorage.setItem(settingsKey, JSON.stringify(defaultSettings));
+    } else {
+      const saved = JSON.parse(existingRaw);
+      let changed = false;
+      if (!saved.imagekit || !saved.imagekit.urlEndpoint) {
+        saved.imagekit = {
+          urlEndpoint: "https://ik.imagekit.io/zk1gmjhtt",
+          publicKey: "public_Y4lsHCnlEUNxsHMlG4dsLllVkAI=",
+          authEndpoint: "/api/imagekit-auth"
+        };
+        changed = true;
+      }
+      if (!saved.firebase || !saved.firebase.apiKey) {
+        saved.firebase = {
+          apiKey: "AIzaSyCEp45xgfqFqD55c6shvxO7_jxymXjHDts",
+          authDomain: "ddsharma-3befe.firebaseapp.com",
+          projectId: "ddsharma-3befe",
+          storageBucket: "ddsharma-3befe.firebasestorage.app",
+          messagingSenderId: "452928596721",
+          appId: "1:452928596721:web:5f5423d5f540a3b7825750"
+        };
+        changed = true;
+      }
+      if (changed) {
+        window.localStorage.setItem(settingsKey, JSON.stringify(saved));
+      }
+    }
+  } catch (e) {
+    console.error("Failed to populate default settings:", e);
+  }
+};
+initializeLocalStorage();
+
+
+// Sync functions that work with both Firebase (Firestore) and LocalStorage
+export const getCollection = async (collName) => {
+  if (isFirebaseEnabled && db) {
+    try {
+      const snap = await getDocs(collection(db, collName));
+      
+      // If collection is empty in Firestore, automatically seed it with default template content
+      if (snap.empty) {
+        const defaults = DEFAULT_CONTENT[collName] || [];
+        if (defaults.length > 0) {
+          console.log(`Firestore collection '${collName}' is empty. Seeding defaults...`);
+          for (const item of defaults) {
+            const id = String(item.id || item.email || item.date || Date.now());
+            await setDoc(doc(db, collName, id), item);
+          }
+          // Cache locally
+          window.localStorage.setItem(STORAGE_KEYS[collName], JSON.stringify(defaults));
+          return defaults;
+        }
+      }
+      
+      const items = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      // Also cache locally
+      window.localStorage.setItem(STORAGE_KEYS[collName], JSON.stringify(items));
+      return items;
+    } catch (e) {
+      console.error(`Firebase fetch for ${collName} failed, fallback to cache:`, e);
+    }
+  }
+  
+  // Local fallback
+  const local = window.localStorage.getItem(STORAGE_KEYS[collName]);
   return safeJsonParse(local, DEFAULT_CONTENT[collName] || []);
 };
 
 export const saveCollection = async (collName, items) => {
-  // Update local storage synchronously so the user feels instant snappiness
+  // Sync to local storage
   if (typeof window !== 'undefined') {
     window.localStorage.setItem(STORAGE_KEYS[collName], JSON.stringify(items));
     window.dispatchEvent(new Event(CONTENT_UPDATED_EVENT));
   }
+
+  // Sync to Firebase
+  if (isFirebaseEnabled && db) {
+    try {
+      for (const item of items) {
+        const id = String(item.id || item.email || item.date || Date.now());
+        await setDoc(doc(db, collName, id), item);
+      }
+    } catch (e) {
+      console.error(`Firebase save collection for ${collName} failed:`, e);
+    }
+  }
 };
 
+// Save a single item in a collection
+export const saveItem = async (collName, item) => {
+  const current = await getCollection(collName);
+  const id = String(item.id || item.email || item.date || Date.now());
+  
+  const index = current.findIndex(x => String(x.id || x.email || x.date) === id);
+  const updated = [...current];
+  if (index >= 0) {
+    updated[index] = item;
+  } else {
+    updated.push(item);
+  }
+
+  // Update local storage
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem(STORAGE_KEYS[collName], JSON.stringify(updated));
+    window.dispatchEvent(new Event(CONTENT_UPDATED_EVENT));
+  }
+
+  // Update Firebase
+  if (isFirebaseEnabled && db) {
+    try {
+      await setDoc(doc(db, collName, id), item);
+    } catch (e) {
+      console.error(`Firebase save item failed for ${collName}:`, e);
+    }
+  }
+};
+
+// Delete a single item
+export const deleteItem = async (collName, itemId) => {
+  const current = await getCollection(collName);
+  const updated = current.filter(x => String(x.id || x.email || x.date) !== String(itemId));
+
+  // Update local storage
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem(STORAGE_KEYS[collName], JSON.stringify(updated));
+    window.dispatchEvent(new Event(CONTENT_UPDATED_EVENT));
+  }
+
+  // Update Firebase
+  if (isFirebaseEnabled && db) {
+    try {
+      await deleteDoc(doc(db, collName, String(itemId)));
+    } catch (e) {
+      console.error(`Firebase delete item failed for ${collName}:`, e);
+    }
+  }
+};
+
+// Reset collection to default
 export const resetCollection = async (collName) => {
   await saveCollection(collName, DEFAULT_CONTENT[collName] || []);
 };
 
+// Reactive hook to fetch data with live update support
 export const useAdminContent = (collName) => {
-  const [items, setItems] = useState(() => getCollection(collName));
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
-    // Keep local storage event sync (in case other tabs update local storage)
-    const syncLocal = () => {
-      setItems(getCollection(collName));
-    };
-    window.addEventListener(CONTENT_UPDATED_EVENT, syncLocal);
-    window.addEventListener('storage', syncLocal);
+    // Initial fetch from cache/localStorage for speed
+    const cache = window.localStorage.getItem(STORAGE_KEYS[collName]);
+    if (cache) {
+      setItems(safeJsonParse(cache, DEFAULT_CONTENT[collName] || []));
+    } else {
+      getCollection(collName).then(data => setItems(data));
+    }
 
-    return () => {
-      window.removeEventListener(CONTENT_UPDATED_EVENT, syncLocal);
-      window.removeEventListener('storage', syncLocal);
-    };
+    // Subscribe
+    if (isFirebaseEnabled && db) {
+      const unsub = onSnapshot(collection(db, collName), (snap) => {
+        const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setItems(data);
+        window.localStorage.setItem(STORAGE_KEYS[collName], JSON.stringify(data));
+      }, (error) => {
+        console.error(`Firestore real-time subscription failed for ${collName}:`, error);
+      });
+      return unsub;
+    } else {
+      // Local event listeners
+      const syncLocal = () => {
+        const local = window.localStorage.getItem(STORAGE_KEYS[collName]);
+        setItems(safeJsonParse(local, DEFAULT_CONTENT[collName] || []));
+      };
+      window.addEventListener(CONTENT_UPDATED_EVENT, syncLocal);
+      window.addEventListener('storage', syncLocal);
+      // For backward compatibility with t360-content-updated-v3
+      window.addEventListener('t360-content-updated-v3', syncLocal);
+
+      return () => {
+        window.removeEventListener(CONTENT_UPDATED_EVENT, syncLocal);
+        window.removeEventListener('storage', syncLocal);
+        window.removeEventListener('t360-content-updated-v3', syncLocal);
+      };
+    }
   }, [collName]);
 
   return items;
 };
 
-// Legacy auth status checks for backward compatibility
+/* ==========================================================================
+   USER AUTHENTICATION LOGIC (Firebase + Mock Fallback)
+   ========================================================================== */
+
+// Check if user is Admin
+export const isUserAdmin = (user) => {
+  if (!user) return false;
+  return user.role === 'admin' || user.email === 'admin@team360.com';
+};
+
+// Register user
+export const registerUser = async (name, email, password) => {
+  const normalizedEmail = email.toLowerCase().trim();
+
+  if (isFirebaseEnabled && auth) {
+    const cred = await createUserWithEmailAndPassword(auth, normalizedEmail, password);
+    await updateProfile(cred.user, { displayName: name });
+    
+    // Save additional profile info in Firestore
+    const userDoc = {
+      uid: cred.user.uid,
+      name,
+      email: normalizedEmail,
+      role: 'user', // Default role
+      createdAt: new Date().toISOString()
+    };
+    await setDoc(doc(db, 'users', cred.user.uid), userDoc);
+    return userDoc;
+  }
+
+  // Local fallback
+  const users = await getCollection('users');
+  if (users.find(u => u.email === normalizedEmail)) {
+    throw new Error('User already exists');
+  }
+
+  const newUser = {
+    id: Date.now(),
+    uid: String(Date.now()),
+    name,
+    email: normalizedEmail,
+    password, // Stored in plain text only for mock local demonstration!
+    role: normalizedEmail === 'admin@team360.com' ? 'admin' : 'user',
+    createdAt: new Date().toISOString()
+  };
+
+  await saveItem('users', newUser);
+  
+  // Set current user session
+  window.localStorage.setItem('t360_v5_current_user', JSON.stringify(newUser));
+  window.dispatchEvent(new Event('t360-auth-changed'));
+  return newUser;
+};
+
+// Login user
+export const loginUser = async (email, password) => {
+  const normalizedEmail = email.toLowerCase().trim();
+
+  if (isFirebaseEnabled && auth) {
+    const cred = await signInWithEmailAndPassword(auth, normalizedEmail, password);
+    const userDocRef = doc(db, 'users', cred.user.uid);
+    const userDocSnap = await getDoc(userDocRef);
+    const isDefaultAdmin = normalizedEmail === 'admin@team360.com';
+    if (userDocSnap.exists()) {
+      const data = userDocSnap.data();
+      return { uid: cred.user.uid, ...data, role: data.role || (isDefaultAdmin ? 'admin' : 'user') };
+    }
+    return {
+      uid: cred.user.uid,
+      name: cred.user.displayName || (isDefaultAdmin ? 'Administrator' : 'User'),
+      email: cred.user.email,
+      role: isDefaultAdmin ? 'admin' : 'user'
+    };
+  }
+
+  // Local fallback
+  const users = await getCollection('users');
+  
+  // Check for admin default login
+  if (normalizedEmail === 'admin@team360.com' && password === 'admin123') {
+    const adminUser = {
+      uid: 'admin-uid',
+      name: 'Administrator',
+      email: 'admin@team360.com',
+      role: 'admin'
+    };
+    window.localStorage.setItem('t360_v5_current_user', JSON.stringify(adminUser));
+    window.localStorage.setItem('t360_v5_session', 'active'); // Admin legacy support
+    window.dispatchEvent(new Event('t360-auth-changed'));
+    return adminUser;
+  }
+
+  const found = users.find(u => u.email === normalizedEmail && u.password === password);
+  if (!found) {
+    throw new Error('Invalid email or password');
+  }
+
+  window.localStorage.setItem('t360_v5_current_user', JSON.stringify(found));
+  if (found.role === 'admin') {
+    window.localStorage.setItem('t360_v5_session', 'active');
+  }
+  window.dispatchEvent(new Event('t360-auth-changed'));
+  return found;
+};
+
+// Logout user
+export const logoutUser = async () => {
+  if (isFirebaseEnabled && auth) {
+    await signOut(auth);
+  }
+  
+  window.localStorage.removeItem('t360_v5_current_user');
+  window.localStorage.removeItem('t360_v5_session');
+  window.dispatchEvent(new Event('t360-auth-changed'));
+};
+
+// Hook for accessing the current user auth state reactively
+export const useCurrentUser = () => {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Initial fetch from localStorage
+    const getLocalUser = () => {
+      const saved = window.localStorage.getItem('t360_v5_current_user');
+      return saved ? safeJsonParse(saved, null) : null;
+    };
+    
+    setCurrentUser(getLocalUser());
+
+    if (isFirebaseEnabled && auth) {
+      const unsubAuth = onAuthStateChanged(auth, async (firebaseUser) => {
+        if (firebaseUser) {
+          try {
+            const userDocSnap = await getDoc(doc(db, 'users', firebaseUser.uid));
+            const isDefaultAdmin = firebaseUser.email?.toLowerCase().trim() === 'admin@team360.com';
+            if (userDocSnap.exists()) {
+              const data = userDocSnap.data();
+              const fullUser = { uid: firebaseUser.uid, ...data, role: data.role || (isDefaultAdmin ? 'admin' : 'user') };
+              setCurrentUser(fullUser);
+              window.localStorage.setItem('t360_v5_current_user', JSON.stringify(fullUser));
+            } else {
+              const defaultUser = {
+                uid: firebaseUser.uid,
+                name: firebaseUser.displayName || (isDefaultAdmin ? 'Administrator' : 'User'),
+                email: firebaseUser.email,
+                role: isDefaultAdmin ? 'admin' : 'user'
+              };
+              setCurrentUser(defaultUser);
+              window.localStorage.setItem('t360_v5_current_user', JSON.stringify(defaultUser));
+            }
+          } catch (e) {
+            console.error('Error fetching user metadata:', e);
+          }
+        } else {
+          setCurrentUser(null);
+          window.localStorage.removeItem('t360_v5_current_user');
+        }
+        setLoading(false);
+      });
+      return unsubAuth;
+    } else {
+      setLoading(false);
+      const handleAuthChange = () => {
+        setCurrentUser(getLocalUser());
+      };
+      window.addEventListener('t360-auth-changed', handleAuthChange);
+      return () => {
+        window.removeEventListener('t360-auth-changed', handleAuthChange);
+      };
+    }
+  }, []);
+
+  return { currentUser, loading };
+};
+
+/* ==========================================================================
+   ENROLLMENT / PURCHASE SYSTEM
+   ========================================================================== */
+
+// Check if user is enrolled in a course
+export const checkEnrollment = async (userIdOrEmail, courseId) => {
+  if (!userIdOrEmail) return false;
+  
+  if (isFirebaseEnabled && db) {
+    try {
+      const q = query(
+        collection(db, 'purchases'), 
+        where('courseId', '==', courseId),
+        where('userEmail', '==', String(userIdOrEmail).toLowerCase())
+      );
+      const snap = await getDocs(q);
+      if (!snap.empty) return true;
+
+      const q2 = query(
+        collection(db, 'purchases'), 
+        where('courseId', '==', courseId),
+        where('userId', '==', userIdOrEmail)
+      );
+      const snap2 = await getDocs(q2);
+      return !snap2.empty;
+    } catch (e) {
+      console.error('Error checking Firebase enrollment:', e);
+    }
+  }
+
+  // Local fallback
+  const purchases = await getCollection('purchases');
+  return purchases.some(p => 
+    String(p.courseId) === String(courseId) && 
+    (String(p.userId) === String(userIdOrEmail) || String(p.userEmail).toLowerCase() === String(userIdOrEmail).toLowerCase())
+  );
+};
+
+// Purchase a course
+export const purchaseCourse = async (user, courseId, paymentDetails = {}) => {
+  if (!user) throw new Error('User must be logged in to purchase');
+
+  const purchaseDoc = {
+    id: `purchase-${Date.now()}`,
+    userId: user.uid || String(user.id),
+    userName: user.name,
+    userEmail: user.email.toLowerCase(),
+    courseId,
+    amount: paymentDetails.amount || 0,
+    paymentId: paymentDetails.paymentId || `mock-pay-${Date.now()}`,
+    date: new Date().toLocaleString('en-US', {
+      month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    }),
+    status: 'completed'
+  };
+
+  await saveItem('purchases', purchaseDoc);
+  return purchaseDoc;
+};
+
+// Admin manually adds enrollment
+export const adminAddEnrollment = async (email, courseId) => {
+  const normalizedEmail = email.toLowerCase().trim();
+  
+  // Find user by email to get their details
+  const users = await getCollection('users');
+  const user = users.find(u => u.email === normalizedEmail) || {
+    uid: `guest-${Date.now()}`,
+    name: normalizedEmail.split('@')[0],
+    email: normalizedEmail
+  };
+
+  const purchaseDoc = {
+    id: `enroll-${Date.now()}`,
+    userId: user.uid,
+    userName: user.name,
+    userEmail: normalizedEmail,
+    courseId,
+    amount: 0,
+    paymentId: `manual-admin-${Date.now()}`,
+    date: new Date().toLocaleString('en-US', {
+      month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    }),
+    status: 'completed'
+  };
+
+  await saveItem('purchases', purchaseDoc);
+};
+
+// Admin manually revokes enrollment
+export const adminRemoveEnrollment = async (purchaseId) => {
+  await deleteItem('purchases', purchaseId);
+};
+
+/* ==========================================================================
+   LEGACY COMPATIBILITY LOGIC & UTILITIES
+   ========================================================================== */
 export const getAdminAccount = () => {
   if (typeof window === 'undefined') return null;
   return safeJsonParse(window.localStorage.getItem('t360_v5_account'), null);
@@ -550,6 +1056,9 @@ export const saveAdminAccount = (account) => {
 
 export const isAdminLoggedIn = () => {
   if (typeof window === 'undefined') return false;
+  // Dynamic check: checks current session or legacy token
+  const curUser = safeJsonParse(window.localStorage.getItem('t360_v5_current_user'), null);
+  if (curUser && curUser.role === 'admin') return true;
   return window.localStorage.getItem('t360_v5_session') === 'active';
 };
 
@@ -557,9 +1066,23 @@ export const setAdminSession = (isActive) => {
   if (typeof window !== 'undefined') {
     if (isActive) {
       window.localStorage.setItem('t360_v5_session', 'active');
+      const curUser = safeJsonParse(window.localStorage.getItem('t360_v5_current_user'), null);
+      if (!curUser) {
+        window.localStorage.setItem('t360_v5_current_user', JSON.stringify({
+          uid: 'admin-uid',
+          name: 'Administrator',
+          email: 'admin@team360.com',
+          role: 'admin'
+        }));
+      }
     } else {
       window.localStorage.removeItem('t360_v5_session');
+      const curUser = safeJsonParse(window.localStorage.getItem('t360_v5_current_user'), null);
+      if (curUser && curUser.role === 'admin') {
+        window.localStorage.removeItem('t360_v5_current_user');
+      }
     }
+    window.dispatchEvent(new Event('t360-auth-changed'));
   }
 };
 
@@ -610,10 +1133,12 @@ export const emptyItemFor = (collection) => {
       readTime: '5 mins read',
       intro: '',
       quote: '',
-      sections: [],
+      sections: [
+        { heading: '', paragraphs: [''] }
+      ],
       technique: {
         title: '',
-        steps: [],
+        steps: [''],
       },
       conclusion: '',
     };
@@ -633,6 +1158,7 @@ export const emptyItemFor = (collection) => {
     whyChoose: '',
     faqs: [],
     image: '',
+    modules: [],
   };
 };
 

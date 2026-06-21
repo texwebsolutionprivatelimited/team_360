@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Sparkles, Send, CheckCircle } from 'lucide-react';
+import { saveItem } from '../admin/contentStore';
 
 export default function ContactModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
@@ -35,10 +36,11 @@ export default function ContactModal({ isOpen, onClose }) {
       message: formData.message.trim()
     };
 
-    // Sync locally for instant snappiness/compatibility
-    const existing = JSON.parse(localStorage.getItem('t360_v3_contacts') || '[]');
-    localStorage.setItem('t360_v3_contacts', JSON.stringify([newQuery, ...existing]));
-    window.dispatchEvent(new Event('t360-content-updated-v3'));
+    try {
+      await saveItem('contacts', newQuery);
+    } catch (err) {
+      console.error('Failed to save contact query:', err);
+    }
 
     // Simulate API request delay for manifestation confirmation UX
     setTimeout(() => {
@@ -69,15 +71,15 @@ export default function ContactModal({ isOpen, onClose }) {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 overflow-y-auto flex items-start sm:items-center justify-center p-4 py-8">
       {/* Blurred Backdrop */}
       <div 
-        className="absolute inset-0 bg-cosmic-darkest/80 backdrop-blur-md transition-opacity duration-300"
+        className="fixed inset-0 bg-cosmic-darkest/80 backdrop-blur-md transition-opacity duration-300"
         onClick={onClose}
       ></div>
 
       {/* Modal Box */}
-      <div className="relative w-full max-w-lg glass-card rounded-3xl p-6 sm:p-8 overflow-hidden shadow-2xl border border-gold/20 animate-float-slow">
+      <div className="relative w-full max-w-lg glass-card rounded-2xl sm:rounded-3xl p-5 sm:p-8 overflow-hidden shadow-2xl border border-gold/20 my-auto">
         
         {/* Glowing Background Auroras */}
         <div className="absolute -top-24 -left-24 w-48 h-48 rounded-full bg-cosmic-lavender/10 blur-3xl pointer-events-none"></div>

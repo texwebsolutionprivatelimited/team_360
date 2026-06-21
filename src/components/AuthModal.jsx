@@ -1,0 +1,239 @@
+import React, { useState } from 'react';
+import { X, Sparkles, LogIn, UserPlus, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { loginUser, registerUser } from '../admin/contentStore';
+
+export default function AuthModal({ isOpen, onClose, onSuccess }) {
+  const [isLoginTab, setIsLoginTab] = useState(true);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  if (!isOpen) return null;
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    setError(''); // Clear error on edit
+  };
+
+  const validate = () => {
+    if (!formData.email || !formData.password) {
+      setError('Please fill in all required fields.');
+      return false;
+    }
+    if (!isLoginTab) {
+      if (!formData.name) {
+        setError('Please enter your name.');
+        return false;
+      }
+      if (formData.password.length < 6) {
+        setError('Password must be at least 6 characters.');
+        return false;
+      }
+      if (formData.password !== formData.confirmPassword) {
+        setError('Passwords do not match.');
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    setLoading(true);
+    setError('');
+
+    try {
+      if (isLoginTab) {
+        // Login Flow
+        const loggedInUser = await loginUser(formData.email, formData.password);
+        if (onSuccess) onSuccess(loggedInUser);
+      } else {
+        // Register Flow
+        const registeredUser = await registerUser(formData.name, formData.email, formData.password);
+        if (onSuccess) onSuccess(registeredUser);
+      }
+      
+      // Reset form and close
+      setFormData({ name: '', email: '', password: '', confirmPassword: '' });
+      onClose();
+    } catch (err) {
+      console.error(err);
+      setError(err.message || 'An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 overflow-y-auto flex items-start sm:items-center justify-center p-4 py-8">
+      {/* Blurred Backdrop */}
+      <div 
+        className="fixed inset-0 bg-[#0D0302]/85 backdrop-blur-md transition-opacity duration-300"
+        onClick={onClose}
+      ></div>
+
+      {/* Modal Box */}
+      <div className="relative w-full max-w-md bg-gradient-to-br from-[#2A0D04] via-[#1A0802] to-[#120502] rounded-2xl sm:rounded-3xl p-5 sm:p-8 overflow-hidden shadow-2xl border border-[#FFD95A]/25 text-[#FCE7C2] my-auto">
+        
+        {/* Glowing Background Auroras */}
+        <div className="absolute -top-24 -left-24 w-48 h-48 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>
+        <div className="absolute -bottom-24 -right-24 w-48 h-48 rounded-full bg-amber-600/10 blur-3xl pointer-events-none"></div>
+
+        {/* Close Button */}
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 sm:top-5 sm:right-5 text-white/60 hover:text-[#FFD95A] transition-colors duration-200 cursor-pointer"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Logo Header */}
+        <div className="flex flex-col items-center mb-6">
+          <div className="w-12 h-12 rounded-full border border-[#FFD95A]/30 bg-[#FFD95A]/10 flex items-center justify-center mb-3">
+            <Sparkles className="w-6 h-6 text-[#FFD95A] animate-pulse" />
+          </div>
+          <h3 className="font-serif text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-[#FFD95A] to-white">
+            {isLoginTab ? 'Welcome Back' : 'Create Account'}
+          </h3>
+          <p className="text-white/60 text-xs mt-1 text-center font-medium leading-relaxed">
+            {isLoginTab 
+              ? 'Access your course vault and brain-training programs' 
+              : 'Join Team 360 and unlock your subconscious potential'}
+          </p>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex bg-[#120502] p-1 rounded-xl mb-6 border border-white/5">
+          <button
+            onClick={() => { setIsLoginTab(true); setError(''); }}
+            className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+              isLoginTab 
+                ? 'bg-[#FFD95A] text-[#2A0D04] shadow-md' 
+                : 'text-white/60 hover:text-white'
+            }`}
+          >
+            Login
+          </button>
+          <button
+            onClick={() => { setIsLoginTab(false); setError(''); }}
+            className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+              !isLoginTab 
+                ? 'bg-[#FFD95A] text-[#2A0D04] shadow-md' 
+                : 'text-white/60 hover:text-white'
+            }`}
+          >
+            Sign Up
+          </button>
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="mb-4 p-3.5 bg-red-500/10 border border-red-500/30 rounded-xl flex items-start gap-2.5 text-red-200 text-xs leading-normal">
+            <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-4 text-left">
+          
+          {/* Name Field (Only on signup) */}
+          {!isLoginTab && (
+            <div>
+              <label className="block text-[10px] font-black text-[#FFD95A] uppercase tracking-widest mb-1.5">Full Name</label>
+              <input 
+                type="text" 
+                name="name"
+                required
+                value={formData.name}
+                onChange={handleInputChange}
+                placeholder="Enter your name"
+                className="w-full bg-[#120502]/60 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FFD95A]/60 focus:ring-1 focus:ring-[#FFD95A]/30 transition-all text-xs font-semibold"
+              />
+            </div>
+          )}
+
+          {/* Email Field */}
+          <div>
+            <label className="block text-[10px] font-black text-[#FFD95A] uppercase tracking-widest mb-1.5">Email Address</label>
+            <input 
+              type="email" 
+              name="email"
+              required
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="name@example.com"
+              className="w-full bg-[#120502]/60 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FFD95A]/60 focus:ring-1 focus:ring-[#FFD95A]/30 transition-all text-xs font-semibold"
+            />
+          </div>
+
+          {/* Password Field */}
+          <div>
+            <label className="block text-[10px] font-black text-[#FFD95A] uppercase tracking-widest mb-1.5">Password</label>
+            <div className="relative">
+              <input 
+                type={showPassword ? 'text' : 'password'} 
+                name="password"
+                required
+                value={formData.password}
+                onChange={handleInputChange}
+                placeholder="••••••••"
+                className="w-full bg-[#120502]/60 border border-white/10 rounded-xl px-4 py-3 pr-10 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FFD95A]/60 focus:ring-1 focus:ring-[#FFD95A]/30 transition-all text-xs font-semibold"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-white/40 hover:text-white cursor-pointer"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
+
+          {/* Confirm Password Field (Only on signup) */}
+          {!isLoginTab && (
+            <div>
+              <label className="block text-[10px] font-black text-[#FFD95A] uppercase tracking-widest mb-1.5">Confirm Password</label>
+              <input 
+                type={showPassword ? 'text' : 'password'} 
+                name="confirmPassword"
+                required
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                placeholder="••••••••"
+                className="w-full bg-[#120502]/60 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FFD95A]/60 focus:ring-1 focus:ring-[#FFD95A]/30 transition-all text-xs font-semibold"
+              />
+            </div>
+          )}
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3.5 bg-[#FFD95A] hover:bg-amber-400 text-[#2A0D04] font-black rounded-xl flex items-center justify-center gap-2 transition-all shadow-md shadow-amber-500/10 hover:shadow-amber-500/25 mt-6 text-xs uppercase tracking-wider cursor-pointer"
+          >
+            {loading ? (
+              <span className="w-5 h-5 border-2 border-[#2A0D04] border-t-transparent rounded-full animate-spin"></span>
+            ) : (
+              <>
+                {isLoginTab ? <LogIn className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
+                {isLoginTab ? 'Login Account' : 'Sign Up Account'}
+              </>
+            )}
+          </button>
+        </form>
+
+
+      </div>
+    </div>
+  );
+}

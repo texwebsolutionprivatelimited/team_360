@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Phone, Sparkles, Send, CheckCircle, Shield, Award, HelpCircle, Heart } from 'lucide-react';
 import ddSharmaPortrait from '../assets/dd_sharma_portrait.jpg';
+import { saveItem } from '../admin/contentStore';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -34,10 +35,11 @@ export default function ContactPage() {
       message: formData.message.trim()
     };
 
-    // Sync locally for instant compatibility
-    const existing = JSON.parse(localStorage.getItem('t360_v3_contacts') || '[]');
-    localStorage.setItem('t360_v3_contacts', JSON.stringify([newQuery, ...existing]));
-    window.dispatchEvent(new Event('t360-content-updated-v3'));
+    try {
+      await saveItem('contacts', newQuery);
+    } catch (err) {
+      console.error('Failed to save query:', err);
+    }
 
     // Simulate API request delay for manifestation confirmation UX
     setTimeout(() => {

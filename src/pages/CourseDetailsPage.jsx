@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import ddSharmaPortrait from '../assets/dd_sharma_portrait.jpg';
-import { BookOpen, Check, Shield, Award, MessageCircle, ArrowLeft, Calendar, Sparkles, AlertCircle, Heart, Star, Coins, Flame, Sun } from 'lucide-react';
-import { isPrivateSession, useAdminContent } from '../admin/contentStore';
+import { BookOpen, Check, Shield, Award, MessageCircle, ArrowLeft, Calendar, Sparkles, AlertCircle, Heart, Star, Coins, Flame, Sun, X, CreditCard, QrCode, Lock, Play, ShieldCheck } from 'lucide-react';
+import { isPrivateSession, useAdminContent, useCurrentUser, checkEnrollment, purchaseCourse } from '../admin/contentStore';
+import AuthModal from '../components/AuthModal';
+import logoImg from '../assets/logo.png';
 
 const WhatsAppIcon = ({ className = "w-4 h-4 fill-white" }) => (
   <svg className={className} viewBox="0 0 24 24">
@@ -16,6 +18,146 @@ export default function CourseDetailsPage() {
 
   // Find the matching workshop
   const workshop = workshops.find((w) => w.id === id);
+
+  const navigate = useNavigate();
+  const { currentUser } = useCurrentUser();
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [enrollmentLoading, setEnrollmentLoading] = useState(true);
+
+  // Checkout Modal State
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [showPayModal, setShowPayModal] = useState(false);
+  const [paymentType, setPaymentType] = useState('upi'); // 'upi' or 'card'
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCvv, setCardCvv] = useState('');
+  const [payLoading, setPayLoading] = useState(false);
+
+  const isRecorded = workshop && (workshop.isRecorded || workshop.type === 'Recorded Session');
+
+  // Load enrollment statuses
+  useEffect(() => {
+    const loadEnrollment = async () => {
+      if (!workshop || !isRecorded) {
+        setEnrollmentLoading(false);
+        return;
+      }
+      if (!currentUser) {
+        setIsEnrolled(false);
+        setEnrollmentLoading(false);
+        return;
+      }
+      setEnrollmentLoading(true);
+      try {
+        const enrolled = await checkEnrollment(currentUser.uid || currentUser.id, workshop.id);
+        setIsEnrolled(enrolled);
+      } catch (e) {
+        console.error("Error checking enrollment:", e);
+      } finally {
+        setEnrollmentLoading(false);
+      }
+    };
+    loadEnrollment();
+  }, [currentUser, workshop, isRecorded]);
+
+  // Load Razorpay Checkout Script
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const handleBuyClick = () => {
+    if (!currentUser) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+    
+    // Check if Razorpay Key exists in settings
+    let rzpKey = import.meta.env.VITE_RAZORPAY_KEY_ID || '';
+    try {
+      const settings = JSON.parse(localStorage.getItem('t360_v5_settings') || '{}');
+      if (settings && settings.razorpayKey) {
+        rzpKey = settings.razorpayKey;
+      }
+    } catch(e) {}
+
+    if (rzpKey) {
+      // Trigger Real Razorpay Checkout
+      triggerRazorpay(workshop, rzpKey);
+    } else {
+      // Open Mock Payment Modal
+      setShowPayModal(true);
+    }
+  };
+
+  const triggerRazorpay = async (course, rzpKey) => {
+    const loaded = await loadRazorpayScript();
+    if (!loaded) {
+      alert('Failed to load payment gateways. Please try again.');
+      return;
+    }
+
+    const options = {
+      key: rzpKey,
+      amount: (course.price || 35400) * 100, // in paisa
+      currency: 'INR',
+      name: 'Team 360',
+      description: course.title,
+      image: logoImg,
+      handler: async function (response) {
+        setPayLoading(true);
+        try {
+          await purchaseCourse(currentUser, course.id, {
+            amount: course.price || 35400,
+            paymentId: response.razorpay_payment_id
+          });
+          setIsEnrolled(true);
+          navigate(`/recorded-courses/${course.id}`);
+        } catch (e) {
+          alert('Failed to record purchase: ' + e.message);
+        } finally {
+          setPayLoading(false);
+        }
+      },
+      prefill: {
+        name: currentUser.name,
+        email: currentUser.email,
+      },
+      theme: {
+        color: '#2A0D04'
+      }
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
+
+  const handleMockPaymentSubmit = async (e) => {
+    e.preventDefault();
+    setPayLoading(true);
+
+    // Simulate payment processing delay
+    setTimeout(async () => {
+      try {
+        await purchaseCourse(currentUser, workshop.id, {
+          amount: workshop.price || 35400,
+          paymentId: `mock-pay-${Date.now()}`
+        });
+        setIsEnrolled(true);
+        setShowPayModal(false);
+        navigate(`/recorded-courses/${workshop.id}`);
+      } catch (err) {
+        alert('Failed to process mock purchase');
+      } finally {
+        setPayLoading(false);
+      }
+    }, 1500);
+  };
 
   useEffect(() => {
     if (workshop) {
@@ -332,7 +474,7 @@ export default function CourseDetailsPage() {
         {/* Back Link */}
         <div className="mb-6">
           <Link
-            to="/courses"
+            to={isRecorded ? "/recorded-courses" : "/courses"}
             className="inline-flex items-center gap-2 text-[#6B2D17] hover:text-[#2A0D04] font-bold text-[10px] sm:text-sm uppercase tracking-wider transition-colors bg-white/60 border border-amber-200/50 px-4 py-2 rounded-full"
           >
             <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -410,17 +552,56 @@ export default function CourseDetailsPage() {
 
               {/* Registration and Whatsapp Actions */}
               <div className="bg-amber-50/30 border border-amber-200 p-3.5 sm:p-5 rounded-2xl space-y-4 shadow-sm">
-                <a
-                  href={`https://wa.me/916376779062?text=Hello%20Team%20360%20Support,%20I%20am%20very%20interested%20in%20registering%20for%20the%20${encodeURIComponent(workshop.title)}.%20Please%20guide%20me%20on%20the%20registration%20details!`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full bg-gradient-to-r from-[#25D366] to-[#20BA56] hover:brightness-105 text-white font-black py-3 sm:py-4 px-2 sm:px-4 rounded-xl flex items-center justify-center gap-1.5 sm:gap-2.5 text-[10px] sm:text-xs uppercase tracking-wider shadow-md transition-all active:scale-[0.98] cursor-pointer"
-                >
-                  <WhatsAppIcon className="w-4.5 h-4.5 sm:w-5 sm:h-5 fill-white animate-bounce flex-shrink-0" />
-                  Register via WhatsApp
-                </a>
+                {isRecorded ? (
+                  enrollmentLoading ? (
+                    <div className="text-center py-2 flex flex-col items-center">
+                      <span className="w-6 h-6 border-2 border-[#2A0D04] border-t-transparent rounded-full animate-spin"></span>
+                      <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider mt-2">Checking access status...</span>
+                    </div>
+                  ) : isEnrolled ? (
+                    <button
+                      onClick={() => navigate(`/recorded-courses/${workshop.id}`)}
+                      className="w-full bg-[#2A0D04] hover:bg-[#6B2D17] text-[#FFD95A] font-black py-3 sm:py-4 px-2 sm:px-4 rounded-xl flex items-center justify-center gap-1.5 sm:gap-2.5 text-[10px] sm:text-xs uppercase tracking-wider shadow-md transition-all active:scale-[0.98] cursor-pointer"
+                    >
+                      <BookOpen className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-[#FFD95A]" />
+                      Watch Lessons Now
+                    </button>
+                  ) : (
+                    <div className="space-y-3">
+                      <button
+                        onClick={handleBuyClick}
+                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 sm:py-4 px-2 sm:px-4 rounded-xl flex items-center justify-center gap-1.5 sm:gap-2.5 text-[10px] sm:text-xs uppercase tracking-wider shadow-md transition-all active:scale-[0.98] cursor-pointer"
+                      >
+                        <CreditCard className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-white" />
+                        Buy Course Online (₹{(workshop.price || 35400).toLocaleString('en-IN')})
+                      </button>
+                      <a
+                        href={`https://wa.me/916376779062?text=Hello%20Team%20360%20Support,%20I%20am%20interested%20in%20buying%20the%20recorded%20course%20${encodeURIComponent(workshop.title)}.%20Please%20guide%20me%20on%20alternative%20payment%20methods!`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full bg-gradient-to-r from-[#25D366] to-[#20BA56] hover:brightness-105 text-white font-bold py-3 sm:py-4 px-2 sm:px-4 rounded-xl flex items-center justify-center gap-1.5 sm:gap-2.5 text-[10px] sm:text-xs uppercase tracking-wider shadow-md transition-all active:scale-[0.98] cursor-pointer"
+                      >
+                        <WhatsAppIcon className="w-4.5 h-4.5 sm:w-5 sm:h-5 fill-white" />
+                        Inquire on WhatsApp
+                      </a>
+                    </div>
+                  )
+                ) : (
+                  <a
+                    href={`https://wa.me/916376779062?text=Hello%20Team%20360%20Support,%20I%20am%20very%20interested%20in%20registering%20for%20the%20${encodeURIComponent(workshop.title)}.%20Please%20guide%20me%20on%20the%20registration%20details!`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-gradient-to-r from-[#25D366] to-[#20BA56] hover:brightness-105 text-white font-black py-3 sm:py-4 px-2 sm:px-4 rounded-xl flex items-center justify-center gap-1.5 sm:gap-2.5 text-[10px] sm:text-xs uppercase tracking-wider shadow-md transition-all active:scale-[0.98] cursor-pointer"
+                  >
+                    <WhatsAppIcon className="w-4.5 h-4.5 sm:w-5 sm:h-5 fill-white animate-bounce flex-shrink-0" />
+                    Register via WhatsApp
+                  </a>
+                )}
                 <p className="text-[9px] sm:text-[10px] text-gray-500 text-center font-medium leading-relaxed">
-                  Deep activations involve precise cosmic timings. Tap above to connect with D.D. Sharma's office on WhatsApp for slot allocations, pricing structures, and joining links.
+                  {isRecorded 
+                    ? "Get instant online access to high-definition recorded lessons and course modules. Tap above to enroll directly."
+                    : "Deep activations involve precise cosmic timings. Tap above to connect with D.D. Sharma's office on WhatsApp for slot allocations, pricing structures, and joining links."
+                  }
                 </p>
               </div>
             </div>
@@ -472,39 +653,95 @@ export default function CourseDetailsPage() {
               <div className="absolute top-[-5%] right-[-5%] w-64 h-64 rounded-full bg-amber-100/30 blur-3xl pointer-events-none" />
 
               {/* Sacred Roadmap / Curriculum Timeline */}
-              {curriculumBlocks.length > 0 && (
-                <div className="space-y-6 mb-8">
+              {isRecorded && workshop.modules && workshop.modules.length > 0 ? (
+                <div className="space-y-6 mb-8 text-left">
                   <h3 className="font-serif text-lg sm:text-xl font-bold text-[#2A0D04] flex items-center gap-2 mb-4">
                     <BookOpen className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-[#6B2D17]" />
-                    Program Roadmap & Curriculum
+                    Course Syllabus & Modules
                   </h3>
 
-                  <div className="relative pl-5 sm:pl-8 border-l-2 border-amber-300/80 ml-1.5 sm:ml-2 space-y-6">
-                    {curriculumBlocks.map((block, idx) => (
-                      <div key={idx} className="relative group/timeline">
-                        {/* Timeline Node dot */}
-                        <span className="absolute left-[-29px] sm:left-[-41px] top-2 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#2A0D04] border-4 border-white shadow-md group-hover/timeline:scale-110 transition-transform duration-300 flex items-center justify-center z-10" />
-
-                        <div className="bg-amber-50/40 border-2 border-amber-300/80 p-3.5 sm:p-5 rounded-2xl group-hover/timeline:border-[#6B2D17]/40 group-hover/timeline:bg-amber-50/70 transition-all duration-300">
-                          {block.title ? (
-                            <>
-                              <h4 className="font-serif font-black text-xs sm:text-base text-[#2A0D04] mb-1.5">
-                                {block.title}
-                              </h4>
-                              <p className="text-gray-700 text-[11px] sm:text-sm leading-relaxed font-medium">
-                                {block.desc}
-                              </p>
-                            </>
-                          ) : (
-                            <p className="text-gray-700 text-[11px] sm:text-sm leading-relaxed font-medium">
-                              {block.desc}
-                            </p>
-                          )}
+                  <div className="space-y-6">
+                    {workshop.modules.map((mod, modIdx) => (
+                      <div key={mod.id || modIdx} className="bg-amber-50/20 border border-amber-100 p-4 sm:p-5 rounded-2xl space-y-3">
+                        <h4 className="font-serif text-sm sm:text-base font-extrabold text-[#2A0D04] border-b border-amber-200/50 pb-2">
+                          {mod.title}
+                        </h4>
+                        
+                        <div className="space-y-2.5">
+                          {mod.sessions && mod.sessions.map((session, sIdx) => (
+                            <div 
+                              key={session.id || sIdx}
+                              onClick={() => {
+                                if (isEnrolled) {
+                                  navigate(`/recorded-courses/${workshop.id}`);
+                                } else {
+                                  handleBuyClick();
+                                }
+                              }}
+                              className="bg-white border border-amber-100 p-3 rounded-xl flex items-start justify-between gap-3 hover:bg-amber-50/50 hover:border-amber-200 transition-all cursor-pointer group"
+                            >
+                              <div className="flex-1 min-w-0">
+                                <h5 className="text-xs sm:text-sm font-bold text-[#2A0D04] flex items-center gap-1.5 leading-snug">
+                                  {session.title}
+                                </h5>
+                                <p className="text-[11px] text-gray-500 font-medium leading-relaxed mt-1 line-clamp-2">
+                                  {session.desc || session.description || 'Practice session details.'}
+                                </p>
+                              </div>
+                              
+                              <div className="shrink-0 flex items-center justify-center">
+                                {isEnrolled ? (
+                                  <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                                    <Play className="w-3 h-3 fill-current" />
+                                  </div>
+                                ) : (
+                                  <div className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-[#6B2D17] group-hover:bg-[#6B2D17] group-hover:text-white transition-all">
+                                    <Lock className="w-3 h-3" />
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
+              ) : (
+                curriculumBlocks.length > 0 && (
+                  <div className="space-y-6 mb-8">
+                    <h3 className="font-serif text-lg sm:text-xl font-bold text-[#2A0D04] flex items-center gap-2 mb-4">
+                      <BookOpen className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-[#6B2D17]" />
+                      Program Roadmap & Curriculum
+                    </h3>
+
+                    <div className="relative pl-5 sm:pl-8 border-l-2 border-amber-300/80 ml-1.5 sm:ml-2 space-y-6">
+                      {curriculumBlocks.map((block, idx) => (
+                        <div key={idx} className="relative group/timeline">
+                          {/* Timeline Node dot */}
+                          <span className="absolute left-[-29px] sm:left-[-41px] top-2 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#2A0D04] border-4 border-white shadow-md group-hover/timeline:scale-110 transition-transform duration-300 flex items-center justify-center z-10" />
+
+                          <div className="bg-amber-50/40 border-2 border-amber-300/80 p-3.5 sm:p-5 rounded-2xl group-hover/timeline:border-[#6B2D17]/40 group-hover/timeline:bg-amber-50/70 transition-all duration-300">
+                            {block.title ? (
+                              <>
+                                <h4 className="font-serif font-black text-xs sm:text-base text-[#2A0D04] mb-1.5">
+                                  {block.title}
+                                </h4>
+                                <p className="text-gray-700 text-[11px] sm:text-sm leading-relaxed font-medium">
+                                  {block.desc}
+                                </p>
+                              </>
+                            ) : (
+                              <p className="text-gray-700 text-[11px] sm:text-sm leading-relaxed font-medium">
+                                {block.desc}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )
               )}
 
               {/* Key Benefits Grid */}
@@ -620,23 +857,53 @@ export default function CourseDetailsPage() {
         <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] p-4 sm:p-6 border border-amber-200 shadow-2xl relative overflow-hidden mb-6 sm:mb-12 max-w-2xl mx-auto text-center transition-all duration-300 hover:scale-[1.01]">
           <div className={`absolute top-[-30%] left-[-30%] w-32 h-32 rounded-full blur-2xl pointer-events-none ${bottomData.glowBg}`} />
           <h4 className="font-serif font-bold text-[#2A0D04] text-sm sm:text-base mb-2">
-            {bottomData.title}
+            {isRecorded 
+              ? (isEnrolled ? "You are enrolled in this course!" : "Ready to start your learning journey online?") 
+              : bottomData.title
+            }
           </h4>
           <p className="text-gray-600 text-xs mb-5 font-semibold leading-relaxed">
-            {bottomData.desc}
+            {isRecorded 
+              ? (isEnrolled ? "Get immediate access to watch all sessions inside your private recorded portal." : `Unlock the complete self-paced syllabus immediately with secure online checkout for only ₹${(workshop.price || 35400).toLocaleString('en-IN')}.`) 
+              : bottomData.desc
+            }
           </p>
           <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 justify-center">
-            <a
-              href={`https://wa.me/916376779062?text=Hello%20Team%20360%20Support,%20I%20am%20very%20interested%20in%20registering%20for%20the%20${encodeURIComponent(workshop.title)}.%20Please%20guide%20me%20on%20the%20registration%20details!`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-64 bg-[#2A0D04] hover:bg-[#120502] text-white font-black py-3.5 sm:py-4 rounded-2xl flex items-center justify-center gap-2 text-[10px] sm:text-xs uppercase tracking-wider shadow-lg transition-all active:scale-[0.98] cursor-pointer"
-            >
-              <WhatsAppIcon className="w-4.5 h-4.5 sm:w-5 sm:h-5 fill-white" />
-              Connect for Booking
-            </a>
+            {isRecorded ? (
+              enrollmentLoading ? (
+                <div className="text-center py-2 flex flex-col items-center">
+                  <span className="w-6 h-6 border-2 border-[#2A0D04] border-t-transparent rounded-full animate-spin"></span>
+                </div>
+              ) : isEnrolled ? (
+                <button
+                  onClick={() => navigate(`/recorded-courses/${workshop.id}`)}
+                  className="w-full sm:w-64 bg-[#2A0D04] hover:bg-[#120502] text-white font-black py-3.5 sm:py-4 rounded-2xl flex items-center justify-center gap-2 text-[10px] sm:text-xs uppercase tracking-wider shadow-lg transition-all active:scale-[0.98] cursor-pointer"
+                >
+                  <BookOpen className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-white" />
+                  Watch Lessons Now
+                </button>
+              ) : (
+                <button
+                  onClick={handleBuyClick}
+                  className="w-full sm:w-64 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 sm:py-4 rounded-2xl flex items-center justify-center gap-2 text-[10px] sm:text-xs uppercase tracking-wider shadow-lg transition-all active:scale-[0.98] cursor-pointer"
+                >
+                  <CreditCard className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-white" />
+                  Buy Course Online
+                </button>
+              )
+            ) : (
+              <a
+                href={`https://wa.me/916376779062?text=Hello%20Team%20360%20Support,%20I%20am%20very%20interested%20in%20registering%20for%20the%20${encodeURIComponent(workshop.title)}.%20Please%20guide%20me%20on%20the%20registration%20details!`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-64 bg-[#2A0D04] hover:bg-[#120502] text-white font-black py-3.5 sm:py-4 rounded-2xl flex items-center justify-center gap-2 text-[10px] sm:text-xs uppercase tracking-wider shadow-lg transition-all active:scale-[0.98] cursor-pointer"
+              >
+                <WhatsAppIcon className="w-4.5 h-4.5 sm:w-5 sm:h-5 fill-white" />
+                Connect for Booking
+              </a>
+            )}
             <Link
-              to="/courses"
+              to={isRecorded ? "/recorded-courses" : "/courses"}
               className="w-full sm:w-auto border border-amber-200 hover:bg-gray-50 text-gray-800 font-bold py-3.5 sm:py-4 px-6 sm:px-8 rounded-2xl text-center text-[10px] sm:text-xs uppercase tracking-wider transition-all"
             >
               Return to Catalog
@@ -644,7 +911,6 @@ export default function CourseDetailsPage() {
           </div>
         </div>
 
-        {/* Row 6: Suggestion Section (More Like This) */}
         <div className="border-t border-amber-200/60 pt-6 sm:pt-12 lg:pt-16">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-10">
             <div>
@@ -656,7 +922,7 @@ export default function CourseDetailsPage() {
               </p>
             </div>
             <Link
-              to="/courses"
+              to={isRecorded ? "/recorded-courses" : "/courses"}
               className="mt-4 sm:mt-0 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#6B2D17] hover:text-[#6B2D17] transition-colors"
             >
               Explore All <Sparkles className="w-4 h-4 text-[#6B2D17] animate-pulse" />
@@ -707,6 +973,156 @@ export default function CourseDetailsPage() {
         </div>
 
       </div>
+
+      {/* Mock Checkout Modal */}
+      {showPayModal && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center p-4 overflow-y-auto">
+          <div className="fixed inset-0 bg-black/85 backdrop-blur-sm" onClick={() => setShowPayModal(false)} />
+          
+          <div className="relative my-auto w-full max-w-md bg-gradient-to-br from-[#2A0D04] via-[#1A0802] to-[#120502] border border-[#FFD95A]/25 rounded-2xl sm:rounded-3xl p-5 sm:p-8 overflow-hidden shadow-2xl text-left text-[#FCE7C2]">
+            <button onClick={() => setShowPayModal(false)} className="absolute top-4 right-4 sm:top-5 sm:right-5 text-white/50 hover:text-white cursor-pointer z-10">
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Header */}
+            <div className="border-b border-white/10 pb-4 mb-5 flex items-center gap-3 pr-8">
+              <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                <CreditCard className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-serif text-lg font-bold text-white">Payment Checkout</h3>
+                <span className="text-[10px] text-white/50 tracking-wider uppercase font-black">Demo Payment Gateway</span>
+              </div>
+            </div>
+
+            {/* Course Summary */}
+            <div className="bg-white/5 p-4 rounded-2xl border border-white/10 space-y-1 mb-5">
+              <span className="text-[9px] uppercase font-black text-[#FFD95A] tracking-wider">Course Selected</span>
+              <h4 className="font-serif text-sm font-bold text-white">{workshop.title}</h4>
+              <div className="flex justify-between items-center pt-2 mt-2 border-t border-white/5 text-xs">
+                <span className="text-white/60 font-semibold">Total Amount</span>
+                <span className="font-black text-white text-base">₹{(workshop.price || 35400).toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+
+            {/* Tabs (Card / UPI) */}
+            <div className="flex bg-[#120502] p-1 rounded-xl mb-5 border border-white/5 text-xs">
+              <button
+                type="button"
+                onClick={() => setPaymentType('upi')}
+                className={`flex-1 py-2 rounded-lg font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  paymentType === 'upi' ? 'bg-[#FFD95A] text-[#2A0D04]' : 'text-white/60 hover:text-white'
+                }`}
+              >
+                <QrCode className="w-4 h-4" /> UPI QR Code
+              </button>
+              <button
+                type="button"
+                onClick={() => setPaymentType('card')}
+                className={`flex-1 py-2 rounded-lg font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  paymentType === 'card' ? 'bg-[#FFD95A] text-[#2A0D04]' : 'text-white/60 hover:text-white'
+                }`}
+              >
+                <CreditCard className="w-4 h-4" /> Credit Card
+              </button>
+            </div>
+
+            {/* Payment Content */}
+            <form onSubmit={handleMockPaymentSubmit} className="space-y-4">
+              {paymentType === 'upi' ? (
+                <div className="text-center py-4 flex flex-col items-center justify-center space-y-3">
+                  <div className="bg-white p-3 rounded-2xl border border-amber-100 shadow-md">
+                    {/* Simulated QR Code */}
+                    <svg className="w-32 h-32 text-gray-900" viewBox="0 0 100 100">
+                      <rect width="100" height="100" fill="white"/>
+                      <rect x="10" y="10" width="20" height="20" fill="currentColor"/>
+                      <rect x="70" y="10" width="20" height="20" fill="currentColor"/>
+                      <rect x="10" y="70" width="20" height="20" fill="currentColor"/>
+                      <rect x="15" y="15" width="10" height="10" fill="white"/>
+                      <rect x="75" y="15" width="10" height="10" fill="white"/>
+                      <rect x="15" y="75" width="10" height="10" fill="white"/>
+                      <rect x="35" y="35" width="30" height="30" fill="currentColor"/>
+                      <rect x="40" y="40" width="20" height="20" fill="white"/>
+                      <rect x="45" y="45" width="10" height="10" fill="currentColor"/>
+                      <rect x="75" y="75" width="15" height="15" fill="currentColor"/>
+                      <rect x="10" y="40" width="10" height="20" fill="currentColor"/>
+                      <rect x="40" y="10" width="20" height="10" fill="currentColor"/>
+                    </svg>
+                  </div>
+                  <p className="text-[10px] text-white/50 font-bold uppercase tracking-wider leading-relaxed">
+                    Scan using any UPI App (GPay, PhonePe, Paytm)<br />
+                    or click the button below to simulate payment success.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3.5">
+                  <div>
+                    <label className="block text-[9px] font-black text-[#FFD95A] uppercase tracking-widest mb-1">Card Number</label>
+                    <input 
+                      type="text" 
+                      required
+                      placeholder="4111 2222 3333 4444"
+                      value={cardNumber}
+                      onChange={(e) => setCardNumber(e.target.value)}
+                      className="w-full bg-[#120502]/60 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FFD95A]/60 text-xs font-bold"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[9px] font-black text-[#FFD95A] uppercase tracking-widest mb-1">Expiry Date</label>
+                      <input 
+                        type="text" 
+                        required
+                        placeholder="MM/YY"
+                        value={cardExpiry}
+                        onChange={(e) => setCardExpiry(e.target.value)}
+                        className="w-full bg-[#120502]/60 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FFD95A]/60 text-xs font-bold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-black text-[#FFD95A] uppercase tracking-widest mb-1">CVV</label>
+                      <input 
+                        type="password" 
+                        required
+                        maxLength="3"
+                        placeholder="•••"
+                        value={cardCvv}
+                        onChange={(e) => setCardCvv(e.target.value)}
+                        className="w-full bg-[#120502]/60 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FFD95A]/60 text-xs font-bold"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Submit CTA */}
+              <button
+                type="submit"
+                disabled={payLoading}
+                className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-500/10 mt-6 text-xs uppercase tracking-wider cursor-pointer"
+              >
+                {payLoading ? (
+                  <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                ) : (
+                  <>
+                    <ShieldCheck className="w-4.5 h-4.5" />
+                    Complete Payment Simulator
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Auth Modal Trigger */}
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccess={() => handleBuyClick()}
+      />
     </div>
   );
 }
+
+
