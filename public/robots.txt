@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Direct search engine crawlers to our XML sitemap
-Sitemap: https://team360mindset.in/sitemap.xml
+Sitemap: https://devendraduttsharma.com/sitemap.xml
