@@ -146,11 +146,11 @@ export default function BooksPage() {
       {/* Page Header */}
       <div className="relative pt-4 pb-3 sm:pb-6 text-center overflow-hidden">
         <div className="relative z-10 max-w-4xl mx-auto px-4">
-          <span className="inline-flex items-center gap-1.5 text-[10px] xs:text-xs font-bold tracking-widest text-[#6B2D17] uppercase mb-3 whitespace-nowrap">
+          <span className="inline-flex items-center gap-1.5 text-[10px] xs:text-xs font-bold tracking-widest text-[#6B2D17] uppercase mb-3">
             <BookOpen className="w-4 h-4 text-[#6B2D17]" />
             Official Spiritual &amp; Motivational Books
           </span>
-          <h1 className="font-serif text-[21px] xs:text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#2A0D04] leading-tight mb-3 whitespace-nowrap">
+          <h1 className="font-serif text-[21px] xs:text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#2A0D04] leading-tight mb-3">
             Spiritual &amp; Motivational Books
           </h1>
           <p className="text-gray-700 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed font-medium">

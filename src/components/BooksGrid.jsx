@@ -45,11 +45,11 @@ export default function BooksGrid({ limit }) {
         {/* Header - Only render if not inside catalog page (or render slightly adapted) */}
         {!limit ? null : (
           <div className="text-center mb-10 max-w-3xl mx-auto">
-            <span className="inline-flex items-center gap-1.5 text-[10px] xs:text-xs font-bold tracking-widest text-[#6B2D17] uppercase mb-3 animate-tagline-blink whitespace-nowrap">
+            <span className="inline-flex items-center gap-1.5 text-[10px] xs:text-xs font-bold tracking-widest text-[#6B2D17] uppercase mb-3 animate-tagline-blink">
               <Gem className="w-3.5 h-3.5" />
-              Empowering Mindsets & Abundance
+              Empowering Mindsets &amp; Abundance
             </span>
-            <h2 className="font-serif text-[21px] xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#2A0D04] mb-3 whitespace-nowrap">
+            <h2 className="font-serif text-[21px] xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#2A0D04] mb-3">
               Spiritual &amp; Motivational Books
             </h2>
             <div className="w-20 h-1 mx-auto rounded-full bg-gradient-to-r from-[#2A0D04] to-[#6B2D17] mb-4" />
