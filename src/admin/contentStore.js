@@ -5,7 +5,8 @@ import {
   createUserWithEmailAndPassword, 
   signOut, 
   onAuthStateChanged,
-  updateProfile
+  updateProfile,
+  sendPasswordResetEmail
 } from 'firebase/auth';
 import { 
   collection, 
@@ -884,6 +885,24 @@ export const logoutUser = async () => {
   window.localStorage.removeItem('t360_v5_current_user');
   window.localStorage.removeItem('t360_v5_session');
   window.dispatchEvent(new Event('t360-auth-changed'));
+};
+
+// Reset user password
+export const resetUserPassword = async (email) => {
+  const normalizedEmail = email.toLowerCase().trim();
+
+  if (isFirebaseEnabled && auth) {
+    await sendPasswordResetEmail(auth, normalizedEmail);
+    return;
+  }
+
+  // Local fallback mock behavior
+  const users = await getCollection('users');
+  const found = users.find(u => u.email === normalizedEmail);
+  if (!found) {
+    throw new Error('No user found with this email address.');
+  }
+  return;
 };
 
 // Hook for accessing the current user auth state reactively

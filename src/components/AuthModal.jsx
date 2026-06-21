@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { X, Sparkles, LogIn, UserPlus, Eye, EyeOff, AlertCircle } from 'lucide-react';
-import { loginUser, registerUser } from '../admin/contentStore';
+import { X, Sparkles, LogIn, UserPlus, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
+import { loginUser, registerUser, resetUserPassword } from '../admin/contentStore';
 
 export default function AuthModal({ isOpen, onClose, onSuccess }) {
   const [isLoginTab, setIsLoginTab] = useState(true);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,6 +22,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     setError(''); // Clear error on edit
+    setSuccessMessage('');
   };
 
   const validate = () => {
@@ -46,6 +49,28 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (isForgotPassword) {
+      if (!formData.email) {
+        setError('Please enter your email address.');
+        return;
+      }
+      setLoading(true);
+      setError('');
+      setSuccessMessage('');
+      try {
+        await resetUserPassword(formData.email);
+        setSuccessMessage('A password reset link has been sent to your email.');
+        setFormData({ name: '', email: '', password: '', confirmPassword: '' });
+      } catch (err) {
+        console.error(err);
+        setError(err.message || 'An error occurred. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
     if (!validate()) return;
 
     setLoading(true);
@@ -102,38 +127,44 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
             <Sparkles className="w-6 h-6 text-[#FFD95A] animate-pulse" />
           </div>
           <h3 className="font-serif text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-[#FFD95A] to-white">
-            {isLoginTab ? 'Welcome Back' : 'Create Account'}
+            {isForgotPassword 
+              ? 'Reset Password' 
+              : (isLoginTab ? 'Welcome Back' : 'Create Account')}
           </h3>
           <p className="text-white/60 text-xs mt-1 text-center font-medium leading-relaxed">
-            {isLoginTab 
-              ? 'Access your course vault and brain-training programs' 
-              : 'Join Team 360 and unlock your subconscious potential'}
+            {isForgotPassword 
+              ? 'Enter your email to receive a password reset link'
+              : (isLoginTab 
+                  ? 'Access your course vault and brain-training programs' 
+                  : 'Join Team 360 and unlock your subconscious potential')}
           </p>
         </div>
 
-        {/* Tabs */}
-        <div className="flex bg-[#120502] p-1 rounded-xl mb-6 border border-white/5">
-          <button
-            onClick={() => { setIsLoginTab(true); setError(''); }}
-            className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-              isLoginTab 
-                ? 'bg-[#FFD95A] text-[#2A0D04] shadow-md' 
-                : 'text-white/60 hover:text-white'
-            }`}
-          >
-            Login
-          </button>
-          <button
-            onClick={() => { setIsLoginTab(false); setError(''); }}
-            className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-              !isLoginTab 
-                ? 'bg-[#FFD95A] text-[#2A0D04] shadow-md' 
-                : 'text-white/60 hover:text-white'
-            }`}
-          >
-            Sign Up
-          </button>
-        </div>
+        {/* Tabs (Hidden during Forgot Password flow) */}
+        {!isForgotPassword && (
+          <div className="flex bg-[#120502] p-1 rounded-xl mb-6 border border-white/5">
+            <button
+              onClick={() => { setIsLoginTab(true); setError(''); setSuccessMessage(''); }}
+              className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                isLoginTab 
+                  ? 'bg-[#FFD95A] text-[#2A0D04] shadow-md' 
+                  : 'text-white/60 hover:text-white'
+              }`}
+            >
+              Login
+            </button>
+            <button
+              onClick={() => { setIsLoginTab(false); setError(''); setSuccessMessage(''); }}
+              className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                !isLoginTab 
+                  ? 'bg-[#FFD95A] text-[#2A0D04] shadow-md' 
+                  : 'text-white/60 hover:text-white'
+              }`}
+            >
+              Sign Up
+            </button>
+          </div>
+        )}
 
         {/* Error Message */}
         {error && (
@@ -143,11 +174,19 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
           </div>
         )}
 
+        {/* Success Message */}
+        {successMessage && (
+          <div className="mb-4 p-3.5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl flex items-start gap-2.5 text-emerald-200 text-xs leading-normal">
+            <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+            <span>{successMessage}</span>
+          </div>
+        )}
+
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4 text-left">
           
           {/* Name Field (Only on signup) */}
-          {!isLoginTab && (
+          {!isForgotPassword && !isLoginTab && (
             <div>
               <label className="block text-[10px] font-black text-[#FFD95A] uppercase tracking-widest mb-1.5">Full Name</label>
               <input 
@@ -176,31 +215,44 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
             />
           </div>
 
-          {/* Password Field */}
-          <div>
-            <label className="block text-[10px] font-black text-[#FFD95A] uppercase tracking-widest mb-1.5">Password</label>
-            <div className="relative">
-              <input 
-                type={showPassword ? 'text' : 'password'} 
-                name="password"
-                required
-                value={formData.password}
-                onChange={handleInputChange}
-                placeholder="••••••••"
-                className="w-full bg-[#120502]/60 border border-white/10 rounded-xl px-4 py-3 pr-10 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FFD95A]/60 focus:ring-1 focus:ring-[#FFD95A]/30 transition-all text-xs font-semibold"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-3 flex items-center text-white/40 hover:text-white cursor-pointer"
-              >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
+          {/* Password Field (Hidden in Forgot Password mode) */}
+          {!isForgotPassword && (
+            <div>
+              <label className="block text-[10px] font-black text-[#FFD95A] uppercase tracking-widest mb-1.5">Password</label>
+              <div className="relative">
+                <input 
+                  type={showPassword ? 'text' : 'password'} 
+                  name="password"
+                  required
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="••••••••"
+                  className="w-full bg-[#120502]/60 border border-white/10 rounded-xl px-4 py-3 pr-10 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FFD95A]/60 focus:ring-1 focus:ring-[#FFD95A]/30 transition-all text-xs font-semibold"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-3 flex items-center text-white/40 hover:text-white cursor-pointer"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+              
+              {/* Forgot Password Link */}
+              {isLoginTab && (
+                <button
+                  type="button"
+                  onClick={() => { setIsForgotPassword(true); setError(''); setSuccessMessage(''); }}
+                  className="text-[10px] text-[#FFD95A]/70 hover:text-[#FFD95A] block mt-2 hover:underline text-right w-full font-bold cursor-pointer"
+                >
+                  Forgot Password?
+                </button>
+              )}
             </div>
-          </div>
+          )}
 
           {/* Confirm Password Field (Only on signup) */}
-          {!isLoginTab && (
+          {!isForgotPassword && !isLoginTab && (
             <div>
               <label className="block text-[10px] font-black text-[#FFD95A] uppercase tracking-widest mb-1.5">Confirm Password</label>
               <input 
@@ -225,11 +277,26 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
               <span className="w-5 h-5 border-2 border-[#2A0D04] border-t-transparent rounded-full animate-spin"></span>
             ) : (
               <>
-                {isLoginTab ? <LogIn className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
-                {isLoginTab ? 'Login Account' : 'Sign Up Account'}
+                {isForgotPassword 
+                  ? <LogIn className="w-4 h-4" /> 
+                  : (isLoginTab ? <LogIn className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />)}
+                {isForgotPassword 
+                  ? 'Send Reset Email' 
+                  : (isLoginTab ? 'Login Account' : 'Sign Up Account')}
               </>
             )}
           </button>
+          
+          {/* Back to Login link */}
+          {isForgotPassword && (
+            <button
+              type="button"
+              onClick={() => { setIsForgotPassword(false); setError(''); setSuccessMessage(''); }}
+              className="text-xs text-[#FFD95A]/70 hover:text-[#FFD95A] mt-4 block text-center mx-auto hover:underline font-bold cursor-pointer"
+            >
+              Back to Login
+            </button>
+          )}
         </form>
 
 
