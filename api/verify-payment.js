@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     amount
   } = req.body;
 
-  const secret = process.env.VITE_RAZORPAY_KEY_SECRET;
+  const secret = process.env.RAZORPAY_KEY_SECRET || process.env.VITE_RAZORPAY_KEY_SECRET;
   if (!secret) {
     return res.status(500).json({ error: 'Razorpay Secret Key not configured on server.' });
   }

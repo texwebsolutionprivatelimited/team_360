@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   }
 
   const keyId = process.env.VITE_RAZORPAY_KEY_ID;
-  const keySecret = process.env.VITE_RAZORPAY_KEY_SECRET;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET || process.env.VITE_RAZORPAY_KEY_SECRET;
 
   if (!keyId || !keySecret) {
     return res.status(500).json({ error: 'Razorpay API credentials not configured on server.' });
