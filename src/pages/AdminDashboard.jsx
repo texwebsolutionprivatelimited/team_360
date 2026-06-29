@@ -446,6 +446,7 @@ export default function AdminDashboard() {
             { id: 'enrollments', label: 'Enrollment Manager', icon: <Users className="w-4 h-4" /> },
             { id: 'blogs', label: 'Blog Publisher', icon: <Newspaper className="w-4 h-4" /> },
             { id: 'inquiries', label: 'Inquiry Tracker', icon: <MessageSquare className="w-4 h-4" /> },
+            { id: 'settings', label: 'System Settings', icon: <Settings className="w-4 h-4" /> },
           ].map(tab => (
             <button
               key={tab.id}
@@ -1381,6 +1382,172 @@ export default function AdminDashboard() {
                 )}
               </div>
 
+            </div>
+          )}
+
+          {/* ==================== 5. SYSTEM SETTINGS TAB ==================== */}
+          {activeTab === 'settings' && (
+            <div className="space-y-6 text-left">
+              <div>
+                <h3 className="font-serif text-2xl font-bold text-[#2A0D04]">System Configuration</h3>
+                <p className="text-gray-500 text-xs mt-1">Configure your API gateways, database credentials, and payment settings.</p>
+              </div>
+
+              <form onSubmit={handleSaveSettings} className="space-y-6">
+                {/* Razorpay Settings */}
+                <div className="bg-amber-50/20 border border-amber-100 rounded-3xl p-6 space-y-4">
+                  <h4 className="font-bold text-sm text-[#2a0d04] border-b border-amber-100/50 pb-2 flex items-center gap-2">
+                    <span>💳</span> Razorpay Payment Gateway
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1.5">Razorpay Key ID</label>
+                      <input
+                        type="text"
+                        value={settings.razorpayKey}
+                        onChange={(e) => setSettings({ ...settings, razorpayKey: e.target.value })}
+                        placeholder="rzp_test_... or rzp_live_..."
+                        className="w-full bg-white border border-amber-100 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#2A0D04]"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Firebase Settings */}
+                <div className="bg-amber-50/20 border border-amber-100 rounded-3xl p-6 space-y-4">
+                  <h4 className="font-bold text-sm text-[#2a0d04] border-b border-amber-100/50 pb-2 flex items-center gap-2">
+                    <span>🔥</span> Firebase Credentials
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1.5">API Key</label>
+                      <input
+                        type="text"
+                        value={settings.firebase.apiKey}
+                        onChange={(e) => setSettings({
+                          ...settings,
+                          firebase: { ...settings.firebase, apiKey: e.target.value }
+                        })}
+                        className="w-full bg-white border border-amber-100 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#2A0D04]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1.5">Auth Domain</label>
+                      <input
+                        type="text"
+                        value={settings.firebase.authDomain}
+                        onChange={(e) => setSettings({
+                          ...settings,
+                          firebase: { ...settings.firebase, authDomain: e.target.value }
+                        })}
+                        className="w-full bg-white border border-amber-100 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#2A0D04]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1.5">Project ID</label>
+                      <input
+                        type="text"
+                        value={settings.firebase.projectId}
+                        onChange={(e) => setSettings({
+                          ...settings,
+                          firebase: { ...settings.firebase, projectId: e.target.value }
+                        })}
+                        className="w-full bg-white border border-amber-100 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#2A0D04]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1.5">Storage Bucket</label>
+                      <input
+                        type="text"
+                        value={settings.firebase.storageBucket}
+                        onChange={(e) => setSettings({
+                          ...settings,
+                          firebase: { ...settings.firebase, storageBucket: e.target.value }
+                        })}
+                        className="w-full bg-white border border-amber-100 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#2A0D04]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1.5">Messaging Sender ID</label>
+                      <input
+                        type="text"
+                        value={settings.firebase.messagingSenderId}
+                        onChange={(e) => setSettings({
+                          ...settings,
+                          firebase: { ...settings.firebase, messagingSenderId: e.target.value }
+                        })}
+                        className="w-full bg-white border border-amber-100 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#2A0D04]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1.5">App ID</label>
+                      <input
+                        type="text"
+                        value={settings.firebase.appId}
+                        onChange={(e) => setSettings({
+                          ...settings,
+                          firebase: { ...settings.firebase, appId: e.target.value }
+                        })}
+                        className="w-full bg-white border border-amber-100 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#2A0D04]"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* ImageKit Settings */}
+                <div className="bg-amber-50/20 border border-amber-100 rounded-3xl p-6 space-y-4">
+                  <h4 className="font-bold text-sm text-[#2a0d04] border-b border-amber-100/50 pb-2 flex items-center gap-2">
+                    <span>📷</span> ImageKit CDN Configuration
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1.5">Public Key</label>
+                      <input
+                        type="text"
+                        value={settings.imagekit.publicKey}
+                        onChange={(e) => setSettings({
+                          ...settings,
+                          imagekit: { ...settings.imagekit, publicKey: e.target.value }
+                        })}
+                        className="w-full bg-white border border-amber-100 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#2A0D04]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1.5">URL Endpoint</label>
+                      <input
+                        type="text"
+                        value={settings.imagekit.urlEndpoint}
+                        onChange={(e) => setSettings({
+                          ...settings,
+                          imagekit: { ...settings.imagekit, urlEndpoint: e.target.value }
+                        })}
+                        className="w-full bg-white border border-amber-100 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#2A0D04]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1.5">Auth Endpoint</label>
+                      <input
+                        type="text"
+                        value={settings.imagekit.authEndpoint}
+                        onChange={(e) => setSettings({
+                          ...settings,
+                          imagekit: { ...settings.imagekit, authEndpoint: e.target.value }
+                        })}
+                        className="w-full bg-white border border-amber-100 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#2A0D04]"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-2 pt-4 border-t border-amber-50">
+                  <button
+                    type="submit"
+                    className="bg-[#2A0D04] text-[#FFD95A] font-bold text-xs uppercase px-6 py-3 rounded-xl hover:bg-[#6B2D17] cursor-pointer transition-all shadow-md hover:shadow-lg active:scale-95"
+                  >
+                    Save System Settings
+                  </button>
+                </div>
+              </form>
             </div>
           )}
 

@@ -575,7 +575,7 @@ export const initializeLocalStorage = () => {
           messagingSenderId: "452928596721",
           appId: "1:452928596721:web:5f5423d5f540a3b7825750"
         },
-        razorpayKey: "",
+        razorpayKey: "rzp_live_T7Tq3mYnO0RzLd",
         imagekit: {
           urlEndpoint: "https://ik.imagekit.io/zk1gmjhtt",
           publicKey: "public_Y4lsHCnlEUNxsHMlG4dsLllVkAI=",
@@ -603,6 +603,10 @@ export const initializeLocalStorage = () => {
           messagingSenderId: "452928596721",
           appId: "1:452928596721:web:5f5423d5f540a3b7825750"
         };
+        changed = true;
+      }
+      if (!saved.razorpayKey) {
+        saved.razorpayKey = "rzp_live_T7Tq3mYnO0RzLd";
         changed = true;
       }
       if (changed) {

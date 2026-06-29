@@ -87,40 +87,77 @@ export default function RecordedCourses() {
       return;
     }
 
-    const options = {
-      key: rzpKey,
-      amount: (course.price || 35400) * 100, // in paisa
-      currency: 'INR',
-      name: 'Team 360',
-      description: course.title,
-      image: logoImg,
-      handler: async function (response) {
-        setPayLoading(true);
-        try {
-          await purchaseCourse(currentUser, course.id, {
-            amount: course.price || 35400,
-            paymentId: response.razorpay_payment_id
-          });
-          // Update local status
-          setEnrollments(prev => ({ ...prev, [course.id]: true }));
-          navigate(`/recorded-courses/${course.id}`);
-        } catch (e) {
-          alert('Failed to record purchase: ' + e.message);
-        } finally {
-          setPayLoading(false);
-        }
-      },
-      prefill: {
-        name: currentUser.name,
-        email: currentUser.email,
-      },
-      theme: {
-        color: '#2A0D04'
+    setPayLoading(true);
+    try {
+      // 1. Create order on the backend
+      const orderRes = await fetch('/api/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          courseId: course.id,
+          amount: course.price || 35400
+        })
+      });
+      const orderData = await orderRes.json();
+      if (!orderRes.ok) {
+        throw new Error(orderData.error || 'Failed to create payment order');
       }
-    };
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+      const options = {
+        key: rzpKey,
+        amount: (course.price || 35400) * 100, // in paisa
+        currency: 'INR',
+        name: 'Team 360',
+        description: course.title,
+        image: logoImg,
+        order_id: orderData.orderId, // Bind the order ID
+        handler: async function (response) {
+          setPayLoading(true);
+          try {
+            // 2. Verify payment on the backend
+            const verifyRes = await fetch('/api/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                userId: currentUser.uid || String(currentUser.id),
+                userName: currentUser.name,
+                userEmail: currentUser.email,
+                courseId: course.id,
+                amount: course.price || 35400
+              })
+            });
+            const verifyData = await verifyRes.json();
+            if (!verifyRes.ok) {
+              throw new Error(verifyData.error || 'Payment verification failed');
+            }
+            // Update local status
+            setEnrollments(prev => ({ ...prev, [course.id]: true }));
+            navigate(`/recorded-courses/${course.id}`);
+          } catch (e) {
+            alert('Payment verification failed: ' + e.message);
+          } finally {
+            setPayLoading(false);
+          }
+        },
+        prefill: {
+          name: currentUser.name,
+          email: currentUser.email,
+        },
+        theme: {
+          color: '#2A0D04'
+        }
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (e) {
+      alert('Error initiating checkout: ' + e.message);
+    } finally {
+      setPayLoading(false);
+    }
   };
 
   const handleMockPaymentSubmit = async (e) => {
