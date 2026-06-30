@@ -974,26 +974,53 @@ export const useCurrentUser = () => {
    ========================================================================== */
 
 // Check if user is enrolled in a course
-export const checkEnrollment = async (userIdOrEmail, courseId) => {
-  if (!userIdOrEmail) return false;
+export const checkEnrollment = async (userOrIdentifier, courseId) => {
+  if (!userOrIdentifier || !courseId) return false;
+
+  const userId = typeof userOrIdentifier === 'object'
+    ? (userOrIdentifier.uid || userOrIdentifier.id || '')
+    : String(userOrIdentifier);
+  const userEmail = typeof userOrIdentifier === 'object'
+    ? (userOrIdentifier.email || '')
+    : (String(userOrIdentifier).includes('@') ? String(userOrIdentifier) : '');
+
+  if (typeof window !== 'undefined') {
+    try {
+      const response = await fetch('/api/check-enrollment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, userEmail, courseId }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        return Boolean(data.enrolled);
+      }
+    } catch (e) {
+      console.error('Server enrollment check failed, falling back:', e);
+    }
+  }
   
   if (isFirebaseEnabled && db) {
     try {
-      const q = query(
-        collection(db, 'purchases'), 
-        where('courseId', '==', courseId),
-        where('userEmail', '==', String(userIdOrEmail).toLowerCase())
-      );
-      const snap = await getDocs(q);
-      if (!snap.empty) return true;
+      if (userEmail) {
+        const q = query(
+          collection(db, 'purchases'), 
+          where('courseId', '==', courseId),
+          where('userEmail', '==', String(userEmail).toLowerCase())
+        );
+        const snap = await getDocs(q);
+        if (!snap.empty) return true;
+      }
 
-      const q2 = query(
-        collection(db, 'purchases'), 
-        where('courseId', '==', courseId),
-        where('userId', '==', userIdOrEmail)
-      );
-      const snap2 = await getDocs(q2);
-      return !snap2.empty;
+      if (userId) {
+        const q2 = query(
+          collection(db, 'purchases'), 
+          where('courseId', '==', courseId),
+          where('userId', '==', String(userId))
+        );
+        const snap2 = await getDocs(q2);
+        return !snap2.empty;
+      }
     } catch (e) {
       console.error('Error checking Firebase enrollment:', e);
     }
@@ -1003,7 +1030,10 @@ export const checkEnrollment = async (userIdOrEmail, courseId) => {
   const purchases = await getCollection('purchases');
   return purchases.some(p => 
     String(p.courseId) === String(courseId) && 
-    (String(p.userId) === String(userIdOrEmail) || String(p.userEmail).toLowerCase() === String(userIdOrEmail).toLowerCase())
+    (
+      (userId && String(p.userId) === String(userId)) ||
+      (userEmail && String(p.userEmail).toLowerCase() === String(userEmail).toLowerCase())
+    )
   );
 };
 

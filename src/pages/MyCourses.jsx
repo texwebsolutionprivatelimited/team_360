@@ -28,7 +28,7 @@ export default function MyCourses() {
       setLoadingEnrollments(true);
       const enrolledList = [];
       for (const course of recordedCourses) {
-        const hasAccess = await checkEnrollment(currentUser.uid || currentUser.id, course.id);
+        const hasAccess = await checkEnrollment(currentUser, course.id);
         if (hasAccess) {
           enrolledList.push(course);
         }

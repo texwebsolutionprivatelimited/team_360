@@ -49,7 +49,7 @@ export default function CourseDetailsPage() {
       }
       setEnrollmentLoading(true);
       try {
-        const enrolled = await checkEnrollment(currentUser.uid || currentUser.id, workshop.id);
+        const enrolled = await checkEnrollment(currentUser, workshop.id);
         setIsEnrolled(enrolled);
       } catch (e) {
         console.error("Error checking enrollment:", e);

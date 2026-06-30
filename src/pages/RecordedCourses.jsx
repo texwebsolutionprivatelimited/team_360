@@ -35,7 +35,7 @@ export default function RecordedCourses() {
       
       const statuses = {};
       for (const course of recordedCourses) {
-        statuses[course.id] = await checkEnrollment(currentUser.uid || currentUser.id, course.id);
+        statuses[course.id] = await checkEnrollment(currentUser, course.id);
       }
       setEnrollments(statuses);
       setLoading(false);

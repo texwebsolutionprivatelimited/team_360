@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAdminContent, useCurrentUser, checkEnrollment, purchaseCourse } from '../admin/contentStore';
+import { useAdminContent, useCurrentUser, checkEnrollment } from '../admin/contentStore';
 import { Play, Sparkles, Award, Shield, Key, MessageCircle, Heart, Star, Brain, ArrowRight, Lock, PlayCircle, Clock } from 'lucide-react';
 import AuthModal from '../components/AuthModal';
 
@@ -30,7 +30,8 @@ export default function RecordedCourseViewer() {
         setCheckingEnrollment(false);
         return;
       }
-      const enrolled = await checkEnrollment(currentUser.uid || currentUser.id, course.id);
+      setCheckingEnrollment(true);
+      const enrolled = await checkEnrollment(currentUser, course.id);
       setIsEnrolled(enrolled);
       setCheckingEnrollment(false);
     };
