@@ -20,8 +20,8 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing courseId or amount' });
   }
 
-  const keyId = process.env.VITE_RAZORPAY_KEY_ID || "rzp_live_T7Tq3mYnO0RzLd";
-  const keySecret = process.env.RAZORPAY_KEY_SECRET || process.env.VITE_RAZORPAY_KEY_SECRET || "9tP138vy6JBPMmWaCR74jJVG";
+  const keyId = process.env.RAZORPAY_KEY_ID || process.env.VITE_RAZORPAY_KEY_ID;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
 
   if (!keyId || !keySecret) {
     return res.status(500).json({ error: 'Razorpay API credentials not configured on server.' });
