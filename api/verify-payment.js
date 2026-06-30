@@ -3,12 +3,12 @@ import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import crypto from 'crypto';
 
 const firebaseConfig = {
-  apiKey: process.env.VITE_FIREBASE_API_KEY,
-  authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.VITE_FIREBASE_APP_ID,
+  apiKey: process.env.VITE_FIREBASE_API_KEY || "AIzaSyCEp45xgfqFqD55c6shvxO7_jxymXjHDts",
+  authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN || "ddsharma-3befe.firebaseapp.com",
+  projectId: process.env.VITE_FIREBASE_PROJECT_ID || "ddsharma-3befe",
+  storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET || "ddsharma-3befe.firebasestorage.app",
+  messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "452928596721",
+  appId: process.env.VITE_FIREBASE_APP_ID || "1:452928596721:web:5f5423d5f540a3b7825750",
 };
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     amount
   } = req.body;
 
-  const secret = process.env.RAZORPAY_KEY_SECRET || process.env.VITE_RAZORPAY_KEY_SECRET;
+  const secret = process.env.RAZORPAY_KEY_SECRET || process.env.VITE_RAZORPAY_KEY_SECRET || "9tP138vy6JBPMmWaCR74jJVG";
   if (!secret) {
     return res.status(500).json({ error: 'Razorpay Secret Key not configured on server.' });
   }
@@ -58,10 +58,10 @@ export default async function handler(req, res) {
     const purchaseId = `purchase-${Date.now()}`;
     const purchaseDoc = {
       id: purchaseId,
-      userId,
-      userName,
-      userEmail: userEmail.toLowerCase(),
-      courseId,
+      userId: userId || 'unknown',
+      userName: userName || 'unknown',
+      userEmail: userEmail ? userEmail.toLowerCase() : '',
+      courseId: courseId || '',
       amount: Number(amount) || 0,
       paymentId: razorpay_payment_id,
       date: new Date().toLocaleString('en-US', {
@@ -70,8 +70,8 @@ export default async function handler(req, res) {
       status: 'completed'
     };
 
-    // Save to Firestore t360_v5_purchases
-    await setDoc(doc(db, 't360_v5_purchases', purchaseId), purchaseDoc);
+    // Save to Firestore purchases
+    await setDoc(doc(db, 'purchases', purchaseId), purchaseDoc);
 
     return res.status(200).json({ success: true, purchase: purchaseDoc });
   } catch (error) {
