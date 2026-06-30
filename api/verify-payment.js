@@ -76,6 +76,8 @@ export default async function handler(req, res) {
     return res.status(200).json({ success: true, purchase: purchaseDoc });
   } catch (error) {
     console.error('Error saving purchase to Firestore:', error);
-    return res.status(500).json({ error: 'Payment verified, but failed to save enrollment. Please contact support.' });
+    return res.status(500).json({ 
+      error: `Payment verified, but failed to save enrollment. Error: ${error.message || error}. Please contact support.` 
+    });
   }
 }
