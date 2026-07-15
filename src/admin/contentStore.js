@@ -798,6 +798,7 @@ export const registerUser = async (name, email, password) => {
       uid: cred.user.uid,
       name,
       email: normalizedEmail,
+      mobile: password, // Store mobile number in Firestore
       role: 'user', // Default role
       createdAt: new Date().toISOString()
     };
@@ -817,6 +818,7 @@ export const registerUser = async (name, email, password) => {
     name,
     email: normalizedEmail,
     password, // Stored in plain text only for mock local demonstration!
+    mobile: password, // Store mobile number in local fallback
     role: normalizedEmail === 'admin@team360.com' ? 'admin' : 'user',
     createdAt: new Date().toISOString()
   };

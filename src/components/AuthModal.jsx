@@ -10,10 +10,10 @@ const getFriendlyErrorMessage = (err) => {
     return 'This email is not registered. Please click "Sign Up" above to create an account.';
   }
   if (code === 'auth/wrong-password' || message.includes('wrong-password')) {
-    return 'Incorrect password. Please verify and try again, or click "Forgot Password?" below to reset it.';
+    return 'Incorrect mobile number. Please verify and try again, or click "Forgot Password?" below to reset it.';
   }
   if (code === 'auth/invalid-credential' || message.includes('invalid-credential')) {
-    return 'Incorrect email or password. If you don\'t have an account yet, click "Sign Up" above to register.';
+    return 'Incorrect email or mobile number. If you don\'t have an account yet, click "Sign Up" above to register.';
   }
   if (code === 'auth/email-already-in-use' || message.includes('email-already-in-use') || message.includes('User already exists')) {
     return 'This email is already registered. Please click "Login" above to sign in.';
@@ -22,7 +22,7 @@ const getFriendlyErrorMessage = (err) => {
     return 'Please enter a valid email address.';
   }
   if (code === 'auth/weak-password' || message.includes('weak-password')) {
-    return 'Password is too weak. It must be at least 6 characters.';
+    return 'Mobile number must be at least 6 digits.';
   }
   if (code === 'auth/too-many-requests' || message.includes('too-many-requests')) {
     return 'Too many failed login attempts. This account has been temporarily disabled. Please try again later.';
@@ -38,8 +38,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    password: '',
-    confirmPassword: ''
+    password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -65,11 +64,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
         return false;
       }
       if (formData.password.length < 6) {
-        setError('Password must be at least 6 characters.');
-        return false;
-      }
-      if (formData.password !== formData.confirmPassword) {
-        setError('Passwords do not match.');
+        setError('Mobile number must be at least 6 digits.');
         return false;
       }
     }
@@ -90,7 +85,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
       try {
         await resetUserPassword(formData.email);
         setSuccessMessage('A password reset link has been sent to your email.');
-        setFormData({ name: '', email: '', password: '', confirmPassword: '' });
+        setFormData({ name: '', email: '', password: '' });
       } catch (err) {
         console.error(err);
         setError(getFriendlyErrorMessage(err));
@@ -117,7 +112,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
       }
       
       // Reset form and close
-      setFormData({ name: '', email: '', password: '', confirmPassword: '' });
+      setFormData({ name: '', email: '', password: '' });
       onClose();
     } catch (err) {
       console.error(err);
@@ -244,10 +239,10 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
             />
           </div>
 
-          {/* Password Field (Hidden in Forgot Password mode) */}
+          {/* Mobile Number Field (Hidden in Forgot Password mode, used as password in backend) */}
           {!isForgotPassword && (
             <div>
-              <label className="block text-[10px] font-black text-[#FFD95A] uppercase tracking-widest mb-1.5">Password</label>
+              <label className="block text-[10px] font-black text-[#FFD95A] uppercase tracking-widest mb-1.5">Mobile Number</label>
               <div className="relative">
                 <input 
                   type={showPassword ? 'text' : 'password'} 
@@ -255,7 +250,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
                   required
                   value={formData.password}
                   onChange={handleInputChange}
-                  placeholder="••••••••"
+                  placeholder="Enter your mobile number"
                   className="w-full bg-[#120502]/60 border border-white/10 rounded-xl px-4 py-3 pr-10 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FFD95A]/60 focus:ring-1 focus:ring-[#FFD95A]/30 transition-all text-xs font-semibold"
                 />
                 <button
@@ -277,22 +272,6 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
                   Forgot Password?
                 </button>
               )}
-            </div>
-          )}
-
-          {/* Confirm Password Field (Only on signup) */}
-          {!isForgotPassword && !isLoginTab && (
-            <div>
-              <label className="block text-[10px] font-black text-[#FFD95A] uppercase tracking-widest mb-1.5">Confirm Password</label>
-              <input 
-                type={showPassword ? 'text' : 'password'} 
-                name="confirmPassword"
-                required
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-                placeholder="••••••••"
-                className="w-full bg-[#120502]/60 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FFD95A]/60 focus:ring-1 focus:ring-[#FFD95A]/30 transition-all text-xs font-semibold"
-              />
             </div>
           )}
 
