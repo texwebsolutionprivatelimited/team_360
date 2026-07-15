@@ -56,11 +56,11 @@ export default function RecordedCourses() {
   };
 
   const handleBuyClick = (course) => {
+    setSelectedCourse(course);
     if (!currentUser) {
       setIsAuthModalOpen(true);
       return;
     }
-    setSelectedCourse(course);
     
     // Check if Razorpay Key exists in settings
     let rzpKey = import.meta.env.VITE_RAZORPAY_KEY_ID || '';
