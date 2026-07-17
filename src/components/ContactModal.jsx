@@ -38,6 +38,14 @@ export default function ContactModal({ isOpen, onClose }) {
 
     try {
       await saveItem('contacts', newQuery);
+
+      // Trigger Google Ads Conversion Event
+      const conversionLabel = import.meta.env.VITE_GOOGLE_ADS_CONVERSION_LABEL || 'conversion';
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'conversion', {
+          'send_to': `AW-18148455939/${conversionLabel}`
+        });
+      }
     } catch (err) {
       console.error('Failed to save contact query:', err);
     }
