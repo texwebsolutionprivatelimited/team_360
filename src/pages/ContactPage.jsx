@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Mail, Phone, Sparkles, Send, CheckCircle, Shield, Award, HelpCircle, Heart } from 'lucide-react';
 import ddSharmaPortrait from '../assets/dd_sharma_portrait.jpg';
 import { saveItem } from '../admin/contentStore';
+import { trackGoogleAdsConversion } from '../utils/googleAds';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -39,12 +40,7 @@ export default function ContactPage() {
       await saveItem('contacts', newQuery);
 
       // Trigger Google Ads Conversion Event
-      const conversionLabel = import.meta.env.VITE_GOOGLE_ADS_CONVERSION_LABEL || 'conversion';
-      if (typeof window.gtag === 'function') {
-        window.gtag('event', 'conversion', {
-          'send_to': `AW-18148455939/${conversionLabel}`
-        });
-      }
+      trackGoogleAdsConversion();
     } catch (err) {
       console.error('Failed to save query:', err);
     }

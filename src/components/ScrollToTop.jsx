@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { trackGoogleAdsPageView } from '../utils/googleAds';
 
 const SEO_MAP = {
   '/': {
@@ -50,6 +51,9 @@ export default function ScrollToTop() {
   useEffect(() => {
     // 1. Scroll to the top of the viewport
     window.scrollTo(0, 0);
+
+    // 1.5. Send a pageview event for Google Ads / gtag-based analytics
+    trackGoogleAdsPageView(pathname);
 
     // 2. Set dynamic Google SEO values for static pages
     // (Details pages like /courses/:id, /books/:id, /blog/:id manage their own titles dynamically)
